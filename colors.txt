@@ -1,0 +1,6 @@
+Main Blue: #2596be
+Light Blue: #67bed9
+Gradient First medium Dark Blue: #0993c3 Dark Blue: #0a82ad
+Fonts Dark Blue: #037199
+Light Yellow: #f9f069
+Gradient Yellow Medium Dark Yellow: #f5e929    ,  Dark Yellow: #e9dc1c

@@ -1,0 +1,5 @@
+users everretreat database 
+=========================
+username: gtbfqhhz_admin
+password: Admin_everretreat@123
+dbname: gtbfqhhz_everretreat_db

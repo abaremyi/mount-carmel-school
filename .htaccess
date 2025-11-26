@@ -1,0 +1,20 @@
+RewriteEngine On
+
+# Security: Prevent direct access to sensitive directories but allow API access
+RewriteCond %{REQUEST_URI} !^/modules/Contact/api/
+RewriteCond %{REQUEST_URI} !^/modules/Gallery/api/
+RewriteCond %{REQUEST_URI} !^/modules/News/api/
+RewriteRule ^(modules|config|layouts)/(.*) - [F,L]
+
+# Redirect to remove trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# Main rewrite rule - redirect all requests to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Custom error pages
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php

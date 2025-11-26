@@ -1,0 +1,47 @@
+root/
+├── index.php (Main Router - UPDATED)
+├── .htaccess (UPDATED with API routes)
+├── config/
+│   ├── database.php (Your existing DB connection)
+│   └── paths.php (Your existing paths config)
+├── layouts/
+│   ├── header.php
+│   ├── navbar.php
+│   ├── footer.php
+│   └── scripts.php
+├── css/
+│   └── homepage.css (The refined CSS styles)
+├── img/
+│   ├── slider/
+│   ├── director/
+│   ├── gallery/
+│   └── news/
+├── modules/
+│   ├── General/
+│   │   └── views/
+│   │       ├── index.php (COMPLETE HOMEPAGE - UPDATED)
+│   │       ├── about.php
+│   │       ├── news.php
+│   │       ├── gallery.php
+│   │       └── contact.php
+│   ├── Contact/
+│   │   ├── api/
+│   │   │   └── contactApi.php
+│   │   ├── models/
+│   │   │   └── ContactModel.php
+│   │   └── controllers/
+│   │       └── ContactController.php
+│   ├── Gallery/ (NEW MODULE)
+│   │   ├── api/
+│   │   │   └── galleryApi.php
+│   │   ├── models/
+│   │   │   └── GalleryModel.php
+│   │   └── controllers/
+│   │       └── GalleryController.php
+│   └── News/ (NEW MODULE)
+│       ├── api/
+│       │   └── newsApi.php
+│       ├── models/
+│       │   └── NewsModel.php
+│       └── controllers/
+│           └── NewsController.php
