@@ -147,7 +147,7 @@
                 </li>
 
                 <li><a href="#admissions">Admissions</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="<?= url('contact') ?>">Contact</a></li>
             </ul>
 
             <a href="https://docs.google.com/forms/d/1wogDmRr4HUKh4uqx9QpbI96s0o_EEOBoAkr2zM2k7Qw/edit" target="_blank" class="apply-btn">
@@ -239,7 +239,7 @@
 
             <li><a href="#admissions" onclick="toggleMenu()"><i class="fas fa-user-graduate"></i> Admissions</a></li>
             <li><a href="#blog" onclick="toggleMenu()"><i class="fas fa-blog"></i> Blog</a></li>
-            <li><a href="#contact" onclick="toggleMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="<?= url('contact') ?>" onclick="toggleMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
         </ul>
 
         <div class="mobile-apply-btn">

@@ -2,27 +2,15 @@
 <html lang="en">
 
 <?php 
-// Include path helper at the top of each view file
+// Include paths configuration
 $root_path = dirname(dirname(dirname(dirname(__FILE__))));
 require_once $root_path . "/config/paths.php";
+
+// Include header
 include_once get_layout('header');
 ?>
 
 <body class="bg-gray">
-    <!-- Preloader -->
-    <div class="preloader-bg"></div>
-    <div id="preloader">
-        <div id="preloader-status">
-            <div class="preloader-position loader"> <span></span> </div>
-        </div>
-    </div>
-    
-    <!-- Progress scroll totop -->
-    <div class="progress-wrap cursor-pointer">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-        </svg>
-    </div>
     
     <!-- Control Active Nav Link -->
      <?php 

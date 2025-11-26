@@ -18,5 +18,16 @@
         "psr-4": {
             "App\\": "modules/"
         }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "rm -rf vendor/composer/installed.json",
+            "find vendor -name .git -type d -exec rm -rf {} +"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }

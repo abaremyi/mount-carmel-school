@@ -4,19 +4,21 @@
 // Define absolute paths
 define('ROOT_PATH', dirname(dirname(__FILE__)));
 define('LAYOUTS_PATH', ROOT_PATH . '/layouts');
-define('DB_PATH', ROOT_PATH . '/config'); // Updated to use config directory
+define('DB_PATH', ROOT_PATH . '/config');
 define('MODULES_PATH', ROOT_PATH . '/modules');
 define('IMG_PATH', ROOT_PATH . '/img');
 define('CSS_PATH', ROOT_PATH . '/css');
 define('JS_PATH', ROOT_PATH . '/js');
 
-// Determine environment
-$isProduction = (getenv('APP_ENV') === 'production') || (getenv('RAILWAY_ENVIRONMENT') === 'production');
+// Determine environment - more robust detection
+$isProduction = (getenv('RAILWAY_ENVIRONMENT') === 'production') || 
+                (getenv('RAILWAY_STATIC_URL') !== false) ||
+                (getenv('MYSQLHOST') !== false);
 
 // Define URL paths
 if ($isProduction) {
     $protocol = 'https';
-    $host = getenv('RAILWAY_STATIC_URL') ?: $_SERVER['HTTP_HOST'];
+    $host = getenv('RAILWAY_STATIC_URL') ?: (getenv('RAILWAY_PUBLIC_DOMAIN') ?: $_SERVER['HTTP_HOST']);
     $base_url = $protocol . "://" . $host;
 } else {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
@@ -25,6 +27,9 @@ if ($isProduction) {
     $base_dir = str_replace('/index.php', '', $script_name);
     $base_url = $protocol . "://" . $host . $base_dir;
 }
+
+// Ensure no double slashes
+$base_url = rtrim($base_url, '/');
 
 define('BASE_URL', $base_url);
 define('IMG_URL', BASE_URL . '/img');
@@ -58,4 +63,3 @@ function url($path = '') {
     }
     return BASE_URL . '/' . ltrim($path, '/');
 }
-?>
