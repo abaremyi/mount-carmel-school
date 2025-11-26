@@ -1,66 +1,51 @@
 <?php
 /**
- * Database Connection Class
- * File: config/database.php
- * Handles PDO database connection
+ * Database Connection Class - Updated for both local and production
  */
 
 class Database {
     private static $connection = null;
 
-    // Adding getInstance method to maintain compatibility with the controller
     public static function getInstance() {
-        return self::getConnection();  // Reuse the existing getConnection method
+        return self::getConnection();
     }
 
     public static function getConnection() {
         if (self::$connection === null) {
-            $host = 'localhost';  
-            $port = '3308';  // ✅ ADDED PORT FOR YOUR XAMPP
-            $db = 'mount_carmel_db';  
-            $user = 'root'; 
-            $pass = ''; 
+            // Check if we're in production (Railway)
+            $isProduction = (getenv('RAILWAY_ENVIRONMENT') === 'production') || 
+                           (getenv('MYSQLHOST') !== false);
+            
+            if ($isProduction) {
+                // Use production configuration
+                require_once __DIR__ . '/database.production.php';
+                self::$connection = \Database::getConnection();
+                return self::$connection;
+            } else {
+                // Use local development configuration
+                $host = 'localhost';  
+                $port = '3308';  // Your XAMPP port
+                $db = 'mount_carmel_db';  
+                $user = 'root'; 
+                $pass = ''; 
 
-            try {
-                // ✅ UPDATED: Added port to connection string
-                self::$connection = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
-                self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                self::$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-                self::$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-                
-                // Optional: Set charset to UTF-8
-                self::$connection->exec("SET NAMES utf8mb4");
-                
-            } catch (PDOException $e) {
-                // Log error instead of displaying it (security best practice)
-                error_log("Database Connection Error: " . $e->getMessage());
-                
-                // Display user-friendly error
-                die("Database connection failed. Please check your configuration.");
+                try {
+                    self::$connection = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
+                    self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    self::$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+                    self::$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                    self::$connection->exec("SET NAMES utf8mb4");
+                    
+                } catch (PDOException $e) {
+                    error_log("Local Database Connection Error: " . $e->getMessage());
+                    die("Local database connection failed. Please check your XAMPP configuration.");
+                }
             }
         }
         return self::$connection;
     }
     
-    /**
-     * Close the database connection
-     */
     public static function closeConnection() {
         self::$connection = null;
     }
-    
-    /**
-     * Test the database connection
-     * @return bool True if connection is successful
-     */
-    public static function testConnection() {
-        try {
-            $conn = self::getConnection();
-            return $conn !== null;
-        } catch (Exception $e) {
-            error_log("Database Test Connection Error: " . $e->getMessage());
-            return false;
-        }
-    }
 }
-?>
