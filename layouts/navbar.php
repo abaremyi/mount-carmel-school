@@ -29,7 +29,7 @@
                 </div>
                 <div class="logo-text">
                     <span class="main">Mount Carmel</span>
-                    <span class="sub">EXCELLENCE IN EDUCATION</span>
+                    <span class="sub">PRIVATE CHRISTIAN SCHOOL</span>
                 </div>
             </a>
 
