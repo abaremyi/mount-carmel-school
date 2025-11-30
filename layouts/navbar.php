@@ -59,7 +59,6 @@
                                     <li><a href="#gallery"><i class="fas fa-circle"></i> Photo Gallery</a></li>
                                     <li><a href="#videos"><i class="fas fa-circle"></i> Videos</a></li>
                                     <li><a href="#news"><i class="fas fa-circle"></i> News & Events</a></li>
-                                    <li><a href="#blog"><i class="fas fa-circle"></i> Blog</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -171,7 +170,7 @@
                 </div>
                 <div class="mobile-logo-text">
                     <div class="main">Mount Carmel</div>
-                    <div class="sub">EXCELLENCE IN EDUCATION</div>
+                    <div class="sub">PRIVATE CHRISTIAN SCHOOL</div>
                 </div>
             </div>
             <button class="close-btn" onclick="toggleMenu()">&times;</button>
@@ -238,7 +237,6 @@
             </li>
 
             <li><a href="#admissions" onclick="toggleMenu()"><i class="fas fa-user-graduate"></i> Admissions</a></li>
-            <li><a href="#blog" onclick="toggleMenu()"><i class="fas fa-blog"></i> Blog</a></li>
             <li><a href="<?= url('contact') ?>" onclick="toggleMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
         </ul>
 

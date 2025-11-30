@@ -162,7 +162,7 @@ include_once get_layout('header');
             <div class="letter-content">
                 <div class="director-photo">
                     <div class="director-card">
-                        <img src="<?= img_url('director/director-photo.jpg') ?>" alt="School Director">
+                        <img src="<?= img_url('director-photo.jpg') ?>" alt="School Director">
                         <div class="director-name-badge">
                             <h3>Rev. Jeanne D'Arc</h3>
                             <p>School Director & Founder</p>
@@ -213,6 +213,35 @@ include_once get_layout('header');
             </div>
         </div>
     </section>
+
+    <!-- Gallery Modal -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="gallery-modal-backdrop"></div>
+        <div class="gallery-modal-content">
+            <div class="gallery-modal-header">
+                <h3 class="gallery-modal-title">Gallery</h3>
+                <button class="gallery-modal-close" aria-label="Close gallery">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="gallery-modal-body">
+                <div class="gallery-loading"></div>
+                <div class="gallery-modal-counter"></div>
+                <button class="gallery-modal-nav prev" aria-label="Previous image">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="gallery-modal-image-container">
+                    <img class="gallery-modal-image" src="" alt="">
+                </div>
+                <button class="gallery-modal-nav next" aria-label="Next image">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="gallery-modal-footer">
+                <p class="gallery-modal-description"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Programs Section -->
     <div class="advantages" style="background: url('<?= img_url('partner-bg2.jpg') ?>') no-repeat; background-size: cover; background-attachment: fixed;">
@@ -350,66 +379,36 @@ include_once get_layout('header');
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials" id="testimonials">
-        <div class="container">
-            <div class="w3l-heading">
-                <h2 class="w3ls_head">What Parents Say</h2>
-            </div>
-            <div class="testimonial-slider">
-                <div class="row">
-                    <div class="col-md-4 testimonial-item">
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"Mount Carmel School has provided an excellent learning environment for my child. The bilingual program and dedicated teachers have made a significant difference in his academic growth."</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="author-info">
-                                    <h4>Alice Johnson</h4>
-                                    <span>Parent of Grade 5 Student</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 testimonial-item">
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"The holistic approach to education at MCS has helped my daughter develop not just academically but also as a confident individual with strong moral values."</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="author-info">
-                                    <h4>David Smith</h4>
-                                    <span>Parent of Nursery Student</span>
-                                </div>
+        <!-- Testimonials Section -->
+        <section class="testimonials" id="testimonials">
+            <div class="container">
+                <div class="w3l-heading">
+                    <h2 class="w3ls_head">What Parents Say About Our School</h2>
+                </div>
+                
+                <div class="carousel-wrapper">
+                    <button class="carousel-nav prev" id="testimonialPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-nav next" id="testimonialNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="testimonialTrack">
+                            <!-- Testimonials will be loaded via AJAX -->
+                            <div class="testimonial-slide" style="text-align: center; padding: 50px;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: var(--primary-teal);"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 testimonial-item">
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <p>"We're impressed with the school's commitment to safety and the individual attention given to each student. The bilingual education is preparing our child for global opportunities."</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="author-info">
-                                    <h4>Sarah Williams</h4>
-                                    <span>Parent of Grade 3 Student</span>
-                                </div>
-                            </div>
-                        </div>
+
+                    <div class="carousel-dots" id="testimonialDots">
+                        <!-- Dots will be generated dynamically -->
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     <!-- Footer -->
     <?php include_once get_layout('footer'); ?>
@@ -422,11 +421,20 @@ include_once get_layout('header');
     // Base URL for API calls
     const BASE_URL = '<?= url() ?>';
     
-    // AJAX for Gallery and News
+    // Global variables for gallery and testimonials
+    let galleryImages = [];
+    let currentGalleryIndex = 0;
+    let testimonials = [];
+    let currentTestimonialIndex = 0;
+    let testimonialInterval;
+    
     $(document).ready(function() {
         loadGalleryImages();
         loadNewsItems();
+        loadTestimonials();
         animateStats();
+        setupGalleryModal();
+        setupTestimonialCarousel();
     });
 
     function loadGalleryImages() {
@@ -435,12 +443,13 @@ include_once get_layout('header');
             method: 'GET',
             data: { 
                 action: 'get_images',
-                limit: 10 
+                limit: 6 
             },
             dataType: 'json',
             success: function(response) {
                 if (response.success && response.data.length > 0) {
-                    displayGalleryImages(response.data);
+                    galleryImages = response.data;
+                    displayGalleryImages(galleryImages);
                 } else {
                     $('#galleryGrid').html('<p style="grid-column: 1/-1; text-align: center; color: #6c757d;">No gallery images available.</p>');
                 }
@@ -454,17 +463,148 @@ include_once get_layout('header');
 
     function displayGalleryImages(images) {
         let html = '';
-        images.forEach(function(image) {
+        images.forEach(function(image, index) {
             html += `
-                <figure>
-                    <img src="${image.image_url}" alt="${image.title || 'Gallery Image'}">
+                <figure class="gallery-item" onclick="openGalleryModal(${index})">
+                    <img src="<?= img_url('${image.image_url}') ?>" alt="${image.title || 'Gallery Image'}">
                     <figcaption>
                         <h3>${image.title || 'Campus Life'}</h3>
+                        <p>${image.description || ''}</p>
                     </figcaption>
                 </figure>
             `;
         });
         $('#galleryGrid').html(html);
+    }
+
+    function setupGalleryModal() {
+        const modal = $('#galleryModal');
+        const closeBtn = modal.find('.gallery-modal-close');
+        const backdrop = modal.find('.gallery-modal-backdrop');
+        const prevBtn = modal.find('.gallery-modal-nav.prev');
+        const nextBtn = modal.find('.gallery-modal-nav.next');
+        const modalImage = modal.find('.gallery-modal-image');
+        const modalTitle = modal.find('.gallery-modal-title');
+        const modalDescription = modal.find('.gallery-modal-description');
+        const modalCounter = modal.find('.gallery-modal-counter');
+        const loadingSpinner = modal.find('.gallery-loading');
+
+        // Close modal when clicking close button or backdrop
+        closeBtn.click(closeGalleryModal);
+        backdrop.click(closeGalleryModal);
+        
+        // Navigation
+        prevBtn.click(function() {
+            navigateGallery(-1);
+        });
+        
+        nextBtn.click(function() {
+            navigateGallery(1);
+        });
+        
+        // Keyboard navigation
+        $(document).keydown(function(e) {
+            if (modal.hasClass('active')) {
+                if (e.key === 'Escape') {
+                    closeGalleryModal();
+                } else if (e.key === 'ArrowLeft') {
+                    navigateGallery(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateGallery(1);
+                }
+            }
+        });
+        
+        // Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        modal.on('touchstart', function(e) {
+            touchStartX = e.originalEvent.changedTouches[0].screenX;
+        });
+        
+        modal.on('touchend', function(e) {
+            touchEndX = e.originalEvent.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next image
+                    navigateGallery(1);
+                } else {
+                    // Swipe right - previous image
+                    navigateGallery(-1);
+                }
+            }
+        }
+    }
+
+    function openGalleryModal(index) {
+        if (galleryImages.length === 0) return;
+        
+        currentGalleryIndex = index;
+        updateGalleryModal();
+        $('#galleryModal').addClass('active');
+        $('body').css('overflow', 'hidden');
+    }
+
+    function closeGalleryModal() {
+        $('#galleryModal').removeClass('active');
+        $('body').css('overflow', '');
+    }
+
+    function navigateGallery(direction) {
+        currentGalleryIndex += direction;
+        
+        // Loop around if at the beginning or end
+        if (currentGalleryIndex < 0) {
+            currentGalleryIndex = galleryImages.length - 1;
+        } else if (currentGalleryIndex >= galleryImages.length) {
+            currentGalleryIndex = 0;
+        }
+        
+        updateGalleryModal();
+    }
+
+    function updateGalleryModal() {
+        if (galleryImages.length === 0) return;
+        
+        const image = galleryImages[currentGalleryIndex];
+        const modal = $('#galleryModal');
+        const modalImage = modal.find('.gallery-modal-image');
+        const loadingSpinner = modal.find('.gallery-loading');
+        
+        // Show loading
+        loadingSpinner.addClass('active');
+        modalImage.css('opacity', '0');
+        
+        // Load image
+        modalImage.on('load', function() {
+            loadingSpinner.removeClass('active');
+            modalImage.css('opacity', '1');
+        });
+        
+        modalImage.on('error', function() {
+            loadingSpinner.removeClass('active');
+            console.error('Failed to load image:', image.image_url);
+        });
+        
+        modalImage.attr('src', '<?= img_url("' + image.image_url + '") ?>');
+        modalImage.attr('alt', image.title || 'Gallery Image');
+        modal.find('.gallery-modal-title').text(image.title || 'Gallery Image');
+        modal.find('.gallery-modal-description').text(image.description || '');
+        modal.find('.gallery-modal-counter').text(`${currentGalleryIndex + 1} / ${galleryImages.length}`);
+        
+        // Update navigation buttons
+        const prevBtn = modal.find('.gallery-modal-nav.prev');
+        const nextBtn = modal.find('.gallery-modal-nav.next');
+        prevBtn.prop('disabled', currentGalleryIndex === 0);
+        nextBtn.prop('disabled', currentGalleryIndex === galleryImages.length - 1);
     }
 
     function loadNewsItems() {
@@ -493,14 +633,19 @@ include_once get_layout('header');
     function displayNewsItems(newsItems) {
         let html = '';
         newsItems.forEach(function(news) {
+            // Format date
+            const date = new Date(news.created_at || news.date);
+            const day = date.getDate();
+            const month = date.toLocaleString('en', { month: 'short' });
+            
             html += `
                 <div class="col-md-3 col-sm-6 news-item">
                     <div class="news-card">
                         <div class="news-image">
-                            <img src="${news.image_url}" alt="${news.title}" class="img-responsive">
+                            <img src="<?= img_url('${news.image_url}') ?>" alt="${news.title}" class="img-responsive">
                             <div class="news-date">
-                                <span class="day">${news.day}</span>
-                                <span class="month">${news.month.toUpperCase()}</span>
+                                <span class="day">${day}</span>
+                                <span class="month">${month.toUpperCase()}</span>
                             </div>
                         </div>
                         <div class="news-content">
@@ -516,6 +661,217 @@ include_once get_layout('header');
         });
         $('#newsContainer').html(html);
     }
+
+    function loadTestimonials() {
+    $.ajax({
+        url: '<?= url('api/testimonials') ?>',
+        method: 'GET',
+        data: { 
+            action: 'get_testimonials',
+            limit: 10 
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success && response.data.length > 0) {
+                testimonials = response.data;
+                displayTestimonials(testimonials);
+                setupTestimonialCarousel();
+                startTestimonialCarousel();
+            } else {
+                $('#testimonialTrack').html('<div class="testimonial-slide"><p style="text-align: center; color: #6c757d; padding: 40px;">No testimonials available at the moment.</p></div>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Testimonials API Error:', error);
+            $('#testimonialTrack').html('<div class="testimonial-slide"><p style="text-align: center; color: #dc3545; padding: 40px;">Failed to load testimonials.</p></div>');
+        }
+    });
+}
+
+function displayTestimonials(testimonials) {
+    let html = '';
+    let dotsHtml = '';
+    
+    testimonials.forEach(function(testimonial, index) {
+        // Get initials for avatar placeholder
+        const names = testimonial.name.split(' ');
+        const initials = names.length >= 2 
+            ? (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase()
+            : names[0].substring(0, 2).toUpperCase();
+        
+        // Generate star rating
+        const rating = testimonial.rating || 5;
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                starsHtml += '<i class="fas fa-star"></i>';
+            } else {
+                starsHtml += '<i class="far fa-star"></i>';
+            }
+        }
+        
+        html += `
+            <div class="testimonial-slide">
+                <div class="testimonial-avatar">
+                    ${testimonial.image_url ? 
+                        `<img src="<?= img_url('${testimonial.image_url}') ?>" alt="${testimonial.name}">` : 
+                        `<div class="avatar-placeholder">${initials}</div>`
+                    }
+                </div>
+                <div class="testimonial-name">${testimonial.name}</div>
+                <div class="testimonial-role">${testimonial.role || 'Parent'}</div>
+                <div class="testimonial-text">
+                    "${testimonial.content}"
+                </div>
+                <div class="testimonial-rating">
+                    ${starsHtml}
+                </div>
+            </div>
+        `;
+    });
+    
+    $('#testimonialTrack').html(html);
+    
+    // Create dots based on number of slides
+    const totalSlides = testimonials.length;
+    const slidesPerView = getSlidesPerView();
+    const totalDots = Math.ceil(totalSlides / slidesPerView);
+    
+    for (let i = 0; i < totalDots; i++) {
+        dotsHtml += `<button class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>`;
+    }
+    
+    $('#testimonialDots').html(dotsHtml);
+}
+
+function getSlidesPerView() {
+    if (window.innerWidth <= 768) {
+        return 1;
+    } else if (window.innerWidth <= 992) {
+        return 2;
+    } else {
+        return 3;
+    }
+}
+
+function setupTestimonialCarousel() {
+    const $track = $('#testimonialTrack');
+    const $slides = $('.testimonial-slide');
+    
+    if ($slides.length === 0) return;
+    
+    let currentIndex = 0;
+    let cardsPerView = getSlidesPerView();
+    let autoPlayInterval;
+    
+    function updateCardsPerView() {
+        cardsPerView = getSlidesPerView();
+    }
+    
+    function moveCarousel() {
+        const slideWidth = $slides.first().outerWidth(true);
+        const offset = -currentIndex * slideWidth;
+        $track.css('transform', `translateX(${offset}px)`);
+        updateDots();
+    }
+    
+    function updateDots() {
+        $('.carousel-dot').removeClass('active');
+        const activeDot = Math.floor(currentIndex / cardsPerView);
+        $('.carousel-dot').eq(activeDot).addClass('active');
+    }
+    
+    function nextSlide() {
+        const maxIndex = $slides.length - cardsPerView;
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+        } else {
+            currentIndex = 0;
+        }
+        moveCarousel();
+    }
+    
+    function prevSlide() {
+        const maxIndex = $slides.length - cardsPerView;
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            currentIndex = maxIndex;
+        }
+        moveCarousel();
+    }
+    
+    function goToSlide(index) {
+        currentIndex = index * cardsPerView;
+        moveCarousel();
+    }
+    
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(nextSlide, 5000);
+    }
+    
+    function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+    }
+    
+    // Event listeners
+    $('#testimonialNext').on('click', function() {
+        stopAutoPlay();
+        nextSlide();
+        startAutoPlay();
+    });
+    
+    $('#testimonialPrev').on('click', function() {
+        stopAutoPlay();
+        prevSlide();
+        startAutoPlay();
+    });
+    
+    $(document).on('click', '.carousel-dot', function() {
+        stopAutoPlay();
+        const dotIndex = $(this).data('index');
+        goToSlide(dotIndex);
+        startAutoPlay();
+    });
+    
+    // Handle resize
+    $(window).on('resize', function() {
+        updateCardsPerView();
+        currentIndex = 0;
+        moveCarousel();
+        // Recreate dots if needed
+        const totalSlides = $slides.length;
+        const totalDots = Math.ceil(totalSlides / cardsPerView);
+        const currentDots = $('.carousel-dot').length;
+        
+        if (totalDots !== currentDots) {
+            let dotsHtml = '';
+            for (let i = 0; i < totalDots; i++) {
+                dotsHtml += `<button class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>`;
+            }
+            $('#testimonialDots').html(dotsHtml);
+        } else {
+            updateDots();
+        }
+    });
+    
+    // Pause on hover
+    $('.carousel-container').hover(
+        function() { stopAutoPlay(); },
+        function() { startAutoPlay(); }
+    );
+    
+    // Initialize
+    moveCarousel();
+    startAutoPlay();
+    
+    // Make functions available globally for the carousel
+    window.testimonialCarousel = {
+        next: nextSlide,
+        prev: prevSlide,
+        goTo: goToSlide
+    };
+}
 
     // Animate Statistics Numbers
     function animateStats() {
@@ -538,6 +894,12 @@ include_once get_layout('header');
         });
     }
 
+    // Debug function
+    function debugGallery() {
+        console.log('Gallery Items Found:', $('.gallery-item').length);
+        console.log('Gallery Images Array:', galleryImages.length);
+        console.log('Gallery Modal Element:', $('#galleryModal').length);
+    }
     
     </script>
     

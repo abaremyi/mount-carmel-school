@@ -119,5 +119,56 @@ class GalleryController {
             ];
         }
     }
+
+    /**
+     * Get next and previous image IDs for navigation
+     * @param int $currentId Current image ID
+     * @param string $category Optional category filter
+     * @return array Next and previous IDs
+     */
+    public function getNavigationIds($currentId, $category = null) {
+        try {
+            // Get all images in order
+            $images = $this->galleryModel->getGalleryImages(1000, 0, $category);
+            
+            $navigation = [
+                'prev' => null,
+                'next' => null
+            ];
+            
+            $currentIndex = -1;
+            foreach ($images as $index => $image) {
+                if ($image['id'] == $currentId) {
+                    $currentIndex = $index;
+                    break;
+                }
+            }
+            
+            if ($currentIndex !== -1) {
+                // Previous image
+                if ($currentIndex > 0) {
+                    $navigation['prev'] = $images[$currentIndex - 1]['id'];
+                }
+                
+                // Next image
+                if ($currentIndex < count($images) - 1) {
+                    $navigation['next'] = $images[$currentIndex + 1]['id'];
+                }
+            }
+            
+            return [
+                'success' => true,
+                'data' => $navigation
+            ];
+            
+        } catch (Exception $e) {
+            error_log("Gallery Controller Navigation Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to get navigation data.',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }
 ?>

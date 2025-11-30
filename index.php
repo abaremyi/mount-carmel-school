@@ -42,9 +42,11 @@ $routes = [
     '/static/get_related_projects' => 'modules/General/static/get_related_projects.php',
     
     // Add API routes
-    '/api/contact' => 'modules/Contact/api/contactApi.php',
+    '/api/hero' => 'modules/Hero/api/heroApi.php',
     '/api/gallery' => 'modules/Gallery/api/galleryApi.php',
     '/api/news' => 'modules/News/api/newsApi.php',
+    '/api/testimonials' => 'modules/Testimonials/api/testimonialsApi.php',
+    '/api/contact' => 'modules/Contact/api/contactApi.php',
 ];
 
 // Serve the appropriate file

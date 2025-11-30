@@ -57,10 +57,19 @@ try {
             echo json_encode($result);
             break;
 
+        case 'get_navigation':
+        case 'getNavigation':
+            // Get navigation IDs for next/previous
+            $currentId = isset($_GET['current_id']) ? (int)$_GET['current_id'] : 0;
+            $category = isset($_GET['category']) ? $_GET['category'] : null;
+            $result = $galleryController->getNavigationIds($currentId, $category);
+            echo json_encode($result);
+            break;
+
         default:
             echo json_encode([
                 'success' => false,
-                'message' => 'Invalid action. Available actions: get_images, get_categories, get_image'
+                'message' => 'Invalid action. Available actions: get_images, get_categories, get_image, get_navigation'
             ]);
             break;
     }

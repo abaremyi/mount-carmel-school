@@ -19,7 +19,7 @@ class GalleryModel {
      * @param string $category Optional category filter
      * @return array Array of gallery images
      */
-    public function getGalleryImages($limit = 10, $offset = 0, $category = null) {
+    public function getGalleryImages($limit = 6, $offset = 0, $category = null) {
         try {
             $whereClause = "WHERE status = 'active'";
             
