@@ -164,23 +164,22 @@ include_once get_layout('header');
                     <div class="director-card">
                         <img src="<?= img_url('director-photo.jpg') ?>" alt="School Director">
                         <div class="director-name-badge">
-                            <h3>Rev. Jeanne D'Arc</h3>
-                            <p>School Director & Founder</p>
+                            <h3>SIBOMANA Gérard</h3>
+                            <p>Acting Legal Representative</p>
                         </div>
                     </div>
                 </div>
                 <div class="letter-text">
-                    <h2>A Letter from the Director</h2>
+                    <h2>A Letter from the Acting Legal Representative</h2>
                     <p class="letter-greeting">Dear Parents and Guardians,</p>
-                    <p>It is with great joy and privilege that I welcome you to <span class="highlight-text">Mount Carmel School</span>, a nurturing bilingual institution founded on the principles of academic excellence and spiritual growth.</p>
-                    <p>Since our establishment in 2013, we have been dedicated to providing quality education that combines rigorous academics with Christian values. Our mission is clear: <span class="highlight-text">to bless Rwanda with God-fearing citizens, highly skilled and generation transformers for God's glory.</span></p>
-                    <p>As an authorized <span class="highlight-text">IB World School</span>, we offer both the Middle Years Programme and Diploma Programme, delivering a curriculum designed to transform lives and open doors to top universities worldwide.</p>
-                    <p>At Mount Carmel, we encourage students to go beyond their limits – guided by exceptional teachers, small class sizes, and personalized support. We nurture curiosity, character, and a lifelong love of learning through academics, outdoor education, arts, sports, leadership, and service.</p>
-                    <p>You are warmly invited to visit our campus and experience the spirit of Mount Carmel School firsthand.</p>
+                    <p>It is with great joy and privilege that I welcome you to <span class="highlight-text">Mount Carmel School</span>, a nurturing bilingual institution committed to academic excellence and strong Christian values.</p>
+                    <p>Since our establishment in 2013, we have remained dedicated to offering quality education that shapes the mind, heart, and character of every learner. Our mission is to raise God-fearing, skilled, and responsible young people who will positively impact their communities and the nation.</span></p>
+                    <p>At Mount Carmel School, we believe in helping students grow beyond their limits. Through a supportive learning environment, experienced teachers, small class sizes, and a balanced approach to academics, leadership, creativity, and service, we focus on developing well-rounded individuals prepared for future opportunities.</p>
+                    <p>We warmly invite you to visit our campus and experience the spirit and excellence of Mount Carmel School.</p>
                     <div class="letter-signature">
                         <p>With warm regards,</p>
-                        <p class="signature-name">Rev. Jeanne D'Arc Uwanyiligira</p>
-                        <p>Director & Founder</p>
+                        <p class="signature-name">SIBOMANA Gérard</p>
+                        <p>Acting Legal Representative</p>
                     </div>
                 </div>
             </div>
