@@ -25,6 +25,7 @@ $routes = [
     '/' => 'modules/General/views/index.php',
     '/home' => 'modules/General/views/index.php',
     '/about' => 'modules/General/views/about.php',
+    '/administration' => 'modules/General/views/administration.php',
     '/services' => 'modules/General/views/services.php',
     '/service-details' => 'modules/General/views/service-details.php',
     '/projects' => 'modules/General/views/projects.php',
@@ -47,6 +48,25 @@ $routes = [
     '/api/news' => 'modules/News/api/newsApi.php',
     '/api/testimonials' => 'modules/Testimonials/api/testimonialsApi.php',
     '/api/contact' => 'modules/Contact/api/contactApi.php',
+
+    // Authentication routes
+    '/login' => 'modules/Authentication/views/login.php',
+    '/forgot-password' => 'modules/Authentication/views/forgot-password.php',
+    '/logout' => 'modules/Authentication/views/logout.php', 
+    '/register' => 'modules/Authentication/views/register.php',
+    '/reset-password' => 'modules/Authentication/views/reset-password.php',
+    '/verify-email' => 'modules/Authentication/views/verifyEmail.php',
+    
+    // Dashboard routes
+    '/admin' => 'modules/Dashboard/views/admin.php',
+    '/dashboard' => 'modules/Dashboard/views/dashboard.php',
+    '/parent' => 'modules/Dashboard/views/parent.php',
+    '/student' => 'modules/Dashboard/views/student.php',
+    '/teacher' => 'modules/Dashboard/views/teacher.php',
+    
+    // API routes
+    '/api/auth' => 'modules/Authentication/api/authApi.php',
+    '/api/dashboard' => 'modules/Dashboard/api/dashboardApi.php',
 ];
 
 // Serve the appropriate file

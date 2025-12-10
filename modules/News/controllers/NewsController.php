@@ -1,3 +1,4 @@
+
 <?php
 /**
  * News Controller
@@ -28,6 +29,7 @@ class NewsController {
             $limit = isset($params['limit']) ? (int)$params['limit'] : 4;
             $offset = isset($params['offset']) ? (int)$params['offset'] : 0;
             $category = isset($params['category']) ? $params['category'] : null;
+            $upcoming = isset($params['upcoming']) ? (bool)$params['upcoming'] : false;
 
             // Validate limit (max 50)
             if ($limit > 50) {
@@ -35,7 +37,7 @@ class NewsController {
             }
 
             // Get news items
-            $newsItems = $this->newsModel->getNewsItems($limit, $offset, $category);
+            $newsItems = $this->newsModel->getNewsItems($limit, $offset, $category, $upcoming);
 
             // Format dates for display
             foreach ($newsItems as &$item) {
@@ -164,6 +166,36 @@ class NewsController {
             return [
                 'success' => false,
                 'message' => 'Failed to retrieve latest news.',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Get upcoming events
+     * @param int $limit Number of events
+     * @return array Response array
+     */
+    public function getUpcomingEvents($limit = 4) {
+        try {
+            $upcomingEvents = $this->newsModel->getUpcomingEvents($limit);
+
+            // Format dates
+            foreach ($upcomingEvents as &$event) {
+                $event['formatted_date'] = date('F j, Y', strtotime($event['published_date']));
+                $event['formatted_time'] = date('g:i A', strtotime($event['published_date']));
+            }
+
+            return [
+                'success' => true,
+                'data' => $upcomingEvents
+            ];
+
+        } catch (Exception $e) {
+            error_log("News Controller Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to retrieve upcoming events.',
                 'error' => $e->getMessage()
             ];
         }

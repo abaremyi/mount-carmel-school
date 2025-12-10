@@ -49,16 +49,16 @@
                                 <h4><i class="fas fa-school"></i> School Info</h4>
                                 <ul>
                                     <li><a href="<?= url('about') ?>"><i class="fas fa-circle"></i> Who We Are</a></li>
-                                    <li><a href="<?= url('about') ?>"><i class="fas fa-circle"></i> Mission, Vision & Philosophy</a></li>
-                                    <li><a href="<?= url('team') ?>"><i class="fas fa-circle"></i> Administration</a></li>
+                                    <li><a href="<?= url('about#mvp-about-section') ?>"><i class="fas fa-circle"></i> Mission, Vision & Philosophy</a></li>
+                                    <li><a href="<?= url('administration') ?>"><i class="fas fa-circle"></i> Administration</a></li>
                                 </ul>
                             </div>
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-images"></i> Media</h4>
                                 <ul>
-                                    <li><a href="#gallery"><i class="fas fa-circle"></i> Photo Gallery</a></li>
-                                    <li><a href="#videos"><i class="fas fa-circle"></i> Videos</a></li>
-                                    <li><a href="#news"><i class="fas fa-circle"></i> News & Events</a></li>
+                                    <li><a href="<?= url('gallery') ?>"><i class="fas fa-circle"></i> Photo Gallery</a></li>
+                                    <li><a href="<?= url('video-gallery') ?>"><i class="fas fa-circle"></i> Videos</a></li>
+                                    <li><a href="<?= url('news') ?>"><i class="fas fa-circle"></i> News & Events</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -185,12 +185,11 @@
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="mobile-dropdown-content">
-                    <a href="#who-we-are" onclick="toggleMenu()"><i class="fas fa-school"></i> Who We Are</a>
-                    <a href="#mission" onclick="toggleMenu()"><i class="fas fa-bullseye"></i> Mission & Vision</a>
-                    <a href="#team" onclick="toggleMenu()"><i class="fas fa-users"></i> Administration</a>
-                    <a href="#history" onclick="toggleMenu()"><i class="fas fa-history"></i> Our History</a>
-                    <a href="#programs" onclick="toggleMenu()"><i class="fas fa-book-open"></i> Programs</a>
-                    <a href="#gallery" onclick="toggleMenu()"><i class="fas fa-images"></i> Photo Gallery</a>
+                    <a href="<?= url('about') ?>" onclick="toggleMenu()"><i class="fas fa-school"></i> Who We Are</a>
+                    <a href="<?= url('about#mvp-about-section') ?>" onclick="toggleMenu()"><i class="fas fa-bullseye"></i> Mission & Vision</a>
+                    <a href="<?= url('administration') ?>" onclick="toggleMenu()"><i class="fas fa-users"></i> Administration</a>
+                    <a href="<?= url('program') ?>" onclick="toggleMenu()"><i class="fas fa-book-open"></i> Programs</a>
+                    <a href="<?= url('gallery') ?>" onclick="toggleMenu()"><i class="fas fa-images"></i> Photo Gallery</a>
                 </div>
             </li>
 

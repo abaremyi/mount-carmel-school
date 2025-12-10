@@ -60,7 +60,7 @@ include_once get_layout('header');
                     </div>
                 </div>
                 <div class="who-image">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'%3E%3Crect fill='%2300796B' width='600' height='450'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='white' text-anchor='middle' dy='.3em'%3ESchool Campus%3C/text%3E%3C/svg%3E"
+                    <img src="<?= img_url('about/school-venue-1.jpg') ?>"
                         alt="Mount Carmel School Campus">
                 </div>
             </div>
@@ -68,7 +68,7 @@ include_once get_layout('header');
     </section>
 
     <!-- NEW: Mission, Vision & Philosophy -->
-    <section class="mvp-about-section tmp-section"> <!-- Changed from mvp-section -->
+    <section class="mvp-about-section tmp-section" id="mvp-about-section"> <!-- Changed from mvp-section -->
         <div class="container">
             <div class="w3l-heading">
                 <h2 class="w3ls_head">Mission, Vision & Philosophy</h2>
@@ -76,9 +76,9 @@ include_once get_layout('header');
             <div class="mvp-about-container"> <!-- Changed from mvp-container -->
                 <!-- Mission Card -->
                 <div class="cause-about-card"> <!-- Changed from cause-card -->
-                    <div class="bg-about-thumbnail"></div> <!-- Changed from bg-thumbnail -->
+                    <div class="bg-about-thumbnail" style="background-image: url('<?= img_url('about/about-1.jpg') ?>')"></div> <!-- Changed from bg-thumbnail -->
                     <div class="card-about-content"> <!-- Changed from card-content -->
-                        <img src="https://cdn-icons-png.flaticon.com/128/2769/2769339.png" alt="Mission Icon"
+                        <img src="<?= img_url('about/mission2.png') ?>" alt="Mission Icon"
                             class="card-about-icon"> <!-- Changed from card-icon -->
                         <h3>Our Mission</h3>
                         <p>To train children to honor GOD, develop their potential skills; achieve excellence in
@@ -88,9 +88,9 @@ include_once get_layout('header');
     
                 <!-- Vision Card -->
                 <div class="cause-about-card">
-                    <div class="bg-about-thumbnail"></div>
+                    <div class="bg-about-thumbnail" style="background-image: url('<?= img_url('about/about-2.jpg') ?>')"></div>
                     <div class="card-about-content">
-                        <img src="https://cdn-icons-png.flaticon.com/128/3094/3094837.png" alt="Vision Icon"
+                        <img src="<?= img_url('about/vision.png') ?>" alt="Vision Icon"
                             class="card-about-icon">
                         <h3>Our Vision</h3>
                         <p>To bless Rwanda with GOD fearing citizens, highly skilled and generation transformers for
@@ -100,9 +100,9 @@ include_once get_layout('header');
     
                 <!-- Philosophy Card -->
                 <div class="cause-about-card">
-                    <div class="bg-about-thumbnail"></div>
+                    <div class="bg-about-thumbnail" style="background-image: url('<?= img_url('about/about-3.jpg') ?>')"></div>
                     <div class="card-about-content">
-                        <img src="https://cdn-icons-png.flaticon.com/128/2821/2821786.png" alt="Philosophy Icon"
+                        <img src="<?= img_url('about/philosophy.png') ?>" alt="Philosophy Icon"
                             class="card-about-icon">
                         <h3>Our Philosophy</h3>
                         <p>We believe in holistic education that nurtures the mind, body, and spirit. Every child is
@@ -210,7 +210,7 @@ include_once get_layout('header');
                 </div>
                 <div class="history-image">
                     <div class="history-image-container">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'%3E%3Crect fill='%2300796B' width='600' height='450'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='white' text-anchor='middle' dy='.3em'%3ESchool History%3C/text%3E%3C/svg%3E" 
+                        <img src="<?= img_url('about/school-venue-2.jpg') ?>" 
                              alt="Mount Carmel School History">
                         <div class="history-image-caption">
                             <h4>Since 2013</h4>
@@ -254,13 +254,13 @@ include_once get_layout('header');
     </section>
     
     <!-- Quick Links to Detailed Pages -->
-    <section class="quick-links tmp-section">
+    <section class="quick-links tmp-section" >
         <div class="container">
             <div class="w3l-heading">
                 <h2 class="w3ls_head">Explore More</h2>
             </div>
             <div class="links-grid">
-                <a href="/programs" class="link-card">
+                <a href="<?= url('programs') ?>" class="link-card">
                     <div class="link-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
@@ -270,7 +270,7 @@ include_once get_layout('header');
                         <i class="fas fa-arrow-right"></i>
                     </div>
                 </a>
-                <a href="/administration" class="link-card">
+                <a href="<?= url('administration') ?>" class="link-card">
                     <div class="link-icon">
                         <i class="fas fa-user-tie"></i>
                     </div>
@@ -280,7 +280,7 @@ include_once get_layout('header');
                         <i class="fas fa-arrow-right"></i>
                     </div>
                 </a>
-                <a href="/gallery" class="link-card">
+                <a href="<?= url('gallery') ?>" class="link-card">
                     <div class="link-icon">
                         <i class="fas fa-images"></i>
                     </div>

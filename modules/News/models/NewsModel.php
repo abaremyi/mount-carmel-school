@@ -1,3 +1,4 @@
+
 <?php
 /**
  * News Model
@@ -17,14 +18,22 @@ class NewsModel {
      * @param int $limit Number of items to retrieve
      * @param int $offset Starting position
      * @param string $category Optional category filter
+     * @param bool $upcoming Optional upcoming events filter
      * @return array Array of news items
      */
-    public function getNewsItems($limit = 4, $offset = 0, $category = null) {
+    public function getNewsItems($limit = 4, $offset = 0, $category = null, $upcoming = false) {
         try {
             $whereClause = "WHERE status = 'published'";
+            $orderClause = "ORDER BY published_date DESC, created_at DESC";
             
             if ($category) {
                 $whereClause .= " AND category = :category";
+            }
+            
+            if ($upcoming) {
+                $currentDate = date('Y-m-d');
+                $whereClause .= " AND published_date >= :current_date";
+                $orderClause = "ORDER BY published_date ASC";
             }
             
             $query = "SELECT 
@@ -38,16 +47,21 @@ class NewsModel {
                         published_date,
                         author,
                         views,
-                        created_at
+                        created_at,
+                        event_location
                       FROM news_events 
                       $whereClause
-                      ORDER BY published_date DESC, created_at DESC 
+                      $orderClause
                       LIMIT :limit OFFSET :offset";
             
             $stmt = $this->db->prepare($query);
             
             if ($category) {
                 $stmt->bindParam(':category', $category, PDO::PARAM_STR);
+            }
+            
+            if ($upcoming) {
+                $stmt->bindParam(':current_date', $currentDate, PDO::PARAM_STR);
             }
             
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
@@ -204,6 +218,45 @@ class NewsModel {
                       LIMIT :limit";
             
             $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            error_log("News Model Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get upcoming events
+     * @param int $limit Number of events
+     * @return array Array of upcoming events
+     */
+    public function getUpcomingEvents($limit = 4) {
+        try {
+            $currentDate = date('Y-m-d');
+            
+            $query = "SELECT 
+                        id,
+                        title,
+                        excerpt,
+                        description,
+                        image_url,
+                        thumbnail_url,
+                        category,
+                        published_date,
+                        event_location
+                      FROM news_events 
+                      WHERE status = 'published' 
+                      AND category = 'event'
+                      AND published_date >= :current_date
+                      ORDER BY published_date ASC 
+                      LIMIT :limit";
+            
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':current_date', $currentDate, PDO::PARAM_STR);
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             

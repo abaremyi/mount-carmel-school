@@ -35,7 +35,8 @@ try {
             $params = [
                 'limit' => isset($_GET['limit']) ? (int)$_GET['limit'] : 4,
                 'offset' => isset($_GET['offset']) ? (int)$_GET['offset'] : 0,
-                'category' => isset($_GET['category']) ? $_GET['category'] : null
+                'category' => isset($_GET['category']) ? $_GET['category'] : null,
+                'upcoming' => isset($_GET['upcoming']) ? filter_var($_GET['upcoming'], FILTER_VALIDATE_BOOLEAN) : false
             ];
 
             $result = $newsController->getNewsItems($params);
@@ -69,10 +70,18 @@ try {
             echo json_encode($result);
             break;
 
+        case 'get_upcoming':
+        case 'getUpcoming':
+            // Get upcoming events
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 4;
+            $result = $newsController->getUpcomingEvents($limit);
+            echo json_encode($result);
+            break;
+
         default:
             echo json_encode([
                 'success' => false,
-                'message' => 'Invalid action. Available actions: get_news, get_news_by_id, get_related, get_latest'
+                'message' => 'Invalid action. Available actions: get_news, get_news_by_id, get_related, get_latest, get_upcoming'
             ]);
             break;
     }

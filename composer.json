@@ -16,8 +16,13 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "modules/"
-        }
+            "App\\": "modules/",
+            "Config\\": "config/"
+        },
+        "files": [
+            "config/paths.php",
+            "config/config.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [

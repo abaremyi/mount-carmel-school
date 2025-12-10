@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2025 at 07:54 PM
+-- Generation Time: Dec 09, 2025 at 10:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -103,21 +103,158 @@ CREATE TABLE `news_events` (
   `category` enum('news','event','announcement','achievement') DEFAULT 'news',
   `author` varchar(100) DEFAULT NULL,
   `published_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
   `status` enum('draft','published','archived') DEFAULT 'draft',
   `views` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `featured` tinyint(1) DEFAULT 0,
+  `event_location` varchar(255) DEFAULT NULL,
+  `event_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `news_events`
 --
 
-INSERT INTO `news_events` (`id`, `title`, `excerpt`, `description`, `image_url`, `thumbnail_url`, `category`, `author`, `published_date`, `status`, `views`, `created_at`, `updated_at`) VALUES
-(1, 'Annual Sports Day 2024', 'Join us for our exciting Annual Sports Day featuring various competitions and activities for all students.', 'Our Annual Sports Day is a celebration of athleticism, teamwork, and school spirit. Students from all grades participate in various sporting events including track and field, basketball, football, and many more. This year promises to be even more exciting with new activities and competitions. Parents and guardians are warmly invited to attend and cheer for their children.', '/news/news-1.jpg', NULL, 'event', 'Admin', '2024-12-15', 'published', 0, '2025-11-25 21:57:33', '2025-11-28 08:35:27'),
-(2, 'Science Fair Winners', 'Congratulations to our students who won top prizes at the Regional Science Fair competition.', 'We are proud to announce that our students have excelled at the Regional Science Fair, bringing home multiple awards including first place in the Biology category and second place in Physics. Their innovative projects and dedication to scientific inquiry have made Mount Carmel School proud. Special congratulations to Sarah Mugisha, John Kamanzi, and their team members for their outstanding achievements.', '/news/news-2.jpg', NULL, 'achievement', 'Admin', '2024-12-10', 'published', 0, '2025-11-25 21:57:33', '2025-11-28 08:35:27'),
-(3, 'Parent-Teacher Meeting', 'Quarterly parent-teacher meeting scheduled to discuss student progress and development.', 'We invite all parents to attend our quarterly parent-teacher meeting where we will discuss student progress, upcoming events, and ways parents can support their children\'s learning at home. This is an excellent opportunity to meet with teachers, understand your child\'s academic journey, and participate in planning for the next term. Refreshments will be served.', '/news/news-3.jpg', NULL, 'announcement', 'Admin', '2024-12-05', 'published', 0, '2025-11-25 21:57:33', '2025-11-28 08:35:27'),
-(4, 'New Library Inauguration', 'Our new state-of-the-art library has been officially inaugurated with over 5000 books.', 'Mount Carmel School is proud to announce the inauguration of our new library facility, equipped with modern amenities, comfortable reading spaces, and over 5,000 books covering various subjects and interests. The library features dedicated sections for different age groups, computer stations for research, and quiet study areas. We thank all our donors and supporters who made this project possible.', '/news/news-4.jpg', NULL, 'news', 'Admin', '2024-11-28', 'published', 0, '2025-11-25 21:57:33', '2025-11-28 08:35:27');
+INSERT INTO `news_events` (`id`, `title`, `excerpt`, `description`, `image_url`, `thumbnail_url`, `category`, `author`, `published_date`, `end_date`, `status`, `views`, `created_at`, `updated_at`, `featured`, `event_location`, `event_time`, `end_time`) VALUES
+(1, 'Annual Sports Day 2024', 'Join us for our exciting Annual Sports Day featuring various competitions and activities for all students.', 'Our Annual Sports Day is a celebration of athleticism, teamwork, and school spirit. Students from all grades participate in various sporting events including track and field, basketball, football, and many more. This year promises to be even more exciting with new activities and competitions. Parents and guardians are warmly invited to attend and cheer for their children.', '/news/news-1.jpg', NULL, 'event', 'Admin', '2026-01-02', NULL, 'published', 1, '2025-11-25 21:57:33', '2025-12-06 22:14:47', 1, 'School Playground', '09:00:00', NULL),
+(2, 'Science Fair Winners', 'Congratulations to our students who won top prizes at the Regional Science Fair competition.', 'We are proud to announce that our students have excelled at the Regional Science Fair, bringing home multiple awards including first place in the Biology category and second place in Physics. Their innovative projects and dedication to scientific inquiry have made Mount Carmel School proud. Special congratulations to Sarah Mugisha, John Kamanzi, and their team members for their outstanding achievements.', '/news/news-2.jpg', NULL, 'achievement', 'Admin', '2025-12-14', NULL, 'published', 1, '2025-11-25 21:57:33', '2025-12-06 22:14:47', 0, 'Science Lab', '10:00:00', NULL),
+(3, 'Parent-Teacher Meeting', 'Quarterly parent-teacher meeting scheduled to discuss student progress and development.', 'We invite all parents to attend our quarterly parent-teacher meeting where we will discuss student progress, upcoming events, and ways parents can support their children\'s learning at home. This is an excellent opportunity to meet with teachers, understand your child\'s academic journey, and participate in planning for the next term. Refreshments will be served.', '/news/news-3.jpg', NULL, 'announcement', 'Admin', '2025-12-26', NULL, 'published', 3, '2025-11-25 21:57:33', '2025-12-07 18:32:33', 0, 'Main Hall', '14:00:00', NULL),
+(4, 'New Library Inauguration', 'Our new state-of-the-art library has been officially inaugurated with over 5000 books.', 'Mount Carmel School is proud to announce the inauguration of our new library facility, equipped with modern amenities, comfortable reading spaces, and over 5,000 books covering various subjects and interests. The library features dedicated sections for different age groups, computer stations for research, and quiet study areas. We thank all our donors and supporters who made this project possible.', '/news/news-4.jpg', NULL, 'news', 'Admin', '2025-12-19', NULL, 'published', 1, '2025-11-25 21:57:33', '2025-12-06 22:14:47', 0, 'Library', '15:00:00', NULL),
+(5, 'New Computer Lab Opens', 'Our new computer lab with 30 modern computers is now open for students.', 'Mount Carmel School is excited to announce the opening of our new state-of-the-art computer laboratory. Equipped with 30 modern computers, high-speed internet, and educational software, this facility will enhance digital literacy among our students.', '/news/computer-lab.jpg', NULL, 'news', 'Admin', '2024-11-15', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
+(6, 'Math Olympiad Winners', 'Our students win gold medals in the National Math Olympiad competition.', 'Congratulations to our mathematics team for winning three gold medals in the National Math Olympiad. Their dedication and problem-solving skills have brought great honor to our school.', '/news/math-olympiad.jpg', NULL, 'achievement', 'Admin', '2024-11-10', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
+(7, 'Thanksgiving Celebration', 'Join us for our annual Thanksgiving celebration and cultural show.', 'Our annual Thanksgiving celebration will feature cultural performances, traditional food, and expressions of gratitude. All parents and guardians are invited to join this joyful occasion.', '/news/thanksgiving.jpg', NULL, 'event', 'Admin', '2025-12-09', NULL, 'published', 2, '2025-12-06 22:03:27', '2025-12-07 19:14:22', 0, NULL, NULL, NULL),
+(8, 'Exam Schedule Released', 'Important: End of term examination schedule is now available.', 'The end of term examination schedule has been released. Please check with class teachers for detailed timetables and preparation guidelines.', '/news/exam-schedule.jpg', NULL, 'announcement', 'Admin', '2024-11-12', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
+(9, 'Environmental Club Plantation Drive', 'Students plant 100 trees in the school campus as part of environmental awareness.', 'Our Environmental Club organized a successful plantation drive, planting 100 trees across the school campus. This initiative promotes environmental conservation and sustainability.', '/news/plantation-drive.jpg', NULL, 'news', 'Admin', '2024-11-08', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
+(10, 'Annual Day Preparations', 'Rehearsals for Annual Day celebrations begin next week.', 'Preparations for our Annual Day celebrations are underway. Students will participate in various performances showcasing their talents in music, dance, and drama.', '/news/annual-day.jpg', NULL, 'event', 'Admin', '2025-12-15', NULL, 'published', 1, '2025-12-06 22:03:27', '2025-12-09 20:07:59', 0, NULL, NULL, NULL),
+(11, 'Debate Competition Results', 'Mount Carmel debaters win inter-school debate competition.', 'Our debate team emerged victorious in the Inter-School Debate Competition, showcasing exceptional oratory skills and critical thinking abilities.', '/news/debate.jpg', NULL, 'achievement', 'Admin', '2024-11-05', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
+(12, 'Parent Workshop: Digital Safety', 'Free workshop for parents on digital safety and cyber security.', 'Learn how to keep your children safe online in our special workshop for parents. Experts will share practical tips and strategies for digital safety.', '/news/digital-safety.jpg', NULL, 'announcement', 'Admin', '2024-11-18', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
+(13, 'Art Exhibition Opening', 'Student art exhibition showcasing creative works from all grades.', 'Our annual art exhibition features creative works from students of all grades. Visit to appreciate the artistic talents of our young artists.', '/news/art-exhibition.jpg', NULL, 'event', 'Admin', '2025-12-11', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:14:47', 0, NULL, NULL, NULL),
+(14, 'Sports Equipment Donation', 'Local business donates new sports equipment to the school.', 'We thank XYZ Sports for their generous donation of new sports equipment including footballs, basketballs, and athletic gear.', '/news/sports-donation.jpg', NULL, 'news', 'Admin', '2024-11-03', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `permissions`
+--
+
+CREATE TABLE `permissions` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `module` varchar(50) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`, `description`, `module`, `action`, `created_at`) VALUES
+(1, 'view_dashboard', 'View dashboard', 'dashboard', 'view', '2025-12-09 16:32:49'),
+(2, 'view_users', 'View users list', 'users', 'view', '2025-12-09 16:32:49'),
+(3, 'create_users', 'Create new users', 'users', 'create', '2025-12-09 16:32:49'),
+(4, 'edit_users', 'Edit users', 'users', 'edit', '2025-12-09 16:32:49'),
+(5, 'delete_users', 'Delete users', 'users', 'delete', '2025-12-09 16:32:49'),
+(6, 'view_roles', 'View roles', 'roles', 'view', '2025-12-09 16:32:49'),
+(7, 'create_roles', 'Create roles', 'roles', 'create', '2025-12-09 16:32:49'),
+(8, 'edit_roles', 'Edit roles', 'roles', 'edit', '2025-12-09 16:32:49'),
+(9, 'delete_roles', 'Delete roles', 'roles', 'delete', '2025-12-09 16:32:49'),
+(10, 'assign_permissions', 'Assign permissions to roles', 'roles', 'assign_permissions', '2025-12-09 16:32:49'),
+(11, 'view_students', 'View students', 'students', 'view', '2025-12-09 16:32:49'),
+(12, 'create_students', 'Add students', 'students', 'create', '2025-12-09 16:32:49'),
+(13, 'edit_students', 'Edit student info', 'students', 'edit', '2025-12-09 16:32:49'),
+(14, 'delete_students', 'Remove students', 'students', 'delete', '2025-12-09 16:32:49'),
+(15, 'view_staff', 'View staff', 'staff', 'view', '2025-12-09 16:32:49'),
+(16, 'create_staff', 'Add staff', 'staff', 'create', '2025-12-09 16:32:49'),
+(17, 'edit_staff', 'Edit staff info', 'staff', 'edit', '2025-12-09 16:32:49'),
+(18, 'delete_staff', 'Remove staff', 'staff', 'delete', '2025-12-09 16:32:49'),
+(19, 'manage_classes', 'Manage classes', 'academics', 'manage_classes', '2025-12-09 16:32:49'),
+(20, 'manage_subjects', 'Manage subjects', 'academics', 'manage_subjects', '2025-12-09 16:32:49'),
+(21, 'manage_timetable', 'Manage timetable', 'academics', 'manage_timetable', '2025-12-09 16:32:49'),
+(22, 'view_finances', 'View finances', 'finance', 'view', '2025-12-09 16:32:49'),
+(23, 'manage_fees', 'Manage fee structure', 'finance', 'manage_fees', '2025-12-09 16:32:49'),
+(24, 'process_payments', 'Process payments', 'finance', 'process_payments', '2025-12-09 16:32:49'),
+(25, 'manage_news', 'Manage news & events', 'website', 'manage_news', '2025-12-09 16:32:49'),
+(26, 'manage_gallery', 'Manage gallery', 'website', 'manage_gallery', '2025-12-09 16:32:49'),
+(27, 'manage_testimonials', 'Manage testimonials', 'website', 'manage_testimonials', '2025-12-09 16:32:49'),
+(28, 'manage_sliders', 'Manage hero sliders', 'website', 'manage_sliders', '2025-12-09 16:32:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` text DEFAULT NULL,
+  `is_super_admin` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `description`, `is_super_admin`, `created_at`, `updated_at`) VALUES
+(1, 'Super Admin', 'Has full system access', 1, '2025-12-09 16:32:49', '2025-12-09 16:32:49'),
+(2, 'Administrator', 'School administration staff', 0, '2025-12-09 16:32:49', '2025-12-09 16:32:49'),
+(3, 'Teacher', 'Teaching staff', 0, '2025-12-09 16:32:49', '2025-12-09 16:32:49'),
+(4, 'Parent', 'Student parents', 0, '2025-12-09 16:32:49', '2025-12-09 16:32:49'),
+(5, 'Student', 'School students', 0, '2025-12-09 16:32:49', '2025-12-09 16:32:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_permissions`
+--
+
+CREATE TABLE `role_permissions` (
+  `id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `role_permissions`
+--
+
+INSERT INTO `role_permissions` (`id`, `role_id`, `permission_id`, `created_at`) VALUES
+(1, 1, 19, '2025-12-09 16:32:49'),
+(2, 1, 20, '2025-12-09 16:32:49'),
+(3, 1, 21, '2025-12-09 16:32:49'),
+(4, 1, 1, '2025-12-09 16:32:49'),
+(5, 1, 23, '2025-12-09 16:32:49'),
+(6, 1, 24, '2025-12-09 16:32:49'),
+(7, 1, 22, '2025-12-09 16:32:49'),
+(8, 1, 10, '2025-12-09 16:32:49'),
+(9, 1, 7, '2025-12-09 16:32:49'),
+(10, 1, 9, '2025-12-09 16:32:49'),
+(11, 1, 8, '2025-12-09 16:32:49'),
+(12, 1, 6, '2025-12-09 16:32:49'),
+(13, 1, 16, '2025-12-09 16:32:49'),
+(14, 1, 18, '2025-12-09 16:32:49'),
+(15, 1, 17, '2025-12-09 16:32:49'),
+(16, 1, 15, '2025-12-09 16:32:49'),
+(17, 1, 12, '2025-12-09 16:32:49'),
+(18, 1, 14, '2025-12-09 16:32:49'),
+(19, 1, 13, '2025-12-09 16:32:49'),
+(20, 1, 11, '2025-12-09 16:32:49'),
+(21, 1, 3, '2025-12-09 16:32:49'),
+(22, 1, 5, '2025-12-09 16:32:49'),
+(23, 1, 4, '2025-12-09 16:32:49'),
+(24, 1, 2, '2025-12-09 16:32:49'),
+(25, 1, 26, '2025-12-09 16:32:49'),
+(26, 1, 25, '2025-12-09 16:32:49'),
+(27, 1, 28, '2025-12-09 16:32:49'),
+(28, 1, 27, '2025-12-09 16:32:49');
 
 -- --------------------------------------------------------
 
@@ -149,6 +286,36 @@ INSERT INTO `testimonials` (`id`, `name`, `role`, `content`, `image_url`, `ratin
 (4, 'Robert Brown', 'Parent of Grade 2 Student', 'The teachers at Mount Carmel are exceptional. They truly care about each student\'s success and provide personalized support when needed.', '/testimonials/parent-4.jpg', 4, 0, 'active', '2025-11-28 14:54:03', '2025-11-29 10:08:51'),
 (5, 'Maria Garcia', 'Parent of Grade 4 Student', 'The school\'s facilities are outstanding, and the extracurricular activities have helped my child discover new interests and talents.', '/testimonials/parent-5.jpg', 5, 0, 'active', '2025-11-28 14:54:03', '2025-11-29 10:08:51');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `photo` varchar(255) DEFAULT 'default-profile.jpg',
+  `role_id` int(11) NOT NULL,
+  `status` enum('active','inactive','pending','suspended') DEFAULT 'pending',
+  `last_login` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `username`, `password`, `photo`, `role_id`, `status`, `last_login`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'BAHATI', 'Gerchom', 'info@mountcarmel.ac.rw', '0787254817', 'superadmin', '$2y$10$e04TKyX.M2QOvnjXJf9atueV0Wqe6Ox8oyiSwlF4pn5d4m4GixXc6', 'default-profile.jpg', 1, 'active', NULL, NULL, '2025-12-09 16:32:49', '2025-12-09 16:32:49');
+
 --
 -- Indexes for dumped tables
 --
@@ -178,10 +345,43 @@ ALTER TABLE `news_events`
   ADD KEY `category` (`category`);
 
 --
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `permission_unique` (`module`,`action`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `role_permission_unique` (`role_id`,`permission_id`),
+  ADD KEY `permission_id` (`permission_id`);
+
+--
 -- Indexes for table `testimonials`
 --
 ALTER TABLE `testimonials`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `phone` (`phone`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -203,13 +403,55 @@ ALTER TABLE `hero_sliders`
 -- AUTO_INCREMENT for table `news_events`
 --
 ALTER TABLE `news_events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `testimonials`
 --
 ALTER TABLE `testimonials`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `role_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

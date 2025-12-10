@@ -1,176 +1,242 @@
 <?php
+/**
+ * Auth API Endpoint
+ * File: modules/Authentication/api/authApi.php
+ * Handles all authentication API requests
+ */
 
-// autoload.php should include all necessary classes (like controllers, DB classes)
-require_once '../../../config/database.php';
-require_once '../controllers/AuthenticationController.php';
-require_once '../../../helpers/JWTHandler.php'; // Include your JWT helper
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
-// Initialize JWT handler
-$jwt = new JWTHandler();
+// Calculate the root path - go up 4 levels from this file's location
+$root_path = dirname(dirname(dirname(dirname(__FILE__))));
+require_once $root_path . "/config/paths.php";
+require_once $root_path . "/config/database.php";
+require_once $root_path . "/modules/Authentication/controllers/AuthController.php";
+require_once $root_path . "/modules/Authentication/models/UserModel.php";
 
-// $action = $_GET['action'] ?? '';
+// Get action from query parameter or request body
 $action = isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : '');
 
-switch ($action) {
-        
-    case 'login':
-        $authController = new AuthenticationController();
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
-    
-        // Call the login method to verify credentials
-        $result = $authController->loginUser($username, $password);
-    
-        if ($result['success']) {
-            echo json_encode([
-                'success' => true, 
-                'message' => 'Login successful.', 
-                'roleid' => $result['roleid'],   
-                'status' => $result['status'],   
-                'rights' => $result['rights']   // ✅ Send rights as an array
-            ]);
-        } else {
-            echo json_encode(['success' => false, 'message' => $result['message']]);
-        }
-        exit;
+// Log the request for debugging
+error_log("Auth API called with action: " . $action);
 
-    case 'register':
-        $authController = new AuthenticationController();
-        $firstname = $_POST['firstname'] ?? '';
-        $lastname = $_POST['lastname'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
-        $username = $_POST['username'] ?? '';
-        $address = $_POST['address'] ?? '';
-       
-        $startingDate = $_POST['startingDate'] ?? '';
-        $roleid = $_POST['roleid'] ?? '';
-        
-        // echo '<script>console.log("phone:'.$phone.', email:'.$email.', password:'.$password.', username:'.$username.' ")</script>';
-
-        // Call the register method and check if the registration is successful
-        $result = $authController->registerUser($firstname, $lastname, $phone, $email, $password, $username, $address, $startingDate, $roleid);
-
-        if ($result['success']) {
-            echo json_encode(['success' => true, 'message' => $result['message']]);
-        } else {
-            echo json_encode(['success' => false, 'message' => $result['message']]);
-        }
-        exit;
-
-    case 'adminRegister':
-        $authController = new AuthenticationController();
-        $firstname = $_POST['firstname'] ?? '';
-        $lastname = $_POST['lastname'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
-        $username = $_POST['username'] ?? '';
-        $address = $_POST['address'] ?? '';
-        
-        $startingDate = $_POST['startingDate'] ?? '';
-        $roleid = $_POST['roleid'] ?? '';
-        
-        // echo '<script>console.log("phone:'.$phone.', email:'.$email.', password:'.$password.', username:'.$username.' ")</script>';
-
-        // Call the register method and check if the registration is successful
-        $result = $authController->adminRegisterUser($firstname, $lastname, $phone, $email, $password, $username, $address, $startingDate, $roleid);
-
-        if ($result['success']) {
-            echo json_encode(['success' => true, 'message' => $result['message']]);
-        } else {
-            echo json_encode(['success' => false, 'message' => $result['message']]);
-        }
-        exit;
-        
-    case 'checkEmail':
-        $authController = new AuthenticationController();
-        $email = $_POST['email'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-
-        // Check if the email already exists in the database
-        if ($authController->userModel->emailExists($email, $phone)) {
-            echo json_encode(['exists' => true]);
-        } else {
-            echo json_encode(['exists' => false]);
-        }
-        exit;
-        
-    case 'verifyEmail':
-        $authController = new AuthenticationController();
-        $email = $_POST['email'] ?? '';
-
-        // Check if the email already exists in the database
-        if ($authController->userModel->verifyEmail($email)) {
-            echo json_encode(['success' => true, 'message' => 'Email Found!']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Email Not Found!']);
-        }
-        exit;
-
-    case 'reset_password':
-        $authController = new AuthenticationController();
-        $password = $_POST['password'] ?? '';
-        $email = $_POST['email'] ?? '';
-        
-        $result = $authController->resetUserPassword($email,$password);
-
-        if ($result['success']) {
-            echo json_encode(['success' => true, 'message' => $result['message']]);
-        } else {
-            echo json_encode(['success' => false, 'message' => $result['message']]);
-        }
-        exit;
-    
-    case 'fetchFarmer':
-        $authController = new AuthenticationController();
-
-        // Check if the email already exists in the database
-        $farmers = $authController->userModel->farmerFetch();
-        if ($farmers) {
-            echo json_encode($farmers);
-        } else {
-            echo json_encode(['exists' => false, 'message' => 'No Farmer Found']);
-        }
-        exit;
-    
-    case 'fetchUsers':
-        $authController = new AuthenticationController();
-
-        $users = $authController->usersFetch();
-        if ($users) {
-            echo json_encode($users);
-        } else {
-            echo json_encode(['exists' => false, 'message' => 'No Farmer Found']);
-        }
-        exit;
-
-    case 'updateUserStatus':
-        $userId = $_POST['userId'];
-        $status = $_POST['status'];
-        $authController = new AuthenticationController();
-        $result = $authController->updateUserStatus($userId, $status);
-        echo json_encode($result);
-        exit;
-    
-    case 'deleteUser':
-        $userId = $_POST['userId'];
-        $authController = new AuthenticationController();
-        $result = $authController->deleteUser($userId);
-        echo json_encode($result);
-        exit;
-    
-    case 'viewUserDetails':
-        $userId = $_POST['userId'];
-        $authController = new AuthenticationController();
-        $result = $authController->viewUserDetails($userId);
-        echo json_encode($result);
-        exit;
-
-    default:
-        echo json_encode(['success' => false, 'message' => 'Invalid action.']);
-        break;
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
+
+try {
+    $authController = new AuthController();
+
+    switch ($action) {
+        case 'login':
+            // Get JSON input or form data
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input) {
+                $input = $_POST;
+            }
+            
+            $identifier = $input['identifier'] ?? '';
+            $password = $input['password'] ?? '';
+            
+            if (empty($identifier) || empty($password)) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Email/Phone and password are required'
+                ]);
+                exit;
+            }
+            
+            $result = $authController->login($identifier, $password);
+            echo json_encode($result);
+            break;
+
+        case 'register':
+            // Get input data
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input) {
+                $input = $_POST;
+            }
+            
+            // Validate required fields
+            $required = ['firstname', 'lastname', 'email', 'phone', 'password'];
+            foreach ($required as $field) {
+                if (empty($input[$field])) {
+                    echo json_encode([
+                        'success' => false, 
+                        'message' => "Missing required field: $field"
+                    ]);
+                    exit;
+                }
+            }
+            
+            // Default role for registration (Student)
+            $input['role_id'] = $input['role_id'] ?? 5;
+            $input['status'] = 'pending';
+            $input['created_by'] = 1; // Default to super admin
+            
+            $result = $authController->register($input, $input['created_by']);
+            echo json_encode($result);
+            break;
+
+        case 'checkEmail':
+            // Check if email exists
+            $email = $_POST['email'] ?? '';
+            if (empty($email)) {
+                echo json_encode(['exists' => false]);
+                exit;
+            }
+            
+            $userModel = new UserModel(Database::getInstance());
+            $exists = $userModel->userExists($email, ''); // Check only email
+            echo json_encode(['exists' => $exists]);
+            break;
+
+        case 'forgot-password':
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input) {
+                $input = $_POST;
+            }
+            
+            $email = $input['email'] ?? '';
+            
+            if (empty($email)) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Email is required'
+                ]);
+                exit;
+            }
+            
+            $result = $authController->forgotPassword($email);
+            echo json_encode($result);
+            break;
+
+        case 'reset-password':
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input) {
+                $input = $_POST;
+            }
+            
+            $email = $input['email'] ?? '';
+            $otp = $input['otp'] ?? '';
+            $password = $input['password'] ?? '';
+            
+            if (empty($email) || empty($password)) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Email and password are required'
+                ]);
+                exit;
+            }
+            
+            if (empty($otp)) {
+                // Allow OTP-less reset for demo
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'OTP is required for security'
+                ]);
+                exit;
+            }
+            
+            $result = $authController->resetPassword($email, $otp, $password);
+            echo json_encode($result);
+            break;
+
+        case 'verify-otp':
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input) {
+                $input = $_POST;
+            }
+            
+            $email = $input['email'] ?? '';
+            $otp = $input['otp'] ?? '';
+            
+            if (empty($email) || empty($otp)) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Email and OTP are required'
+                ]);
+                exit;
+            }
+            
+            $result = $authController->verifyOtp($email, $otp);
+            echo json_encode($result);
+            break;
+
+        case 'validate':
+            $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+            if (strpos($token, 'Bearer ') === 0) {
+                $token = substr($token, 7);
+            } else {
+                // Try to get from cookie
+                $token = $_COOKIE['auth_token'] ?? $token;
+            }
+            
+            $decoded = $authController->validateToken($token);
+            
+            if ($decoded) {
+                echo json_encode([
+                    'success' => true,
+                    'user' => [
+                        'user_id' => $decoded->user_id,
+                        'username' => $decoded->username,
+                        'firstname' => $decoded->firstname,
+                        'lastname' => $decoded->lastname,
+                        'email' => $decoded->email,
+                        'role_id' => $decoded->role_id,
+                        'role_name' => $decoded->role_name,
+                        'is_super_admin' => $decoded->is_super_admin,
+                        'permissions' => $decoded->permissions,
+                        'photo' => $decoded->photo
+                    ]
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Invalid token'
+                ]);
+            }
+            break;
+
+        case 'logout':
+            // Clear session
+            session_destroy();
+            
+            // Clear cookies
+            setcookie('auth_token', '', time() - 3600, '/');
+            
+            $result = $authController->logout();
+            echo json_encode($result);
+            break;
+
+        default:
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Invalid action',
+                'available_actions' => [
+                    'login', 'register', 'checkEmail', 'forgot-password', 
+                    'reset-password', 'verify-otp', 'validate', 'logout'
+                ]
+            ]);
+            break;
+    }
+
+} catch (Exception $e) {
+    error_log("Auth API Exception: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error occurred.',
+        'error' => $e->getMessage()
+    ]);
+}
+?>

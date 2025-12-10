@@ -1,47 +1,280 @@
-root/
-├── index.php (Main Router - UPDATED)
-├── .htaccess (UPDATED with API routes)
-├── config/
-│   ├── database.php (Your existing DB connection)
-│   └── paths.php (Your existing paths config)
-├── layouts/
-│   ├── header.php
-│   ├── navbar.php
+mount-carmel/
+├── config
+│   ├── config.php
+│   ├── database.php
+│   ├── paths.php
+│   ├── seed.php
+├── css
+│   ├── plugins
+│   │   ├── animate.min.css
+│   │   ├── bootstrap.css
+│   │   ├── bootstrap.min.css
+│   │   ├── close.png
+│   │   ├── datepicker.css
+│   │   ├── flaticon.css
+│   │   ├── flexslider.css
+│   │   ├── font-awesome-6.5.1-all.min.css
+│   │   ├── font-awesome-pro.css
+│   │   ├── magnific-popup.css
+│   │   ├── omFont.css
+│   │   ├── owl.carousel.min.css
+│   │   ├── owl.theme.default.min.css
+│   │   ├── owl.video.play.html
+│   │   ├── select2.css
+│   │   ├── themify-icons.css
+│   │   ├── vegas.slider.min.css
+│   │   └── YouTubePopUp.css
+│   ├── plugins.css
+│   ├── style-temp.css
+│   └── style.css
+├── fonts
+│   
+├── helpers
+│   ├── AuthMiddleware.php
+│   └── JWTHandler.php
+├── img
+│   ├── about
+│   ├── clients
+│   ├── gallery
+│   ├── news
+│   ├── projects
+│   ├── services
+│   ├── slider
+│   ├── team
+│   └── testimonials
+├── js
+│   ├── bootstrap.js
+│   ├── bootstrap.min.js
+│   ├── custom.js
+│   ├── datepicker.js
+│   ├── easing.js
+│   ├── imagesloaded.pkgd.min.js
+│   ├── jquery-2.1.4.min.js
+│   ├── jquery-migrate-3.4.1.min.js
+│   ├── jquery.isotope.v3.0.2.js
+│   ├── jquery.magnific-popup.js
+│   ├── jquery.stellar.min.js
+│   ├── jquery.waypoints.min.js
+│   ├── main.js
+│   ├── modernizr-2.6.2.min.js
+│   ├── move-top.js
+│   ├── owl.carousel.min.js
+│   ├── popper.min.js
+│   ├── scrollIt.min.js
+│   ├── select2.js
+│   ├── temp.js
+│   ├── vegas.slider.min.js
+│   └── YouTubePopUp.js
+├── layouts
 │   ├── footer.php
+│   ├── header.php
+│   ├── logout_modal.php
+│   ├── navbar.php
 │   └── scripts.php
-├── css/
-│   └── homepage.css (The refined CSS styles)
-├── img/
-│   ├── slider/
-│   ├── director/
-│   ├── gallery/
-│   └── news/
-├── modules/
-│   ├── General/
-│   │   └── views/
-│   │       ├── index.php (COMPLETE HOMEPAGE - UPDATED)
-│   │       ├── about.php
-│   │       ├── news.php
-│   │       ├── gallery.php
-│   │       └── contact.php
-│   ├── Contact/
-│   │   ├── api/
+├── modules
+│   ├── Authentication
+│   │   ├── api
+│   │   │   └── authApi.php
+│   │   ├── controllers
+│   │   │   └── AuthController.php
+│   │   ├── models
+│   │   │   └── UserModel.php
+│   │   ├── static
+│   │   │   └── view_user_model.php
+│   │   └── views
+│   │       ├── admin_manage_user.php
+│   │       ├── dashboard.php
+│   │       ├── forgot-password.php
+│   │       ├── login.php
+│   │       ├── logintemp.php
+│   │       ├── logout.php
+│   │       ├── manageaccount.php
+│   │       ├── profile.php
+│   │       ├── register.php
+│   │       ├── registertemp.php
+│   │       ├── resetPassword.php
+│   │       ├── users.php
+│   │       └── verifyEmail.php
+│   ├── Contact
+│   │   ├── api
 │   │   │   └── contactApi.php
-│   │   ├── models/
+│   │   ├── controllers
+│   │   │   ├── ContactController.php
+│   │   │   └── emailcongTemp.php
+│   │   ├── models
 │   │   │   └── ContactModel.php
-│   │   └── controllers/
-│   │       └── ContactController.php
-│   ├── Gallery/ (NEW MODULE)
-│   │   ├── api/
-│   │   │   └── galleryApi.php
-│   │   ├── models/
+│   │   └── views
+│   │       ├── export_subscribers.php
+│   │       ├── messages.php
+│   │       └── subscribers.php
+│   ├── Dashboard
+│   │   ├── api
+│   │   ├── controllers
+│   │   ├── models
 │   │   │   └── GalleryModel.php
-│   │   └── controllers/
-│   │       └── GalleryController.php
-│   └── News/ (NEW MODULE)
-│       ├── api/
-│       │   └── newsApi.php
-│       ├── models/
-│       │   └── NewsModel.php
-│       └── controllers/
-│           └── NewsController.php
+│   │   ├── static
+│   │   │   ├── add_package_day.php
+│   │   │   ├── add_package.php
+│   │   │   ├── add_section.php
+│   │   │   ├── admin_modals.php
+│   │   │   ├── delete_day.php
+│   │   │   ├── delete_package.php
+│   │   │   ├── delete_section.php
+│   │   │   ├── get_package_day.php
+│   │   │   ├── get_package_days.php
+│   │   │   ├── get_package.php
+│   │   │   ├── get_packages.php
+│   │   │   ├── get_page_data.php
+│   │   │   ├── get_sections.php
+│   │   │   ├── tourism_packages_management.js
+│   │   │   ├── tourism-management.js
+│   │   │   ├── update_package_day.php
+│   │   │   ├── update_package.php
+│   │   │   ├── update_page.php
+│   │   │   └── update_section.php
+│   │   └── views
+│   │       ├── admin.php
+│   │       ├── dashboard.php
+│   │       ├── gallery.php
+│   │       ├── homepage.php
+│   │       ├── locations.php
+│   │       ├── parent.php
+│   │       ├── partners.php
+│   │       ├── student.php
+│   │       ├── teacher.php
+│   │       ├── tourism_packages_mngt.php
+│   │       ├── tourism_social_mngt.php
+│   │       ├── videosManager.php
+│   │       └── welcome.php
+│   ├── Gallery
+│   │   ├── api
+│   │   │   └── galleryApi.php
+│   │   ├── controllers
+│   │   │   └── GalleryController.php
+│   │   └── models
+│   │       └── GalleryModel.php
+│   ├── General
+│   │   ├── static
+│   │   │   ├── get_news_sidebar.php
+│   │   │   ├── get_news.php
+│   │   │   ├── get_packages.php
+│   │   │   ├── get_project_gallery.php
+│   │   │   ├── get_projects.php
+│   │   │   ├── get_related_projects.php
+│   │   │   ├── getPackageDetails.php
+│   │   │   └── tourism-styles.php
+│   │   └── views
+│   │       ├── about.php
+│   │       ├── administration.php
+│   │       ├── contact.php
+│   │       ├── gallery.php
+│   │       ├── index.php
+│   │       ├── news.php
+│   │       ├── products.php
+│   │       ├── project-details.php
+│   │       ├── projects.php
+│   │       ├── service-details.php
+│   │       ├── services.php
+│   │       ├── team-single.php
+│   │       ├── team.php
+│   │       └── template.php
+│   ├── Hero
+│   │   ├── api
+│   │   │   └── heroApi.php
+│   │   ├── controllers
+│   │   │   └── HeroController.php
+│   │   └── models
+│   │       └── HeroModel.php
+│   ├── News
+│   │   ├── api
+│   │   │   └── newsApi.php
+│   │   ├── controllers
+│   │   │   └── NewsController.php
+│   │   └── models
+│   │       └── NewsModel.php
+│   ├── Newsletter
+│   │   └── api
+│   │       └── newsletterApi.php
+│   └── Testimonials
+│       ├── api
+│       │   └── testimonialsApi.php
+│       ├── controllers
+│       │   └── TestimonialController.php
+│       └── models
+│           └── TestimonialModel.php
+├── scripts
+│   └── import-database.php
+├── vendor
+│   ├── bin
+│   ├── composer
+│   │   ├── autoload_classmap.php
+│   │   ├── autoload_files.php
+│   │   ├── autoload_namespaces.php
+│   │   ├── autoload_psr4.php
+│   │   ├── autoload_real.php
+│   │   ├── autoload_static.php
+│   │   ├── ClassLoader.php
+│   │   ├── installed.json
+│   │   ├── installed.php
+│   │   ├── InstalledVersions.php
+│   │   ├── LICENSE
+│   │   └── platform_check.php
+│   ├── datatables
+│   ├── fancybox
+│   ├── firebase
+│   │   └── php-jwt
+│   │       ├── src
+│   │       │   ├── BeforeValidException.php
+│   │       │   ├── CachedKeySet.php
+│   │       │   ├── ExpiredException.php
+│   │       │   ├── JWK.php
+│   │       │   ├── JWT.php
+│   │       │   ├── JWTExceptionWithPayloadInterface.php
+│   │       │   ├── Key.php
+│   │       │   └── SignatureInvalidException.php
+│   │       ├── CHANGELOG.md
+│   │       ├── composer.json
+│   │       ├── LICENSE
+│   │       └── README.md
+│   ├── graham-campbell
+│   │   └── result-type
+│   │       ├── src
+│   │       │   ├── Error.php
+│   │       │   ├── Result.php
+│   │       │   └── Success.php
+│   │       ├── composer.json
+│   │       └── LICENSE
+│   ├── phpmailer
+│   │   └── phpmailer
+│   │       ├── language
+│   ├── phpoption
+│   │   └── phpoption
+│   ├── sweetalert
+│   │   └── sweetalert2.js
+│   ├── symfony
+│   │   ├── polyfill-ctype
+│   │   ├── polyfill-mbstring
+│   │   └── polyfill-php80
+│   ├── vlucas
+│   │   └── phpdotenv
+│   │       ├── src
+│   │       │   ├── Exception
+│   │       │   ├── Loader
+│   │       │   ├── Parser
+│   │       │   ├── Repository
+│   │       │   ├── Store
+│   │       │   ├── Util
+│   │       │   ├── Dotenv.php
+│   │       │   └── Validator.php
+│   │       ├── composer.json
+│   │       └── LICENSE
+│   └── autoload.php
+├── .env
+├── .htaccess
+├── composer.json
+├── composer.lock
+├── debug.php
+├── error.php
+├── index.php
+├── README.md
+└── test.php

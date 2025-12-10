@@ -92,12 +92,10 @@ include_once get_layout('header');
                     <div class="video-container">
                         <div class="video-wrapper">
                             <iframe 
-                                src="https://www.youtube.com/embed/H03wb1cZCSQ?si=2DbuGZ1I6otMILSY" 
+                                src="https://www.youtube.com/embed/NZI3j_XpgWM?si=dbEgYZNAuGMkrNBl" 
                                 title="Welcome to Mount Carmel School"
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                referrerpolicy="strict-origin-when-cross-origin" 
-                                allowfullscreen>
+                                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
                             </iframe>
                         </div>
                     </div>

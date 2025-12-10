@@ -1,0 +1,63 @@
+===========================================
+xxxxxxxxx VERSION 1 .HTACESS XXXXXXXXXXXXXX
+===========================================
+RewriteEngine On
+
+# Security: Prevent direct access to sensitive directories but allow API access
+RewriteCond %{REQUEST_URI} !^/modules/Contact/api/
+RewriteCond %{REQUEST_URI} !^/modules/Gallery/api/
+RewriteCond %{REQUEST_URI} !^/modules/News/api/
+RewriteRule ^(modules|config|layouts)/(.*) - [F,L]
+
+# Redirect to remove trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# Main rewrite rule - redirect all requests to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Custom error pages
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
+
+===========================================
+xxxxxxxxx VERSION 2 .HTACESS XXXXXXXXXXXXXX
+===========================================
+RewriteEngine On
+
+# ==================== SECURITY ====================
+# Block direct access to sensitive directories
+RewriteRule ^(config|helpers|vendor)/(.*) - [F,L]
+
+# Block access to .env, .htaccess, etc.
+<FilesMatch "\.(env|htaccess|log|sql|bak|swp)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# ==================== URL HANDLING ====================
+# Remove trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# Allow direct access to existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Allow direct access to API endpoints
+RewriteRule ^modules/[^/]+/api/ - [L]
+
+# Allow direct access to authentication pages (so login works without routing)
+RewriteCond %{REQUEST_URI} ^/(login|register|forgot-password|reset-password|verifyEmail|logout)$
+RewriteRule ^ - [L]
+
+# ==================== MAIN ROUTING ====================
+# Route everything else through index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# ==================== ERROR PAGES ====================
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
