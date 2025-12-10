@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2025 at 10:16 PM
+-- Generation Time: Dec 11, 2025 at 12:20 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -306,15 +306,18 @@ CREATE TABLE `users` (
   `last_login` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `reset_token` varchar(10) DEFAULT NULL,
+  `reset_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `username`, `password`, `photo`, `role_id`, `status`, `last_login`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'BAHATI', 'Gerchom', 'info@mountcarmel.ac.rw', '0787254817', 'superadmin', '$2y$10$e04TKyX.M2QOvnjXJf9atueV0Wqe6Ox8oyiSwlF4pn5d4m4GixXc6', 'default-profile.jpg', 1, 'active', NULL, NULL, '2025-12-09 16:32:49', '2025-12-09 16:32:49');
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `username`, `password`, `photo`, `role_id`, `status`, `last_login`, `created_by`, `created_at`, `updated_at`, `reset_token`, `reset_expiry`) VALUES
+(1, 'BAHATI', 'Gerchom', 'info@mountcarmel.ac.rw', '250787254817', 'superadmin', '$2y$10$U8MPqa6EFv0sKwCuUKY/sOJoBLgkbsiBlSZ4q1p4aeS84IdoDdKyq', 'default-profile.jpg', 1, 'active', '2025-12-11 00:51:36', NULL, '2025-12-09 16:32:49', '2025-12-10 22:51:36', NULL, NULL),
+(3, 'Admin', 'User', 'abaremy1997@gmail.com', '1234567890', 'admin', '$2y$10$cTKQFPz493I5.QQkU1MwzOW.YLOdQKqnHbWzpsnO13eI54jLUnCt6', 'default-profile.jpg', 1, 'active', '2025-12-10 17:27:50', 1, '2025-12-10 08:07:50', '2025-12-10 15:27:50', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -433,7 +436,7 @@ ALTER TABLE `testimonials`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
