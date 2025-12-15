@@ -27,58 +27,55 @@ include_once get_layout('header');
 
     <!-- Hero Section - Carousel -->
     <section class="hero" id="home">
-        <!-- Slide 1 -->
-        <div class="hero-slide hero-slide-1 active" style="background: linear-gradient(135deg, rgba(0, 121, 107, 0.85), rgba(26, 58, 82, 0.85)), url('<?= img_url('slider/slider-1.jpg') ?>') center/cover;">
+        <?php
+        // Fetch hero sliders from database
+        require_once $root_path . "/config/database.php";
+        $pdo = Database::getConnection();
+        
+        $stmt = $pdo->query("SELECT * FROM hero_sliders WHERE status = 'active' ORDER BY display_order");
+        $sliders = $stmt->fetchAll();
+        
+        $isFirst = true;
+        foreach ($sliders as $index => $slider):
+        ?>
+        <div class="hero-slide hero-slide-<?= $index + 1 ?> <?= $isFirst ? 'active' : '' ?>" 
+             style="background: linear-gradient(135deg, rgba(0, 121, 107, 0.85), rgba(26, 58, 82, 0.85)), url('<?= img_url($slider['image_url']) ?>') center/cover;">
             <div class="hero-content">
-                <h1>Start Your Beautiful<br>And <span class="highlight">Bright</span> Future</h1>
-                <p>Empowering students to achieve excellence through quality education, modern facilities, and dedicated faculty members.</p>
+                <h1><?= htmlspecialchars($slider['title']) ?></h1>
+                <p><?= htmlspecialchars($slider['description']) ?></p>
                 <div class="hero-buttons">
-                    <a href="#programs" class="btn btn-primary">Explore Programs</a>
-                    <a href="<?= url('contact') ?>" class="btn btn-secondary">Contact Us</a>
+                    <?php if (!empty($slider['button1_text'])): ?>
+                    <a href="<?= htmlspecialchars($slider['button1_link']) ?>" class="btn btn-primary"><?= htmlspecialchars($slider['button1_text']) ?></a>
+                    <?php endif; ?>
+                    <?php if (!empty($slider['button2_text'])): ?>
+                    <a href="<?= htmlspecialchars($slider['button2_link']) ?>" class="btn btn-secondary"><?= htmlspecialchars($slider['button2_text']) ?></a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
-
-        <!-- Slide 2 -->
-        <div class="hero-slide hero-slide-2" style="background: linear-gradient(135deg, rgba(0, 121, 107, 0.65), rgba(42, 90, 129, 0.66)), url('<?= img_url('slider/slider-2.jpg') ?>') center/cover;">
-            <div class="hero-content">
-                <h1>Excellence In <span class="highlight">Education</span><br>Since 2013</h1>
-                <p>Building tomorrow's leaders through comprehensive learning programs and character development.</p>
-                <div class="hero-buttons">
-                    <a href="#admissions" class="btn btn-primary">Apply Now</a>
-                    <a href="<?= url('about') ?>" class="btn btn-secondary">Learn More</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="hero-slide hero-slide-3" style="background: linear-gradient(135deg, rgba(0, 14, 12, 0.85), rgba(3, 7, 10, 0.85)), url('<?= img_url('slider/slider-3.jpg') ?>') center/cover;">
-            <div class="hero-content">
-                <h1>Modern <span class="highlight">Facilities</span><br>Expert Teachers</h1>
-                <p>State-of-the-art infrastructure combined with experienced educators for the best learning experience.</p>
-                <div class="hero-buttons">
-                    <a href="#facilities" class="btn btn-primary">Our Facilities</a>
-                    <a href="<?= url('gallery') ?>" class="btn btn-secondary">View Gallery</a>
-                </div>
-            </div>
-        </div>
-
+        <?php 
+        $isFirst = false;
+        endforeach; 
+        ?>
+        
         <!-- Navigation Arrows -->
+        <?php if (count($sliders) > 1): ?>
         <div class="carousel-arrow carousel-arrow-left" onclick="changeSlide(-1)">
             <i class="fas fa-chevron-left"></i>
         </div>
         <div class="carousel-arrow carousel-arrow-right" onclick="changeSlide(1)">
             <i class="fas fa-chevron-right"></i>
         </div>
-
+    
         <!-- Indicators -->
         <div class="carousel-indicators">
-            <div class="carousel-indicator active" onclick="goToSlide(0)"></div>
-            <div class="carousel-indicator" onclick="goToSlide(1)"></div>
-            <div class="carousel-indicator" onclick="goToSlide(2)"></div>
+            <?php for ($i = 0; $i < count($sliders); $i++): ?>
+            <div class="carousel-indicator <?= $i === 0 ? 'active' : '' ?>" onclick="goToSlide(<?= $i ?>)"></div>
+            <?php endfor; ?>
         </div>
+        <?php endif; ?>
     </section>
-
+    
     <!-- Welcome Section with Video -->
     <section class="welcome-section" id="welcome">
         <div class="container">

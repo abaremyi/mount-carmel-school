@@ -35,6 +35,9 @@ define('BASE_URL', $base_url);
 define('IMG_URL', BASE_URL . '/img');
 define('CSS_URL', BASE_URL . '/css');
 define('JS_URL', BASE_URL . '/js');
+define('AUTH_CSS_URL', CSS_URL . '/auth-style.css');
+define('AUTH_JS_URL', JS_URL . '/auth.js');
+define('VENDOR_URL', BASE_URL . '/vendor');
 
 // Helper functions
 function get_layout($layout_name) {
@@ -62,4 +65,12 @@ function url($path = '') {
         return BASE_URL;
     }
     return BASE_URL . '/' . ltrim($path, '/');
+}
+
+function auth_css_url() {
+    return AUTH_CSS_URL;
+}
+
+function auth_js_url() {
+    return AUTH_JS_URL;
 }

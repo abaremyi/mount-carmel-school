@@ -133,19 +133,24 @@ mount-carmel/
 │   │   │   ├── update_page.php
 │   │   │   └── update_section.php
 │   │   └── views
-│   │       ├── admin.php
-│   │       ├── dashboard.php
-│   │       ├── gallery.php
-│   │       ├── homepage.php
-│   │       ├── locations.php
-│   │       ├── parent.php
-│   │       ├── partners.php
-│   │       ├── student.php
-│   │       ├── teacher.php
-│   │       ├── tourism_packages_mngt.php
-│   │       ├── tourism_social_mngt.php
-│   │       ├── videosManager.php
-│   │       └── welcome.php
+│   │   	 	├── componets
+│   │   	    	│	   └── admin-navbar.php
+│   │   	 	│	   ├── admin-scripts.php
+│   │   	 	│       ├── admin-sidebar.php
+│   │   	 	│       └── admin-styles.php
+│   │       	├── admin.php
+│   │       	├── admin-dashboard.php
+│   │       	├── gallery-management.php
+│   │       	├── hero-sliders.php
+│   │       	├── news-events-management
+│   │       	├── page-content-management.php
+│   │       	├── team-management.php
+│   │       	├── testimonial-management.php
+│   │       	├── contact-management.php
+│   │       	├── programs-management.php
+│   │       	├── tourism_social_mngt.php
+│   │       	├── videosManager.php
+│   │       	└── welcome.php
 │   ├── Gallery
 │   │   ├── api
 │   │   │   └── galleryApi.php

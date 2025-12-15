@@ -59,10 +59,18 @@ $routes = [
     
     // Dashboard routes
     '/admin' => 'modules/Dashboard/views/admin.php',
+    '/admin/dashboard' => 'modules/Dashboard/views/admin-dashboard.php',
     '/dashboard' => 'modules/Dashboard/views/dashboard.php',
     '/parent' => 'modules/Dashboard/views/parent.php',
     '/student' => 'modules/Dashboard/views/student.php',
     '/teacher' => 'modules/Dashboard/views/teacher.php',
+    
+    // Admin management routes
+    '/admin/hero-sliders' => 'modules/Dashboard/views/hero-sliders.php',
+    '/admin/news-events' => 'modules/Dashboard/views/news-events-management.php',
+    '/admin/gallery' => 'modules/Dashboard/views/gallery-management.php',
+    '/admin/testimonials' => 'modules/Dashboard/views/testimonials-management.php',
+    '/admin/page-content' => 'modules/Dashboard/views/page-content-management.php',
     
     // API routes
     '/api/auth' => 'modules/Authentication/api/authApi.php',

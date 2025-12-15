@@ -42,64 +42,59 @@ class UserModel
      * @return array|null User data or null
      */
     public function getUserByEmailOrPhone($identifier)
-{
-    try {
-        $query = "SELECT u.*, r.name as role_name, r.is_super_admin
-                  FROM users u
-                  JOIN roles r ON u.role_id = r.id
-                  WHERE u.email = :email_id OR u.phone = :phone_id OR u.username = :username_id 
-                  LIMIT 1";
+    {
+        try {
+            $query = "SELECT u.*, r.name as role_name, r.is_super_admin
+                      FROM users u
+                      JOIN roles r ON u.role_id = r.id
+                      WHERE u.email = :email_id OR u.phone = :phone_id OR u.username = :username_id 
+                      LIMIT 1";
 
-        $stmt = $this->db->prepare($query);
+            $stmt = $this->db->prepare($query);
 
-        // FIX: Explicitly bind the identifier value to all three unique placeholders
-        $stmt->execute([
-            ':email_id' => $identifier,
-            ':phone_id' => $identifier,
-            ':username_id' => $identifier,
-        ]);
-        
-        $user = $stmt->fetch();
-        
-        // Fetch permissions here (this calls the next function we will fix)
-        if ($user) {
-            $user['permissions'] = $this->getUserPermissions($user['role_id']);
+            // Bind the identifier value to all three unique placeholders
+            $stmt->execute([
+                ':email_id' => $identifier,
+                ':phone_id' => $identifier,
+                ':username_id' => $identifier,
+            ]);
+            
+            $user = $stmt->fetch();
+            
+            // Fetch permissions
+            if ($user) {
+                $user['permissions'] = $this->getUserPermissions($user['role_id']);
+            }
+
+            return $user;
+
+        } catch (PDOException $e) {
+            error_log("User Model Error in getUserByEmailOrPhone: " . $e->getMessage());
+            return false;
         }
-
-        return $user;
-
-    } catch (PDOException $e) {
-        // We log the actual error here to help with debugging
-        error_log("User Model Error in getUserByEmailOrPhone: " . $e->getMessage());
-        // Do not return $e->errorInfo here in final code, just for dev if needed
-        // error_log("SQL Error: " . print_r($stmt->errorInfo(), true)); 
-        return false;
     }
-}
 
     private function getUserPermissions($roleId)
-{
-    try {
-        $query = "SELECT CONCAT(p.module, '.', p.action) as permission
-                  FROM role_permissions rp
-                  JOIN permissions p ON rp.permission_id = p.id
-                  WHERE rp.role_id = :role_id";
+    {
+        try {
+            $query = "SELECT CONCAT(p.module, '.', p.action) as permission
+                      FROM role_permissions rp
+                      JOIN permissions p ON rp.permission_id = p.id
+                      WHERE rp.role_id = :role_id";
 
-        $stmt = $this->db->prepare($query);
-        
-        // FIX: Change array(':role_id', $roleId) to associative syntax
-        $stmt->execute(array(':role_id' => $roleId)); 
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(array(':role_id' => $roleId)); 
 
-        // FIX: Use fetchAll to get ALL permission strings for this role
-        $permissions = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); 
-        
-        return implode(',', $permissions);
+            // Use fetchAll to get ALL permission strings for this role
+            $permissions = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); 
+            
+            return implode(',', $permissions);
 
-    } catch (PDOException $e) {
-        error_log("User Model Error in getUserPermissions: " . $e->getMessage());
-        return '';
+        } catch (PDOException $e) {
+            error_log("User Model Error in getUserPermissions: " . $e->getMessage());
+            return '';
+        }
     }
-}
 
     /**
      * Create new user
@@ -230,21 +225,41 @@ class UserModel
      * Store reset token (OTP)
      * @param int $userId User ID
      * @param string $otp OTP code
-     * @param string $expiry Expiry datetime
      * @return bool Success status
      */
-    public function storeResetToken($userId, $otp, $expiry)
+    public function storeResetToken($userId, $otp)
     {
         try {
-            $query = "UPDATE users SET reset_token = :otp, reset_expiry = :expiry WHERE id = :id";
+            // Use MySQL DATE_ADD to ensure correct timezone handling
+            $query = "UPDATE users 
+                     SET reset_token = :otp, 
+                         reset_expiry = DATE_ADD(NOW(), INTERVAL 5 MINUTE) 
+                     WHERE id = :id";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':otp', $otp, PDO::PARAM_STR);
-            $stmt->bindParam(':expiry', $expiry, PDO::PARAM_STR);
             $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-            return $stmt->execute();
+            
+            $result = $stmt->execute();
+            
+            // Debug: Check if the update was successful
+            if ($result) {
+                error_log("OTP stored successfully for user ID: {$userId}, OTP: {$otp}");
+                
+                // Verify the stored data - Fixed: use backticks for reserved word and alias
+                $verifyQuery = "SELECT reset_token, reset_expiry, NOW() as `server_time` FROM users WHERE id = :id";
+                $verifyStmt = $this->db->prepare($verifyQuery);
+                $verifyStmt->bindParam(':id', $userId, PDO::PARAM_INT);
+                $verifyStmt->execute();
+                $stored = $verifyStmt->fetch(PDO::FETCH_ASSOC);
+                error_log("Verified stored OTP: " . print_r($stored, true));
+            } else {
+                error_log("Failed to store OTP for user ID: {$userId}");
+            }
+            
+            return $result;
 
         } catch (PDOException $e) {
-            error_log("User Model Error: " . $e->getMessage());
+            error_log("User Model Error in storeResetToken: " . $e->getMessage());
             return false;
         }
     }
@@ -258,16 +273,50 @@ class UserModel
     public function verifyResetToken($email, $otp)
     {
         try {
-            $query = "SELECT id FROM users WHERE email = :email AND reset_token = :otp 
-                      AND reset_expiry > NOW()";
+            // First, let's check what's in the database
+            $debugQuery = "SELECT id, email, reset_token, reset_expiry, NOW() as current_time 
+                          FROM users WHERE email = :email";
+            $debugStmt = $this->db->prepare($debugQuery);
+            $debugStmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $debugStmt->execute();
+            $debugData = $debugStmt->fetch(PDO::FETCH_ASSOC);
+            error_log("Debug - User data for email {$email}: " . print_r($debugData, true));
+            error_log("Debug - Comparing OTP: Input='{$otp}' vs Stored='{$debugData['reset_token']}'");
+            
+            // Trim both values to remove any whitespace
+            $otp = trim($otp);
+            
+            $query = "SELECT id, reset_token, reset_expiry FROM users 
+                     WHERE email = :email AND reset_token = :otp 
+                     AND reset_expiry > NOW()";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':otp', $otp, PDO::PARAM_STR);
             $stmt->execute();
-            return $stmt->fetchColumn();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                error_log("OTP verification successful for email: {$email}");
+                return $result['id'];
+            } else {
+                error_log("OTP verification failed for email: {$email}, OTP: {$otp}");
+                
+                // Additional checks
+                $checkQuery = "SELECT id, reset_token, reset_expiry, 
+                              CASE WHEN reset_expiry > NOW() THEN 'valid' ELSE 'expired' END as status
+                              FROM users WHERE email = :email";
+                $checkStmt = $this->db->prepare($checkQuery);
+                $checkStmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $checkStmt->execute();
+                $checkResult = $checkStmt->fetch(PDO::FETCH_ASSOC);
+                error_log("Additional check: " . print_r($checkResult, true));
+                
+                return false;
+            }
 
         } catch (PDOException $e) {
-            error_log("User Model Error: " . $e->getMessage());
+            error_log("User Model Error in verifyResetToken: " . $e->getMessage());
             return false;
         }
     }

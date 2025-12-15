@@ -4,6 +4,9 @@ session_start();
 // Clear all session data
 $_SESSION = [];
 
+$root_path = dirname(dirname(dirname(dirname(__FILE__))));
+require_once $root_path . "/config/paths.php";
+
 // If it's desired to kill the session, also delete the session cookie
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
@@ -36,7 +39,7 @@ setcookie('refresh_token', '', time() - 3600, '/');
         
         // Redirect to login page after 1 second
         setTimeout(function() {
-            window.location.href = '/login';
+            window.location.href = "<?= url('login')?>";
         }, 1000);
     </script>
 </head>

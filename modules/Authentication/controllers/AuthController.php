@@ -10,6 +10,13 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/config/database.ph
 require_once dirname(__FILE__) . '/../models/UserModel.php';
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/helpers/JWTHandler.php';
 
+// Include PHPMailer
+$root_path = dirname(dirname(dirname(dirname(__FILE__))));
+require_once $root_path . '/vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class AuthController {
     private $db;
     public $userModel;
@@ -35,7 +42,7 @@ class AuthController {
             if (!$user) {
                 return [
                     'success' => false, 
-                    'message' => 'Invalid credentials: '.$identifier.' Password: '.$password,
+                    'message' => 'Invalid credentials',
                 ];
             }
 
@@ -51,7 +58,7 @@ class AuthController {
             if (!password_verify($password, $user['password'])) {
                 return [
                     'success' => false, 
-                    'message' => 'Invalid credentials(password)'
+                    'message' => 'Invalid credentials'
                 ];
             }
 
@@ -134,12 +141,12 @@ class AuthController {
             $userId = $this->userModel->createUser($data);
             
             if ($userId) {
-                // Send welcome email (optional)
+                // Send welcome email
                 $this->sendWelcomeEmail($data['email'], $data['firstname']);
                 
                 return [
                     'success' => true,
-                    'message' => 'User registered successfully',
+                    'message' => 'User registered successfully. Please check your email for confirmation.',
                     'user_id' => $userId
                 ];
             }
@@ -169,16 +176,85 @@ class AuthController {
     }
 
     /**
-     * Send welcome email (placeholder)
+     * Send welcome email to new user
      * @param string $email User email
      * @param string $name User name
-     * @return bool Always true for now
+     * @return bool Success status
      */
     private function sendWelcomeEmail($email, $name) {
-        // Implement email sending logic here
-        // Use PHPMailer or similar library
-        error_log("Welcome email would be sent to: $email ($name)");
-        return true;
+        $mail = new PHPMailer(true);
+        
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'abaremy1997@gmail.com';
+            $mail->Password   = 'emnxgufwmehjdiii';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+            
+            // Recipients
+            $mail->setFrom('abaremy1997@gmail.com', 'Mount Carmel School');
+            $mail->addAddress($email, $name);
+            
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Welcome to Mount Carmel School';
+            
+            $emailBody = "
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                    .content { padding: 30px; background-color: #f9f9f9; border-radius: 0 0 10px 10px; }
+                    .button { display: inline-block; padding: 12px 30px; background-color: #764ba2; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+                    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Welcome to Mount Carmel School!</h1>
+                    </div>
+                    <div class='content'>
+                        <p>Dear {$name},</p>
+                        <p>Thank you for registering with Mount Carmel School. We're excited to have you join our community!</p>
+                        
+                        <p><strong>What's Next?</strong></p>
+                        <ul>
+                            <li>Your account is currently pending approval</li>
+                            <li>Our administrators will review your registration</li>
+                            <li>You'll receive another email once your account is activated</li>
+                            <li>After activation, you can log in and access all features</li>
+                        </ul>
+                        
+                        <p>If you have any questions, please don't hesitate to contact us.</p>
+                        
+                        <a href='https://mountcarmel.ac.rw/login' class='button'>Visit Our Website</a>
+                    </div>
+                    <div class='footer'>
+                        <p>Mount Carmel School<br>
+                        Email: info@mountcarmel.ac.rw | Phone: +250 787 254 817</p>
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            ";
+            
+            $mail->Body = $emailBody;
+            $mail->AltBody = "Welcome to Mount Carmel School, {$name}! Your account has been created and is pending approval. You'll receive a confirmation email once your account is activated.";
+            
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Welcome email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
+        }
     }
 
     /**
@@ -332,20 +408,29 @@ class AuthController {
 
             // Generate 6-digit OTP
             $otp = sprintf("%06d", random_int(0, 999999));
-            $expiry = date('Y-m-d H:i:s', strtotime('+5 minutes'));
             
-            // Store OTP in database
-            $success = $this->userModel->storeResetToken($user['id'], $otp, $expiry);
+            // Debug logging
+            error_log("Generated OTP for {$email}: {$otp}");
+            
+            // Store OTP in database (expiry is now handled by MySQL)
+            $success = $this->userModel->storeResetToken($user['id'], $otp);
             
             if ($success) {
                 // Send OTP via email
-                $this->sendOtpEmail($user['email'], $user['firstname'], $otp);
+                $emailSent = $this->sendOtpEmail($user['email'], $user['firstname'], $otp);
                 
-                return [
-                    'success' => true, 
-                    'message' => 'OTP sent to your email',
-                    'otp' => $otp // For demo/testing only - remove in production
-                ];
+                if ($emailSent) {
+                    return [
+                        'success' => true, 
+                        'message' => 'OTP sent to your email. Please check your inbox.',
+                        'debug_otp' => $otp // REMOVE THIS IN PRODUCTION - for testing only
+                    ];
+                } else {
+                    return [
+                        'success' => false, 
+                        'message' => 'OTP generated but failed to send email. Please try again.'
+                    ];
+                }
             }
             
             return [
@@ -391,9 +476,16 @@ class AuthController {
             if ($success) {
                 // Clear reset token
                 $this->userModel->clearResetToken($userId);
+                
+                // Get user details for email
+                $user = $this->userModel->getUserById($userId);
+                
+                // Send confirmation email
+                $this->sendResetConfirmationEmail($user['email'], $user['firstname']);
+                
                 return [
                     'success' => true, 
-                    'message' => 'Password reset successfully'
+                    'message' => 'Password reset successfully. You can now login with your new password.'
                 ];
             }
             
@@ -420,7 +512,12 @@ class AuthController {
      */
     public function verifyOtp($email, $otp) {
         try {
+            // Debug logging
+            error_log("Verifying OTP for email: {$email}, OTP: {$otp}");
+            
             $userId = $this->userModel->verifyResetToken($email, $otp);
+            
+            error_log("User ID from verification: " . ($userId ? $userId : 'NULL'));
             
             if ($userId) {
                 return [
@@ -431,11 +528,11 @@ class AuthController {
             
             return [
                 'success' => false, 
-                'message' => 'Invalid or expired OTP'
+                'message' => 'Invalid or expired OTP. Please request a new one.'
             ];
 
         } catch (Exception $e) {
-            error_log("Auth Controller Error: " . $e->getMessage());
+            error_log("Auth Controller Error in verifyOtp: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => 'Failed to verify OTP.',
@@ -445,29 +542,183 @@ class AuthController {
     }
 
     /**
-     * Send OTP email (placeholder)
+     * Send OTP email for password reset
      * @param string $email User email
      * @param string $name User name
      * @param string $otp OTP code
-     * @return bool Always true for now
+     * @return bool Success status
      */
     private function sendOtpEmail($email, $name, $otp) {
-        // Implement email sending logic here
-        error_log("OTP email would be sent to: $email ($name) - OTP: $otp");
-        return true;
+        $mail = new PHPMailer(true);
+        
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'abaremy1997@gmail.com';
+            $mail->Password   = 'emnxgufwmehjdiii';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+            
+            // Recipients
+            $mail->setFrom('abaremy1997@gmail.com', 'Mount Carmel School');
+            $mail->addAddress($email, $name);
+            
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Reset OTP - Mount Carmel School';
+            
+            $emailBody = "
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                    .content { padding: 30px; background-color: #f9f9f9; border-radius: 0 0 10px 10px; }
+                    .otp-box { background-color: #764ba2; color: white; font-size: 32px; font-weight: bold; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0; letter-spacing: 8px; }
+                    .warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 15px 0; }
+                    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Password Reset Request</h1>
+                    </div>
+                    <div class='content'>
+                        <p>Dear {$name},</p>
+                        <p>We received a request to reset your password for your Mount Carmel School account.</p>
+                        
+                        <p><strong>Your OTP (One-Time Password) is:</strong></p>
+                        <div class='otp-box'>{$otp}</div>
+                        
+                        <div class='warning'>
+                            <strong>⚠️ Important:</strong>
+                            <ul style='margin: 10px 0; padding-left: 20px;'>
+                                <li>This OTP is valid for <strong>5 minutes only</strong></li>
+                                <li>Do not share this OTP with anyone</li>
+                                <li>If you didn't request this, please ignore this email</li>
+                            </ul>
+                        </div>
+                        
+                        <p>To reset your password, enter this OTP in the password reset form on our website.</p>
+                        
+                        <p>If you have any concerns, please contact us immediately.</p>
+                    </div>
+                    <div class='footer'>
+                        <p>Mount Carmel School<br>
+                        Email: info@mountcarmel.ac.rw | Phone: +250 787 254 817</p>
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            ";
+            
+            $mail->Body = $emailBody;
+            $mail->AltBody = "Your OTP for password reset is: {$otp}. This OTP is valid for 5 minutes only. If you didn't request this, please ignore this email.";
+            
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("OTP email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
+        }
     }
 
     /**
-     * Send reset email (placeholder)
+     * Send password reset confirmation email
      * @param string $email User email
      * @param string $name User name
-     * @param string $token Reset token
-     * @return bool Always true for now
+     * @return bool Success status
      */
-    private function sendResetEmail($email, $name, $token) {
-        // Implement reset email sending logic
-        error_log("Reset email would be sent to: $email ($name) - Token: $token");
-        return true;
+    private function sendResetConfirmationEmail($email, $name) {
+        $mail = new PHPMailer(true);
+        
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'abaremy1997@gmail.com';
+            $mail->Password   = 'emnxgufwmehjdiii';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+            
+            // Recipients
+            $mail->setFrom('abaremy1997@gmail.com', 'Mount Carmel School');
+            $mail->addAddress($email, $name);
+            
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Successfully Reset - Mount Carmel School';
+            
+            $emailBody = "
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                    .content { padding: 30px; background-color: #f9f9f9; border-radius: 0 0 10px 10px; }
+                    .success-icon { font-size: 64px; text-align: center; color: #28a745; margin: 20px 0; }
+                    .button { display: inline-block; padding: 12px 30px; background-color: #764ba2; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+                    .warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin: 15px 0; }
+                    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Password Reset Successful</h1>
+                    </div>
+                    <div class='content'>
+                        <div class='success-icon'>✅</div>
+                        
+                        <p>Dear {$name},</p>
+                        <p>Your password has been successfully reset for your Mount Carmel School account.</p>
+                        
+                        <p><strong>What's Next?</strong></p>
+                        <ul>
+                            <li>You can now log in with your new password</li>
+                            <li>Make sure to keep your password secure</li>
+                            <li>Don't share your password with anyone</li>
+                        </ul>
+                        
+                        <div class='warning'>
+                            <strong>⚠️ Security Notice:</strong><br>
+                            If you did not make this change, please contact us immediately at info@mountcarmel.ac.rw or call +250 787 254 817
+                        </div>
+                        
+                        <center>
+                            <a href='https://mountcarmel.ac.rw/login' class='button'>Login Now</a>
+                        </center>
+                        
+                        <p style='margin-top: 20px;'>Thank you for using Mount Carmel School.</p>
+                    </div>
+                    <div class='footer'>
+                        <p>Mount Carmel School<br>
+                        Email: info@mountcarmel.ac.rw | Phone: +250 787 254 817</p>
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            ";
+            
+            $mail->Body = $emailBody;
+            $mail->AltBody = "Your password has been successfully reset. You can now login with your new password. If you did not make this change, please contact us immediately.";
+            
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Reset confirmation email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
+        }
     }
 }
 ?>

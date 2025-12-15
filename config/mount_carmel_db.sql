@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2025 at 12:20 AM
+-- Generation Time: Dec 15, 2025 at 10:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -119,7 +119,7 @@ CREATE TABLE `news_events` (
 --
 
 INSERT INTO `news_events` (`id`, `title`, `excerpt`, `description`, `image_url`, `thumbnail_url`, `category`, `author`, `published_date`, `end_date`, `status`, `views`, `created_at`, `updated_at`, `featured`, `event_location`, `event_time`, `end_time`) VALUES
-(1, 'Annual Sports Day 2024', 'Join us for our exciting Annual Sports Day featuring various competitions and activities for all students.', 'Our Annual Sports Day is a celebration of athleticism, teamwork, and school spirit. Students from all grades participate in various sporting events including track and field, basketball, football, and many more. This year promises to be even more exciting with new activities and competitions. Parents and guardians are warmly invited to attend and cheer for their children.', '/news/news-1.jpg', NULL, 'event', 'Admin', '2026-01-02', NULL, 'published', 1, '2025-11-25 21:57:33', '2025-12-06 22:14:47', 1, 'School Playground', '09:00:00', NULL),
+(1, 'Annual Sports Day 2024', 'Join us for our exciting Annual Sports Day featuring various competitions and activities for all students.', 'Our Annual Sports Day is a celebration of athleticism, teamwork, and school spirit. Students from all grades participate in various sporting events including track and field, basketball, football, and many more. This year promises to be even more exciting with new activities and competitions. Parents and guardians are warmly invited to attend and cheer for their children.', '/news/news-1.jpg', NULL, 'event', 'Admin', '2026-01-02', NULL, 'published', 2, '2025-11-25 21:57:33', '2025-12-13 17:50:39', 1, 'School Playground', '09:00:00', NULL),
 (2, 'Science Fair Winners', 'Congratulations to our students who won top prizes at the Regional Science Fair competition.', 'We are proud to announce that our students have excelled at the Regional Science Fair, bringing home multiple awards including first place in the Biology category and second place in Physics. Their innovative projects and dedication to scientific inquiry have made Mount Carmel School proud. Special congratulations to Sarah Mugisha, John Kamanzi, and their team members for their outstanding achievements.', '/news/news-2.jpg', NULL, 'achievement', 'Admin', '2025-12-14', NULL, 'published', 1, '2025-11-25 21:57:33', '2025-12-06 22:14:47', 0, 'Science Lab', '10:00:00', NULL),
 (3, 'Parent-Teacher Meeting', 'Quarterly parent-teacher meeting scheduled to discuss student progress and development.', 'We invite all parents to attend our quarterly parent-teacher meeting where we will discuss student progress, upcoming events, and ways parents can support their children\'s learning at home. This is an excellent opportunity to meet with teachers, understand your child\'s academic journey, and participate in planning for the next term. Refreshments will be served.', '/news/news-3.jpg', NULL, 'announcement', 'Admin', '2025-12-26', NULL, 'published', 3, '2025-11-25 21:57:33', '2025-12-07 18:32:33', 0, 'Main Hall', '14:00:00', NULL),
 (4, 'New Library Inauguration', 'Our new state-of-the-art library has been officially inaugurated with over 5000 books.', 'Mount Carmel School is proud to announce the inauguration of our new library facility, equipped with modern amenities, comfortable reading spaces, and over 5,000 books covering various subjects and interests. The library features dedicated sections for different age groups, computer stations for research, and quiet study areas. We thank all our donors and supporters who made this project possible.', '/news/news-4.jpg', NULL, 'news', 'Admin', '2025-12-19', NULL, 'published', 1, '2025-11-25 21:57:33', '2025-12-06 22:14:47', 0, 'Library', '15:00:00', NULL),
@@ -133,6 +133,38 @@ INSERT INTO `news_events` (`id`, `title`, `excerpt`, `description`, `image_url`,
 (12, 'Parent Workshop: Digital Safety', 'Free workshop for parents on digital safety and cyber security.', 'Learn how to keep your children safe online in our special workshop for parents. Experts will share practical tips and strategies for digital safety.', '/news/digital-safety.jpg', NULL, 'announcement', 'Admin', '2024-11-18', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
 (13, 'Art Exhibition Opening', 'Student art exhibition showcasing creative works from all grades.', 'Our annual art exhibition features creative works from students of all grades. Visit to appreciate the artistic talents of our young artists.', '/news/art-exhibition.jpg', NULL, 'event', 'Admin', '2025-12-11', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:14:47', 0, NULL, NULL, NULL),
 (14, 'Sports Equipment Donation', 'Local business donates new sports equipment to the school.', 'We thank XYZ Sports for their generous donation of new sports equipment including footballs, basketballs, and athletic gear.', '/news/sports-donation.jpg', NULL, 'news', 'Admin', '2024-11-03', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `page_content`
+--
+
+CREATE TABLE `page_content` (
+  `id` int(11) NOT NULL,
+  `page_name` varchar(100) NOT NULL,
+  `section_name` varchar(100) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `content` longtext NOT NULL,
+  `image_url` varchar(500) DEFAULT NULL,
+  `display_order` int(11) DEFAULT 0,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `page_content`
+--
+
+INSERT INTO `page_content` (`id`, `page_name`, `section_name`, `title`, `content`, `image_url`, `display_order`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'about', 'who_we_are', 'Who We Are', '<h3>Building Tomorrow\'s Leaders</h3>\r\n<p>Mount Carmel School is a nurturing bilingual institution founded in 2013 by Reverend Pastor Jeanne D\'Arc Uwanyiligira. We are dedicated to providing quality education that combines academic excellence with spiritual growth.</p>\r\n<p>Our commitment extends beyond academics. We nurture curiosity, character, and a lifelong love of learning through comprehensive programs in academics, outdoor education, arts, sports, leadership, and community service.</p>', '/about/school-venue-1.jpg', 1, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40'),
+(2, 'about', 'mission', 'Our Mission', 'To train children to honor GOD, develop their potential skills; achieve excellence in academics, wisdom and character.', '/about/mission2.png', 2, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40'),
+(3, 'about', 'vision', 'Our Vision', 'To bless Rwanda with GOD fearing citizens, highly skilled and generation transformers for GOD\'S glory.', '/about/vision.png', 3, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40'),
+(4, 'about', 'philosophy', 'Our Philosophy', 'We believe in holistic education that nurtures the mind, body, and spirit. Every child is unique and capable of excellence when given proper guidance, support, and a nurturing environment rooted in faith.', '/about/philosophy.png', 4, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40'),
+(5, 'about', 'history', 'Our History', '<h3>A Legacy of Faith and Excellence</h3>\r\n<p>Mount Carmel School was founded in 2013 by <strong>Reverend Pastor Jeanne D\'Arc Uwanyiligira</strong>, who was inspired by a deep desire to promote quality education rooted in Christian values.</p>', '/about/school-venue-2.jpg', 5, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40'),
+(6, 'home', 'director_message', 'A Message from Our Director', '<h2>A Letter from the Acting Legal Representative</h2>\r\n<p class=\"letter-greeting\">Dear Parents and Guardians,</p>\r\n<p>It is with great joy and privilege that I welcome you to <span class=\"highlight-text\">Mount Carmel School</span>, a nurturing bilingual institution committed to academic excellence and strong Christian values.</p>', '/director-photo.jpg', 1, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40'),
+(7, 'about', 'core_values', 'Our Core Values', 'Academic Excellence, Stewardship, Hard Work & Unity, Patriotism, Discipleship, Wisdom, Integrity, Love for All', NULL, 6, 'active', '2025-12-13 11:35:40', '2025-12-13 11:35:40');
 
 -- --------------------------------------------------------
 
@@ -181,7 +213,8 @@ INSERT INTO `permissions` (`id`, `name`, `description`, `module`, `action`, `cre
 (25, 'manage_news', 'Manage news & events', 'website', 'manage_news', '2025-12-09 16:32:49'),
 (26, 'manage_gallery', 'Manage gallery', 'website', 'manage_gallery', '2025-12-09 16:32:49'),
 (27, 'manage_testimonials', 'Manage testimonials', 'website', 'manage_testimonials', '2025-12-09 16:32:49'),
-(28, 'manage_sliders', 'Manage hero sliders', 'website', 'manage_sliders', '2025-12-09 16:32:49');
+(28, 'manage_sliders', 'Manage hero sliders', 'website', 'manage_sliders', '2025-12-09 16:32:49'),
+(29, 'manage_content', 'Manage page content', 'website', 'manage_content', '2025-12-13 11:35:40');
 
 -- --------------------------------------------------------
 
@@ -254,7 +287,8 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `permission_id`, `created_at`) 
 (25, 1, 26, '2025-12-09 16:32:49'),
 (26, 1, 25, '2025-12-09 16:32:49'),
 (27, 1, 28, '2025-12-09 16:32:49'),
-(28, 1, 27, '2025-12-09 16:32:49');
+(28, 1, 27, '2025-12-09 16:32:49'),
+(32, 1, 29, '2025-12-13 11:35:40');
 
 -- --------------------------------------------------------
 
@@ -316,8 +350,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `username`, `password`, `photo`, `role_id`, `status`, `last_login`, `created_by`, `created_at`, `updated_at`, `reset_token`, `reset_expiry`) VALUES
-(1, 'BAHATI', 'Gerchom', 'info@mountcarmel.ac.rw', '250787254817', 'superadmin', '$2y$10$U8MPqa6EFv0sKwCuUKY/sOJoBLgkbsiBlSZ4q1p4aeS84IdoDdKyq', 'default-profile.jpg', 1, 'active', '2025-12-11 00:51:36', NULL, '2025-12-09 16:32:49', '2025-12-10 22:51:36', NULL, NULL),
-(3, 'Admin', 'User', 'abaremy1997@gmail.com', '1234567890', 'admin', '$2y$10$cTKQFPz493I5.QQkU1MwzOW.YLOdQKqnHbWzpsnO13eI54jLUnCt6', 'default-profile.jpg', 1, 'active', '2025-12-10 17:27:50', 1, '2025-12-10 08:07:50', '2025-12-10 15:27:50', NULL, NULL);
+(1, 'BAHATI', 'Gerchom', 'info@mountcarmel.ac.rw', '250787254817', 'superadmin', '$2y$10$U8MPqa6EFv0sKwCuUKY/sOJoBLgkbsiBlSZ4q1p4aeS84IdoDdKyq', 'default-profile.jpg', 1, 'active', '2025-12-15 09:45:47', NULL, '2025-12-09 16:32:49', '2025-12-15 07:45:47', NULL, NULL),
+(3, 'Admin', 'User', 'aba1remy@gmail.com', '1234567890', 'admin', '$2y$10$cTKQFPz493I5.QQkU1MwzOW.YLOdQKqnHbWzpsnO13eI54jLUnCt6', 'default-profile.jpg', 1, 'active', '2025-12-15 09:50:13', 1, '2025-12-10 08:07:50', '2025-12-15 07:50:13', '949474', '2025-12-13 09:47:31'),
+(4, 'Cathy', 'Den', 'info.abaremy@gmail.com', '250721053807', 'info.abaremy@gmail.com', '$2y$10$tRnGp6vT61jeg1ryn9FwcOD6CJ645S.ppvpAL4DP2.f7jLx9k.iR6', 'default-profile.jpg', 3, 'pending', NULL, 1, '2025-12-11 12:13:07', '2025-12-11 12:13:07', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -346,6 +381,15 @@ ALTER TABLE `news_events`
   ADD KEY `status` (`status`),
   ADD KEY `published_date` (`published_date`),
   ADD KEY `category` (`category`);
+
+--
+-- Indexes for table `page_content`
+--
+ALTER TABLE `page_content`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `page_section_unique` (`page_name`,`section_name`),
+  ADD KEY `status` (`status`),
+  ADD KEY `display_order` (`display_order`);
 
 --
 -- Indexes for table `permissions`
@@ -409,10 +453,16 @@ ALTER TABLE `news_events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT for table `page_content`
+--
+ALTER TABLE `page_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -424,7 +474,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `testimonials`
@@ -436,7 +486,7 @@ ALTER TABLE `testimonials`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

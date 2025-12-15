@@ -23,13 +23,13 @@
 <nav id="mainNav">
         <div class="nav-container">
             <!-- Logo with School Crest -->
-            <a href="#home" class="logo">
+            <a href="<?= url() ?>" class="logo">
                 <div class="logo-image">
                     <img src="<?= img_url('logo-only.png') ?>" alt="MCS Logo" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div class="logo-text">
                     <span class="main">Mount Carmel</span>
-                    <span class="sub">PRIVATE CHRISTIAN SCHOOL</span>
+                    <span class="sub">A PRIVATE CHRISTIAN SCHOOL</span>
                 </div>
             </a>
 
@@ -190,6 +190,8 @@
                     <a href="<?= url('administration') ?>" onclick="toggleMenu()"><i class="fas fa-users"></i> Administration</a>
                     <a href="<?= url('program') ?>" onclick="toggleMenu()"><i class="fas fa-book-open"></i> Programs</a>
                     <a href="<?= url('gallery') ?>" onclick="toggleMenu()"><i class="fas fa-images"></i> Photo Gallery</a>
+                    <a href="<?= url('news') ?>" onclick="toggleMenu()"><i class="fas fa-newspaper"></i> News & Events</a>
+                    
                 </div>
             </li>
 
