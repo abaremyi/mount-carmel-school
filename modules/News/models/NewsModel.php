@@ -77,6 +77,44 @@ class NewsModel {
     }
 
     /**
+     * Get featured news items
+     * @param int $limit Number of items to retrieve
+     * @return array Array of featured news items
+    */
+    public function getFeaturedNews($limit = 5) {
+        try {
+            $query = "SELECT 
+                        id,
+                        title,
+                        excerpt,
+                        description,
+                        image_url,
+                        thumbnail_url,
+                        category,
+                        published_date,
+                        author,
+                        views,
+                        created_at,
+                        event_location
+                    FROM news_events 
+                    WHERE status = 'published'
+                    AND featured = 1
+                    ORDER BY published_date DESC 
+                    LIMIT :limit";
+            
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            error_log("News Model Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * Get total count of news items
      * @param string $category Optional category filter
      * @return int Total count

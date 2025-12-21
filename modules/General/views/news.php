@@ -44,7 +44,7 @@ include_once get_layout('header');
         <aside class="news-sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <img src="<?= img_url('logo-icon.png') ?>" alt="Logo" onerror="this.style.display='none'">
+                    <img src="<?= img_url('logo-only.png') ?>" alt="Logo" onerror="this.style.display='none'">
                 </div>
                 <h1 class="sidebar-title">News & Events</h1>
                 <p class="sidebar-subtitle">Stay Updated</p>
@@ -233,7 +233,7 @@ include_once get_layout('header');
         $.ajax({
             url: API_URL,
             method: 'GET',
-            data: { action: 'get_latest', limit: 1 },
+            data: { action: 'get_featured', limit: 1 },
             dataType: 'json',
             success: function(response) {
                 if (response.success && response.data.length > 0) {

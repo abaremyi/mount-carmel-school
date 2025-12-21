@@ -70,6 +70,14 @@ try {
             echo json_encode($result);
             break;
 
+        case 'get_featured':
+        case 'getFeatured':
+            // Get Featured news items
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
+            $result = $newsController->getFeaturedNews($limit);
+            echo json_encode($result);
+            break;
+
         case 'get_upcoming':
         case 'getUpcoming':
             // Get upcoming events

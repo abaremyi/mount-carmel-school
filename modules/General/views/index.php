@@ -77,44 +77,75 @@ include_once get_layout('header');
     </section>
     
     <!-- Welcome Section with Video -->
-    <section class="welcome-section" id="welcome">
-        <div class="container">
-            <div class="w3l-heading">
-                <h2 class="w3ls_head">Welcome to Mount Carmel School</h2>
-            </div>
-            
-            <div class="row">
-                <!-- Video Section -->
-                <div class="col-md-6 welcome-left">
-                    <div class="video-container">
-                        <div class="video-wrapper">
+    <!-- Welcome Section with Video -->
+<section class="welcome-section" id="welcome">
+    <div class="container">
+        <?php
+        // Fetch welcome section content from database
+        $stmt = $pdo->prepare("SELECT * FROM page_content WHERE page_name = 'home' AND section_name IN (?, ?, ?, ?, ?, ?)");
+        $stmt->execute(['welcome_section_title', 'welcome_section_video', 'welcome_intro_head', 'welcome_intro_paragraph', 'welcome_quote_title', 'welcome_quote_content']);
+        $welcome_content = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Convert to associative array
+        $welcome = [];
+        foreach ($welcome_content as $content) {
+            $welcome[$content['section_name']] = $content;
+        }
+        ?>
+        
+        <div class="w3l-heading">
+            <h2 class="w3ls_head"><?= $welcome['welcome_section_title']['content'] ?? 'Welcome to Mount Carmel School' ?></h2>
+        </div>
+        
+        <div class="row">
+            <!-- Video Section -->
+            <div class="col-md-6 welcome-left">
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <?php if (!empty($welcome['welcome_section_video']['content'])): ?>
+                            <iframe 
+                                src="<?= htmlspecialchars($welcome['welcome_section_video']['content']) ?>" 
+                                title="Welcome to Mount Carmel School"
+                                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                            </iframe>
+                        <?php else: ?>
+                            <!-- Fallback to default video -->
                             <iframe 
                                 src="https://www.youtube.com/embed/NZI3j_XpgWM?si=dbEgYZNAuGMkrNBl" 
                                 title="Welcome to Mount Carmel School"
                                 frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
                             </iframe>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Welcome Content -->
-                <div class="col-md-6 welcome-right">
-                    <div class="welcome-intro">
-                        <h3>Excellence in Education Since 2013</h3>
-                        <p>Mount Carmel School is a nurturing bilingual institution founded by Reverend Pastor Jeanne D'Arc Uwanyiligira, dedicated to providing quality education that combines academic excellence with spiritual growth.</p>
-                        
-                        <div class="welcome-quote">
-                            <i class="fas fa-quote-left"></i>
-                            <p><strong>Vision:</strong> To bless Rwanda with GOD fearing citizens, highly skilled and generation transformers for GOD'S glory.</p>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
+            <!-- Welcome Content -->
+            <div class="col-md-6 welcome-right">
+                <div class="welcome-intro">
+                    <h3><?= $welcome['welcome_intro_head']['content'] ?? 'Excellence in Education Since 2013' ?></h3>
+                    <p><?= $welcome['welcome_intro_paragraph']['content'] ?? 'Mount Carmel School is a nurturing bilingual institution...' ?></p>
+                    
+                    <div class="welcome-quote">
+                        <i class="fas fa-quote-left"></i>
+                        <p><strong><?= $welcome['welcome_quote_title']['content'] ?? 'Vision:' ?></strong> <?= $welcome['welcome_quote_content']['content'] ?? 'To bless Rwanda with GOD fearing citizens...' ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <div class="row">
+        <!-- Quick Stats -->
+        <?php
+        // Fetch quick stats
+        $stmt = $pdo->query("SELECT * FROM quick_stats WHERE status = 'active' ORDER BY display_order");
+        $quick_stats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        ?>
+        <div class="quick-stats">
+            <div class="row">
+                <?php if (empty($quick_stats)): ?>
+                    <!-- Default stats -->
                     <div class="col-md-3 col-sm-6 stat-box">
                         <div class="stat-circle">
                             <div class="stat-number" data-count="10">0</div>
@@ -122,64 +153,70 @@ include_once get_layout('header');
                         </div>
                         <div class="stat-label">Years of Excellence</div>
                     </div>
-                    <div class="col-md-3 col-sm-6 stat-box">
-                        <div class="stat-circle">
-                            <div class="stat-number" data-count="3">0</div>
-                        </div>
-                        <div class="stat-label">Educational Sections</div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 stat-box">
-                        <div class="stat-circle">
-                            <div class="stat-number" data-count="100">0</div>
-                            <div class="stat-percent">%</div>
-                        </div>
-                        <div class="stat-label">Success Rate</div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 stat-box">
-                        <div class="stat-circle">
-                            <div class="stat-icon">
-                                <i class="fas fa-language"></i>
+                    <!-- ... other default stats ... -->
+                <?php else: ?>
+                    <?php foreach ($quick_stats as $stat): ?>
+                        <div class="col-md-3 col-sm-6 stat-box">
+                            <div class="stat-circle">
+                                <div class="stat-number" data-count="<?= $stat['stat_value'] ?>">0</div>
+                                <?php if (strpos($stat['stat_value'], '%') !== false): ?>
+                                    <div class="stat-percent">%</div>
+                                <?php endif; ?>
                             </div>
+                            <div class="stat-label"><?= htmlspecialchars($stat['stat_label']) ?></div>
                         </div>
-                        <div class="stat-label">Bilingual Curriculum</div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Director's Letter Section -->
-    <section class="directors-letter" id="directors-letter">
-        <div class="container">
-            <div class="w3l-heading">
-                <h2 class="w3ls_head">A Message from Our Director</h2>
-            </div>
-            <div class="letter-content">
-                <div class="director-photo">
-                    <div class="director-card">
-                        <img src="<?= img_url('director-photo.jpg') ?>" alt="School Director">
-                        <div class="director-name-badge">
-                            <h3>SIBOMANA Gérard</h3>
-                            <p>Acting Legal Representative</p>
-                        </div>
+<section class="directors-letter" id="directors-letter">
+    <div class="container">
+        <?php
+        // Fetch director letter content
+        $stmt = $pdo->prepare("SELECT * FROM page_content WHERE page_name = 'home' AND section_name LIKE 'dir_%' OR section_name LIKE 'letter_%' OR section_name IN ('director_photo', 'director_name', 'director_role')");
+        $stmt->execute();
+        $director_content = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $director = [];
+        foreach ($director_content as $content) {
+            $director[$content['section_name']] = $content;
+        }
+        ?>
+        
+        <div class="w3l-heading">
+            <h2 class="w3ls_head"><?= $director['dir_letter_section_title']['content'] ?? 'A Message from Our Director' ?></h2>
+        </div>
+        <div class="letter-content">
+            <div class="director-photo">
+                <div class="director-card">
+                    <img src="<?= !empty($director['director_photo']['image_url']) ? img_url($director['director_photo']['image_url']) : img_url('director-photo.jpg') ?>" alt="School Director">
+                    <div class="director-name-badge">
+                        <h3><?= $director['director_name']['content'] ?? 'SIBOMANA Gérard' ?></h3>
+                        <p><?= $director['director_role']['content'] ?? 'Acting Legal Representative' ?></p>
                     </div>
                 </div>
-                <div class="letter-text">
-                    <h2>A Letter from the Acting Legal Representative</h2>
-                    <p class="letter-greeting">Dear Parents and Guardians,</p>
-                    <p>It is with great joy and privilege that I welcome you to <span class="highlight-text">Mount Carmel School</span>, a nurturing bilingual institution committed to academic excellence and strong Christian values.</p>
-                    <p>Since our establishment in 2013, we have remained dedicated to offering quality education that shapes the mind, heart, and character of every learner. Our mission is to raise God-fearing, skilled, and responsible young people who will positively impact their communities and the nation.</span></p>
-                    <p>At Mount Carmel School, we believe in helping students grow beyond their limits. Through a supportive learning environment, experienced teachers, small class sizes, and a balanced approach to academics, leadership, creativity, and service, we focus on developing well-rounded individuals prepared for future opportunities.</p>
-                    <p>We warmly invite you to visit our campus and experience the spirit and excellence of Mount Carmel School.</p>
-                    <div class="letter-signature">
-                        <p>With warm regards,</p>
-                        <p class="signature-name">SIBOMANA Gérard</p>
-                        <p>Acting Legal Representative</p>
-                    </div>
+            </div>
+            <div class="letter-text">
+                <h2><?= $director['letter_text_title']['content'] ?? 'A Letter from the Acting Legal Representative' ?></h2>
+                <p class="letter-greeting"><?= $director['letter_greeting']['content'] ?? 'Dear Parents and Guardians,' ?></p>
+                <?php for ($i = 1; $i <= 3; $i++): ?>
+                    <?php if (!empty($director["letter_paragraph_{$i}"]['content'])): ?>
+                        <p><?= $director["letter_paragraph_{$i}"]['content'] ?></p>
+                    <?php endif; ?>
+                <?php endfor; ?>
+                <div class="letter-signature">
+                    <p>With warm regards,</p>
+                    <p class="signature-name"><?= $director['letter_signature_name']['content'] ?? 'SIBOMANA Gérard' ?></p>
+                    <p><?= $director['letter_signature_role']['content'] ?? 'Acting Legal Representative' ?></p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Photo Gallery Section -->
     <section class="photo-gallery-section" id="gallery">
@@ -237,123 +274,109 @@ include_once get_layout('header');
         </div>
     </div>
 
-    <!-- Programs Section -->
-    <div class="advantages" style="background: url('<?= img_url('partner-bg2.jpg') ?>') no-repeat; background-size: cover; background-attachment: fixed;">
-        <div class="agile-dot">
-            <div class="container">
-                <div class="advantages-main">
-                    <div class="w3l-heading">
-                        <h3 class="w3ls_head">Our Educational Programs</h3>
-                    </div>
-                   <div class="advantage-bottom">
-                     <div class="col-md-4 advantage-grid">
-                        <div class="program-card">
-                            <div class="program-icon">
-                                <i class="fas fa-baby"></i>
+    <!-- Educational Programs Section -->
+<div class="advantages" style="background: url('<?= img_url('partner-bg2.jpg') ?>') no-repeat; background-size: cover; background-attachment: fixed;">
+    <div class="agile-dot">
+        <div class="container">
+            <div class="advantages-main">
+                <div class="w3l-heading">
+                    <h3 class="w3ls_head"><?= $pages_content['edu_program_head']['content'] ?? 'Our Educational Programs' ?></h3>
+                </div>
+                <div class="advantage-bottom">
+                    <?php
+                    // Fetch educational programs
+                    $stmt = $pdo->query("SELECT * FROM educational_programs WHERE status = 'active' ORDER BY display_order LIMIT 3");
+                    $programs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+                    
+                    <?php if (empty($programs)): ?>
+                        <!-- Default programs -->
+                        <div class="col-md-4 advantage-grid">
+                            <div class="program-card">
+                                <div class="program-icon">
+                                    <i class="fas fa-baby"></i>
+                                </div>
+                                <h3>Nursery School</h3>
+                                <p class="program-subtitle">Francophone Program</p>
+                                <p>Safe and stimulating environment for early childhood development...</p>
+                                <a href="#nursery" class="btn-program">Learn More</a>
                             </div>
-                            <h3>Nursery School</h3>
-                            <p class="program-subtitle">Francophone Program</p>
-                            <p>Safe and stimulating environment for early childhood development through play-based learning in French.</p>
-                            <a href="#nursery" class="btn-program">Learn More</a>
                         </div>
-                     </div>
-                     <div class="col-md-4 advantage-grid">
-                        <div class="program-card">
-                            <div class="program-icon">
-                                <i class="fas fa-child"></i>
+                        <!-- ... other default programs ... -->
+                    <?php else: ?>
+                        <?php foreach ($programs as $program): ?>
+                            <div class="col-md-4 advantage-grid">
+                                <div class="program-card">
+                                    <div class="program-icon">
+                                        <i class="<?= $program['icon_class'] ?>"></i>
+                                    </div>
+                                    <h3><?= htmlspecialchars($program['title']) ?></h3>
+                                    <?php if (!empty($program['subtitle'])): ?>
+                                        <p class="program-subtitle"><?= htmlspecialchars($program['subtitle']) ?></p>
+                                    <?php endif; ?>
+                                    <p><?= substr(strip_tags($program['description']), 0, 120) ?>...</p>
+                                    <a href="#<?= strtolower(str_replace(' ', '-', $program['title'])) ?>" class="btn-program">Learn More</a>
+                                </div>
                             </div>
-                            <h3>Lower Primary</h3>
-                            <p class="program-subtitle">Bilingual Education</p>
-                            <p>Comprehensive primary education focusing on foundational skills in both English and French.</p>
-                            <a href="#primary" class="btn-program">Learn More</a>
-                        </div>
-                     </div>
-                     <div class="col-md-4 advantage-grid">
-                        <div class="program-card">
-                            <div class="program-icon">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <h3>Upper Primary</h3>
-                            <p class="program-subtitle">Bilingual Excellence</p>
-                            <p>Advanced primary education preparing students for secondary school with strong foundations.</p>
-                            <a href="#upper-primary" class="btn-program">Learn More</a>
-                        </div>
-                     </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     <div class="clearfix"></div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Why Choose MCS Section -->
-    <section class="why-choose" id="why-choose">
-        <div class="container">
-            <div class="w3l-heading">
-                <h2 class="w3ls_head">Why Choose Mount Carmel School?</h2>
+<section class="why-choose" id="why-choose">
+    <div class="container">
+        <div class="w3l-heading">
+            <h2 class="w3ls_head">Why Choose Mount Carmel School?</h2>
+        </div>
+        <div class="row">
+            <?php
+            // Fetch why choose items
+            $stmt = $pdo->query("SELECT * FROM why_choose_items WHERE status = 'active' ORDER BY display_order");
+            $why_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (empty($why_items)) {
+                // Default content
+                $why_items = [
+                    ['icon_class' => 'fas fa-user-graduate', 'title' => 'Experienced Faculty', 'description' => 'Our dedicated teachers are highly qualified...'],
+                    // ... other default items
+                ];
+            }
+            ?>
+            
+            <div class="col-md-6 why-left">
+                <?php for ($i = 0; $i < min(3, count($why_items)); $i++): ?>
+                    <div class="why-item">
+                        <div class="why-icon">
+                            <i class="<?= $why_items[$i]['icon_class'] ?>"></i>
+                        </div>
+                        <div class="why-content">
+                            <h3><?= htmlspecialchars($why_items[$i]['title']) ?></h3>
+                            <p><?= htmlspecialchars($why_items[$i]['description']) ?></p>
+                        </div>
+                    </div>
+                <?php endfor; ?>
             </div>
-            <div class="row">
-                <div class="col-md-6 why-left">
+            <div class="col-md-6 why-right">
+                <?php for ($i = 3; $i < min(10, count($why_items)); $i++): ?>
                     <div class="why-item">
                         <div class="why-icon">
-                            <i class="fas fa-user-graduate"></i>
+                            <i class="<?= $why_items[$i]['icon_class'] ?>"></i>
                         </div>
                         <div class="why-content">
-                            <h3>Experienced Faculty</h3>
-                            <p>Our dedicated teachers are highly qualified and experienced in delivering quality education with personalized attention at EAC regional standards.</p>
+                            <h3><?= htmlspecialchars($why_items[$i]['title']) ?></h3>
+                            <p><?= htmlspecialchars($why_items[$i]['description']) ?></p>
                         </div>
                     </div>
-                    <div class="why-item">
-                        <div class="why-icon">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                        <div class="why-content">
-                            <h3>Modern Infrastructure</h3>
-                            <p>State-of-the-art classrooms, laboratories, and facilities designed to enhance the learning experience and foster creativity.</p>
-                        </div>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div class="why-content">
-                            <h3>Holistic Development</h3>
-                            <p>We focus on academic excellence while nurturing physical, emotional, social, and spiritual development based on Christian values.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 why-right">
-                    <div class="why-item">
-                        <div class="why-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div class="why-content">
-                            <h3>Safe Environment</h3>
-                            <p>Secure campus with comprehensive safety measures to ensure student well-being at all times in a nurturing Christian atmosphere.</p>
-                        </div>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon">
-                            <i class="fas fa-globe"></i>
-                        </div>
-                        <div class="why-content">
-                            <h3>Bilingual Advantage</h3>
-                            <p>Master both English and French from early childhood, giving students a competitive edge in our globalized world.</p>
-                        </div>
-                    </div>
-                    <div class="why-item">
-                        <div class="why-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="why-content">
-                            <h3>Proven Track Record</h3>
-                            <p>Consistent academic excellence and outstanding student achievements, including national recognition in primary exams.</p>
-                        </div>
-                    </div>
-                </div>
+                <?php endfor; ?>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- News and Events Section -->
     <section class="news-events" id="news">

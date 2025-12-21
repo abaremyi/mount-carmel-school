@@ -133,11 +133,11 @@ mount-carmel/
 │   │   │   ├── update_page.php
 │   │   │   └── update_section.php
 │   │   └── views
-│   │   	 	├── componets
-│   │   	    	│	   └── admin-navbar.php
-│   │   	 	│	   ├── admin-scripts.php
-│   │   	 	│       ├── admin-sidebar.php
-│   │   	 	│       └── admin-styles.php
+│   │   	 	├── components
+│   │   	    │   └── admin-navbar.php
+│   │   	 	│	├── admin-scripts.php
+│   │   	 	│   ├── admin-sidebar.php
+│   │   	 	│   └── admin-styles.php
 │   │       	├── admin.php
 │   │       	├── admin-dashboard.php
 │   │       	├── gallery-management.php

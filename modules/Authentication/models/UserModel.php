@@ -45,10 +45,10 @@ class UserModel
     {
         try {
             $query = "SELECT u.*, r.name as role_name, r.is_super_admin
-                      FROM users u
-                      JOIN roles r ON u.role_id = r.id
-                      WHERE u.email = :email_id OR u.phone = :phone_id OR u.username = :username_id 
-                      LIMIT 1";
+                    FROM users u
+                    JOIN roles r ON u.role_id = r.id
+                    WHERE u.email = :email_id OR u.phone = :phone_id OR u.username = :username_id 
+                    LIMIT 1";
 
             $stmt = $this->db->prepare($query);
 
@@ -154,9 +154,9 @@ class UserModel
     {
         try {
             $query = "SELECT u.*, r.name as role_name, r.is_super_admin
-                      FROM users u
-                      LEFT JOIN roles r ON u.role_id = r.id
-                      WHERE u.id = :id";
+                    FROM users u
+                    LEFT JOIN roles r ON u.role_id = r.id
+                    WHERE u.id = :id";
 
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);

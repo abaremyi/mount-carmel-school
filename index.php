@@ -36,6 +36,7 @@ $routes = [
     '/team-single' => 'modules/General/views/team-single.php',
     '/contact' => 'modules/General/views/contact.php',
     '/gallery' => 'modules/General/views/gallery.php',
+    '/video-gallery' => 'modules/General/views/videos.php',
     
     // Add static file routes
     '/static/get_projects' => 'modules/General/static/get_projects.php',
@@ -45,6 +46,7 @@ $routes = [
     // Add API routes
     '/api/hero' => 'modules/Hero/api/heroApi.php',
     '/api/gallery' => 'modules/Gallery/api/galleryApi.php',
+    '/api/videos' => 'modules/Videos/api/videoApi.php',
     '/api/news' => 'modules/News/api/newsApi.php',
     '/api/testimonials' => 'modules/Testimonials/api/testimonialsApi.php',
     '/api/contact' => 'modules/Contact/api/contactApi.php',
@@ -64,6 +66,9 @@ $routes = [
     '/parent' => 'modules/Dashboard/views/parent.php',
     '/student' => 'modules/Dashboard/views/student.php',
     '/teacher' => 'modules/Dashboard/views/teacher.php',
+    '/admin/educational-programs' => 'modules/Dashboard/views/educational-programs.php',
+    '/admin/why-choose' => 'modules/Dashboard/views/why-choose-management.php',
+    '/admin/quick-stats' => 'modules/Dashboard/views/quick-stats-management.php',
     
     // Admin management routes
     '/admin/hero-sliders' => 'modules/Dashboard/views/hero-sliders.php',
@@ -71,6 +76,8 @@ $routes = [
     '/admin/gallery' => 'modules/Dashboard/views/gallery-management.php',
     '/admin/testimonials' => 'modules/Dashboard/views/testimonials-management.php',
     '/admin/page-content' => 'modules/Dashboard/views/page-content-management.php',
+    '/admin/users-management' => 'modules/Dashboard/views/users-management.php',
+    '/admin/roles-permissions' => 'modules/Dashboard/views/roles-permissions-management.php',
     
     // API routes
     '/api/auth' => 'modules/Authentication/api/authApi.php',

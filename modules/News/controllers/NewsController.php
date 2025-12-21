@@ -172,6 +172,35 @@ class NewsController {
     }
 
     /**
+     * Get featured news items
+     * @param int $limit Number of items
+     * @return array Response array
+     */
+    public function getFeaturedNews($limit = 5) {
+        try {
+            $featuredNews = $this->newsModel->getFeaturedNews($limit);
+
+            // Format dates
+            foreach ($featuredNews as &$item) {
+                $item['formatted_date'] = date('F j, Y', strtotime($item['published_date']));
+            }
+
+            return [
+                'success' => true,
+                'data' => $featuredNews
+            ];
+
+        } catch (Exception $e) {
+            error_log("News Controller Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to retrieve featured news.',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
      * Get upcoming events
      * @param int $limit Number of events
      * @return array Response array

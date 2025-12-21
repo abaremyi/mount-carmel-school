@@ -21,31 +21,23 @@ $decoded = $token ? $jwtHandler->validateToken($token) : null;
     
     <ul class="nav flex-column mt-4">
         <li class="nav-item">
-            <a href="#" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'admin-dashboard.php' ? 'active' : '' ?>" onclick="loadContent('dashboard')">
+            <a href="<?= url('admin/dashboard') ?>" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'admin-dashboard.php' ? 'active' : '' ?>" onclick="loadContent('dashboard')">
                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </a>
         </li>
         
         <?php if ($decoded->is_super_admin || in_array('users.view', $decoded->permissions)): ?>
         <li class="nav-item">
-            <a href="#" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'users.php' ? 'active' : '' ?>" onclick="loadContent('users')">
+            <a href="<?= url('admin/users-management') ?>" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'users-management.php' ? 'active' : '' ?>">
                 <i class="fas fa-users me-2"></i> Users
             </a>
         </li>
         <?php endif; ?>
-        
+
         <?php if ($decoded->is_super_admin || in_array('roles.view', $decoded->permissions)): ?>
         <li class="nav-item">
-            <a href="#" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'roles.php' ? 'active' : '' ?>" onclick="loadContent('roles')">
+            <a href="<?= url('admin/roles-permissions') ?>" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'roles-permissions-management.php' ? 'active' : '' ?>">
                 <i class="fas fa-user-tag me-2"></i> Roles & Permissions
-            </a>
-        </li>
-        <?php endif; ?>
-        
-        <?php if ($decoded->is_super_admin || in_array('students.view', $decoded->permissions)): ?>
-        <li class="nav-item">
-            <a href="#" class="nav-link" onclick="loadContent('students')">
-                <i class="fas fa-graduation-cap me-2"></i> Students
             </a>
         </li>
         <?php endif; ?>
@@ -80,14 +72,6 @@ $decoded = $token ? $jwtHandler->validateToken($token) : null;
                 </li>
                 <?php endif; ?>
                 
-                <?php if ($decoded->is_super_admin || in_array('website.manage_gallery', $decoded->permissions)): ?>
-                <li>
-                    <a href="<?= url('admin/gallery') ?>" class="dropdown-item">
-                        <i class="fas fa-images me-2"></i> Gallery
-                    </a>
-                </li>
-                <?php endif; ?>
-                
                 <?php if ($decoded->is_super_admin || in_array('website.manage_testimonials', $decoded->permissions)): ?>
                 <li>
                     <a href="<?= url('admin/testimonials') ?>" class="dropdown-item">
@@ -103,21 +87,31 @@ $decoded = $token ? $jwtHandler->validateToken($token) : null;
                     </a>
                 </li>
                 <?php endif; ?>
+                <li>
+                    <a href="<?= url('admin/why-choose') ?>" class="dropdown-item">
+                        <i class="fas fa-star me-2"></i> Why Choose Us
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/quick-stats') ?>" class="dropdown-item">
+                        <i class="fas fa-chart-bar me-2"></i> Quick Stats
+                    </a>
+                </li>
             </ul>
         </li>
         
-        <?php if ($decoded->is_super_admin || in_array('academics.manage_classes', $decoded->permissions)): ?>
+        <?php if ($decoded->is_super_admin || in_array('programs.view', $decoded->permissions)): ?>
         <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-book me-2"></i> Academics
+            <a href="<?= url('admin/educational-programs') ?>" class="nav-link">
+                <i class="fas fa-graduation-cap me-2"></i> Programs
             </a>
         </li>
         <?php endif; ?>
         
-        <?php if ($decoded->is_super_admin || in_array('finance.view', $decoded->permissions)): ?>
+        <?php if ($decoded->is_super_admin || in_array('website.manage_gallery', $decoded->permissions)): ?>
         <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-money-bill-wave me-2"></i> Finance
+            <a href="<?= url('admin/gallery') ?>" class="nav-link">
+                <i class="fas fa-images me-2"></i> Gallery
             </a>
         </li>
         <?php endif; ?>
