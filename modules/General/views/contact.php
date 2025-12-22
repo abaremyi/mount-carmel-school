@@ -526,7 +526,7 @@ include_once get_layout('header');
     .info-icon {
         width: 50px;
         height: 50px;
-        background: #1e88e5;
+        background: rgba(6, 119, 156, 0.9);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -699,7 +699,7 @@ include_once get_layout('header');
     }
 
     .submit-button {
-        background: #1e88e5;
+        background: rgba(6, 119, 156, 0.9);
         color: white;
         padding: 0.9rem 3rem;
         border: none;

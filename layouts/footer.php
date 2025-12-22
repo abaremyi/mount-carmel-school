@@ -34,11 +34,10 @@
                     </div>
                     <div class="footer-grid-info">
                         <ul>
-                            <li><a href="#">Nursery Program</a></li>
-                            <li><a href="#">Primary Education</a></li>
-                            <li><a href="#">Lower Secondary</a></li>
-                            <li><a href="#">Upper Secondary</a></li>
-                            <li><a href="#">Advanced Studies</a></li>
+                            <li><a href="<?= url('programs#nursery-school') ?>">Nursery Program</a></li>
+                            <li><a href="<?= url('programs#lower-primary') ?>">Lower Primary</a></li>
+                            <li><a href="<?= url('programs#upper-primary') ?>">Upper Primary</a></li>
+                            <li><a href="<?= url('admission#requirement') ?>">Admissions</a></li>
                         </ul>
                     </div>
                 </div>
@@ -50,11 +49,10 @@
                     </div>
                     <div class="footer-grid-info">
                         <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Admissions</a></li>
-                            <li><a href="#">Academic Calendar</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="<?= url() ?>">Home</a></li>
+                            <li><a href="<?= url('about') ?>">About Us</a></li>
+                            <li><a href="<?= url('services-facilities#school-feeding') ?>">Facilities</a></li>
+                            <li><a href="<?= url('contact') ?>">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>

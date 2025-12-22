@@ -35,6 +35,7 @@ mount-carmel/
 ├── img
 │   ├── about
 │   ├── clients
+│   ├── facilities
 │   ├── gallery
 │   ├── news
 │   ├── projects

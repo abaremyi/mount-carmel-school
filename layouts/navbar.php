@@ -101,22 +101,22 @@
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-building"></i> Academic</h4>
                                 <ul>
-                                    <li><a href="#computer-lab"><i class="fas fa-circle"></i> Computer Lab</a></li>
-                                    <li><a href="#science-lab"><i class="fas fa-circle"></i> School Library</a></li>
+                                    <li><a href="<?= url('academic-facilities#computer-lab') ?>"><i class="fas fa-circle"></i> Computer Lab</a></li>
+                                    <li><a href="<?= url('academic-facilities#school-library') ?>"><i class="fas fa-circle"></i> School Library</a></li>
                                 </ul>
                             </div>
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-dumbbell"></i> Sports & Recreation</h4>
                                 <ul>
-                                    <li><a href="#fitness"><i class="fas fa-circle"></i> Sports Activities</a></li>
-                                    <li><a href="#swimming"><i class="fas fa-circle"></i> Swimming Courses</a></li>
+                                    <li><a href="<?= url('sports-facilities#sports-activities') ?>"><i class="fas fa-circle"></i> Sports Activities</a></li>
+                                    <li><a href="<?= url('sports-facilities#swimming-courses') ?>"><i class="fas fa-circle"></i> Swimming Courses</a></li>
                                 </ul>
                             </div>
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-utensils"></i> Services</h4>
                                 <ul>
-                                    <li><a href="#cafeteria"><i class="fas fa-circle"></i> School Feeding</a></li>
-                                    <li><a href="#transport"><i class="fas fa-circle"></i> School Transport</a></li>
+                                    <li><a href="<?= url('services-facilities#school-feeding') ?>"><i class="fas fa-circle"></i> School Feeding</a></li>
+                                    <li><a href="<?= url('services-facilities#school-transport') ?>"><i class="fas fa-circle"></i> School Transport</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -211,12 +211,12 @@
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="mobile-dropdown-content">
-                    <a href="#computer-lab" onclick="toggleMenu()"><i class="fas fa-laptop"></i> Computer Lab</a>
-                    <a href="#science-lab" onclick="toggleMenu()"><i class="fas fa-flask"></i> School Library</a>
-                    <a href="#sports" onclick="toggleMenu()"><i class="fas fa-futbol"></i> Sports Activities</a>
-                    <a href="#swimming" onclick="toggleMenu()"><i class="fas fa-swimming-pool"></i> Swimming Pool</a>
-                    <a href="#transport" onclick="toggleMenu()"><i class="fas fa-bus"></i> Transport</a>
-                    <a href="#cafeteria" onclick="toggleMenu()"><i class="fas fa-utensils"></i> School Feeding</a>
+                    <a href="<?= url('academic-facilities#computer-lab') ?>" onclick="toggleMenu()"><i class="fas fa-laptop"></i> Computer Lab</a>
+                    <a href="<?= url('academic-facilities#school-library') ?>" onclick="toggleMenu()"><i class="fas fa-flask"></i> School Library</a>
+                    <a href="<?= url('sports-facilities#sports-activities') ?>" onclick="toggleMenu()"><i class="fas fa-futbol"></i> Sports Activities</a>
+                    <a href="<?= url('sports-facilities#swimming-courses') ?>" onclick="toggleMenu()"><i class="fas fa-swimming-pool"></i> Swimming Pool</a>
+                    <a href="<?= url('services-facilities#school-transport') ?>" onclick="toggleMenu()"><i class="fas fa-bus"></i> Transport</a>
+                    <a href="<?= url('services-facilities#school-feeding') ?>" onclick="toggleMenu()"><i class="fas fa-utensils"></i> School Feeding</a>
                 </div>
             </li>
 
