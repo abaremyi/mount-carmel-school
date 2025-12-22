@@ -103,7 +103,15 @@ $decoded = $token ? $jwtHandler->validateToken($token) : null;
         <?php if ($decoded->is_super_admin || in_array('programs.view', $decoded->permissions)): ?>
         <li class="nav-item">
             <a href="<?= url('admin/educational-programs') ?>" class="nav-link">
-                <i class="fas fa-graduation-cap me-2"></i> Programs
+                <i class="fas fa-book-open me-2"></i> Programs
+            </a>
+        </li>
+        <?php endif; ?>
+
+        <?php if ($decoded->is_super_admin || in_array('programs.view', $decoded->permissions)): ?>
+        <li class="nav-item">
+            <a href="<?= url('admin/admission') ?>" class="nav-link">
+                <i class="fas fa-user-graduate me-2"></i> Admission
             </a>
         </li>
         <?php endif; ?>

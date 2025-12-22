@@ -1,11 +1,16 @@
 <?php
-// Enable error reporting for debugging
+/**
+ * Contact API Endpoint
+ * File: modules/Contact/api/contactApi.php
+ * Handles contact form submissions
+ */
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 
-// Calculate the root path - go up 4 levels from this file's location
 $root_path = dirname(dirname(dirname(dirname(__FILE__))));
 require_once $root_path . "/config/paths.php";
 require_once $root_path . "/config/database.php";
@@ -14,43 +19,46 @@ require_once $root_path . "/modules/Contact/models/ContactModel.php";
 
 $action = isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : '');
 
-// Log the request for debugging
 error_log("Contact API called with action: " . $action);
 
-switch ($action) {
-    case 'contact':
-        try {
-            $contactController = new ContactController();
-            $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $phone = $_POST['phone'] ?? '';
-            $service_type = $_POST['service_type'] ?? '';
-            $message = $_POST['message'] ?? '';
+try {
+    $contactController = new ContactController();
 
-            // Log received data
-            error_log("Contact form data - Name: $name, Email: $email, Phone: $phone, Service: $service_type");
+    switch ($action) {
+        case 'submit_contact':
+        case 'contact':
+        case '':
+            // Handle contact form submission
+            $data = [
+                'name' => $_POST['name'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'phone' => $_POST['phone'] ?? '',
+                'subject' => $_POST['subject'] ?? '',
+                'message' => $_POST['message'] ?? '',
+                'person_type' => $_POST['person_type'] ?? 'guest',
+                'inquiry_type' => $_POST['inquiry_type'] ?? 'general'
+            ];
 
-            // Validate required fields
-            if (empty($name) || empty($email) || empty($phone) || empty($service_type) || empty($message)) {
-                echo json_encode(['success' => false, 'message' => 'All fields are required.']);
-                exit;
-            }
+            error_log("Contact form data - Name: {$data['name']}, Person Type: {$data['person_type']}, Email: {$data['email']}, Phone: {$data['phone']}, Inquiry: {$data['inquiry_type']}");
 
-            $result = $contactController->handleContactForm($name, $email, $phone, $service_type, $message);
+            $result = $contactController->handleContactForm($data);
+            echo json_encode($result);
+            break;
 
-            if ($result['success']) {
-                echo json_encode(['success' => true, 'message' => $result['message']]);
-            } else {
-                echo json_encode(['success' => false, 'message' => $result['message']]);
-            }
-        } catch (Exception $e) {
-            error_log("Exception in contact API: " . $e->getMessage());
-            echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
-        }
-        exit;
-    
-    default:
-        echo json_encode(['success' => false, 'message' => 'Invalid action.']);
-        break;
+        default:
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid action. Available actions: submit_contact, contact'
+            ]);
+            break;
+    }
+
+} catch (Exception $e) {
+    error_log("Contact API Exception: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Server error occurred: ' . $e->getMessage()
+    ]);
 }
 ?>

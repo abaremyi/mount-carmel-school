@@ -1,4 +1,3 @@
-
 <!-- Top Bar -->
 <div class="top-bar">
     <div class="top-container">
@@ -67,7 +66,7 @@
 
                 <!-- Academics Program -->
                 <li>
-                    <a href="#admissions">
+                    <a href="<?= url('programs') ?>">
                         Programs
                         <i class="fas fa-chevron-down"></i>
                     </a>
@@ -76,9 +75,15 @@
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-book-open"></i> Programs</h4>
                                 <ul>
-                                    <li><a href="#nursery"><i class="fas fa-circle"></i> Nursery Program</a></li>
-                                    <li><a href="#primary"><i class="fas fa-circle"></i> Primary School</a></li>
-                                    <li><a href="#curriculum"><i class="fas fa-circle"></i> Curriculum</a></li>
+                                    <li><a href="<?= url('programs#nursery-school') ?>"><i class="fas fa-circle"></i> Nursery School</a></li>
+                                    <li><a href="<?= url('programs#lower-primary') ?>"><i class="fas fa-circle"></i> Lower Primary</a></li>
+                                    <li><a href="<?= url('programs#upper-primary') ?>"><i class="fas fa-circle"></i> Upper Primary</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-menu-column">
+                                <h4><i class="fas fa-book-open"></i> Curriculum</h4>
+                                <ul>
+                                    <li><a href="<?= url('programs#curriculum') ?>"><i class="fas fa-circle"></i> Our Curriculum</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -96,56 +101,48 @@
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-building"></i> Academic</h4>
                                 <ul>
-                                    <li class="has-submenu">
-                                        <a href="#libraries"><i class="fas fa-circle"></i> Libraries</a>
-                                        <div class="submenu-right">
-                                            <h5>Library Locations</h5>
-                                            <ul>
-                                                <li><a href="#lower-library">Lower School Library</a></li>
-                                                <li><a href="#mellon-library">Mellon Library</a></li>
-                                                <li><a href="#digital-library">Digital Resources</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
                                     <li><a href="#computer-lab"><i class="fas fa-circle"></i> Computer Lab</a></li>
-                                    <li><a href="#science-lab"><i class="fas fa-circle"></i> Science Labs</a></li>
-                                    <li><a href="#innovation-lab"><i class="fas fa-circle"></i> Innovation Lab</a></li>
+                                    <li><a href="#science-lab"><i class="fas fa-circle"></i> School Library</a></li>
                                 </ul>
                             </div>
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-dumbbell"></i> Sports & Recreation</h4>
                                 <ul>
-                                    <li class="has-submenu">
-                                        <a href="#sports"><i class="fas fa-circle"></i> Sports Facilities</a>
-                                        <div class="submenu-right">
-                                            <h5>Available Sports</h5>
-                                            <ul>
-                                                <li><a href="#football">Football Field</a></li>
-                                                <li><a href="#basketball">Basketball Court</a></li>
-                                                <li><a href="#volleyball">Volleyball Court</a></li>
-                                                <li><a href="#athletics">Athletics Track</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li><a href="#swimming"><i class="fas fa-circle"></i> Swimming Pool</a></li>
-                                    <li><a href="#fitness"><i class="fas fa-circle"></i> Fitness Center</a></li>
-                                    <li><a href="#canons-park"><i class="fas fa-circle"></i> Canons Park</a></li>
+                                    <li><a href="#fitness"><i class="fas fa-circle"></i> Sports Activities</a></li>
+                                    <li><a href="#swimming"><i class="fas fa-circle"></i> Swimming Courses</a></li>
                                 </ul>
                             </div>
                             <div class="mega-menu-column">
                                 <h4><i class="fas fa-utensils"></i> Services</h4>
                                 <ul>
-                                    <li><a href="#cafeteria"><i class="fas fa-circle"></i> Cafeteria</a></li>
-                                    <li><a href="#transport"><i class="fas fa-circle"></i> Transport</a></li>
-                                    <li><a href="#health"><i class="fas fa-circle"></i> Health Center</a></li>
-                                    <li><a href="#technology"><i class="fas fa-circle"></i> Technology</a></li>
+                                    <li><a href="#cafeteria"><i class="fas fa-circle"></i> School Feeding</a></li>
+                                    <li><a href="#transport"><i class="fas fa-circle"></i> School Transport</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </li>
 
-                <li><a href="#admissions">Admissions</a></li>
+                <!-- Admission -->
+                <li>
+                    <a href="<?= url('admission') ?>">
+                        Admission
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-menu-column">
+                                <h4><i class="fas fa-book-open"></i> Admission</h4>
+                                <ul>
+                                    <li><a href="<?= url('admission#requirement') ?>"><i class="fas fa-circle"></i> Admission Requirements</a></li>
+                                    <li><a href="<?= url('admission#fee-structure') ?>"><i class="fas fa-circle"></i> Fee Structure</a></li>
+                                    <li><a href="https://docs.google.com/forms/d/1wogDmRr4HUKh4uqx9QpbI96s0o_EEOBoAkr2zM2k7Qw/edit" target="_blank"><i class="fas fa-circle"></i> Online Registration</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
                 <li><a href="<?= url('contact') ?>">Contact</a></li>
             </ul>
 
@@ -170,13 +167,13 @@
                 </div>
                 <div class="mobile-logo-text">
                     <div class="main">Mount Carmel</div>
-                    <div class="sub">PRIVATE CHRISTIAN SCHOOL</div>
+                    <div class="sub">A PRIVATE CHRISTIAN SCHOOL</div>
                 </div>
             </div>
             <button class="close-btn" onclick="toggleMenu()">&times;</button>
         </div>
         <ul class="mobile-menu-items">
-            <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+            <li><a href="<?= url() ?>" onclick="toggleMenu()">Home</a></li>
             
             <!-- About Dropdown -->
             <li>
@@ -188,10 +185,22 @@
                     <a href="<?= url('about') ?>" onclick="toggleMenu()"><i class="fas fa-school"></i> Who We Are</a>
                     <a href="<?= url('about#mvp-about-section') ?>" onclick="toggleMenu()"><i class="fas fa-bullseye"></i> Mission & Vision</a>
                     <a href="<?= url('administration') ?>" onclick="toggleMenu()"><i class="fas fa-users"></i> Administration</a>
-                    <a href="<?= url('program') ?>" onclick="toggleMenu()"><i class="fas fa-book-open"></i> Programs</a>
                     <a href="<?= url('gallery') ?>" onclick="toggleMenu()"><i class="fas fa-images"></i> Photo Gallery</a>
                     <a href="<?= url('news') ?>" onclick="toggleMenu()"><i class="fas fa-newspaper"></i> News & Events</a>
-                    
+                </div>
+            </li>
+
+            <!-- Academic Programs -->
+            <li>
+                <div class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
+                    <span><i class="fas fa-graduation-cap"></i> Programs</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="mobile-dropdown-content">
+                    <a href="<?= url('programs#nursery-school') ?>" onclick="toggleMenu()"><i class="fas fa-baby"></i> Nursery School</a>
+                    <a href="<?= url('programs#lower-primary') ?>" onclick="toggleMenu()"><i class="fas fa-child"></i> Lower Primary</a>
+                    <a href="<?= url('programs#upper-primary') ?>" onclick="toggleMenu()"><i class="fas fa-graduation-cap"></i> Upper Primary</a>
+                    <a href="<?= url('programs#curriculum') ?>" onclick="toggleMenu()"><i class="fas fa-book-open"></i> Curriculum</a>
                 </div>
             </li>
 
@@ -202,47 +211,33 @@
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="mobile-dropdown-content">
-                    <a href="#libraries" onclick="toggleMenu()"><i class="fas fa-book-reader"></i> Libraries</a>
-                    <div class="mobile-submenu">
-                        <a href="#lower-library" onclick="toggleMenu()">Lower School Library</a>
-                        <a href="#mellon-library" onclick="toggleMenu()">Mellon Library</a>
-                        <a href="#digital-library" onclick="toggleMenu()">Digital Resources</a>
-                    </div>
                     <a href="#computer-lab" onclick="toggleMenu()"><i class="fas fa-laptop"></i> Computer Lab</a>
-                    <a href="#science-lab" onclick="toggleMenu()"><i class="fas fa-flask"></i> Science Labs</a>
-                    <a href="#innovation-lab" onclick="toggleMenu()"><i class="fas fa-lightbulb"></i> Innovation Lab</a>
-                    <a href="#sports" onclick="toggleMenu()"><i class="fas fa-futbol"></i> Sports Facilities</a>
-                    <div class="mobile-submenu">
-                        <a href="#football" onclick="toggleMenu()">Football Field</a>
-                        <a href="#basketball" onclick="toggleMenu()">Basketball Court</a>
-                        <a href="#volleyball" onclick="toggleMenu()">Volleyball Court</a>
-                        <a href="#athletics" onclick="toggleMenu()">Athletics Track</a>
-                    </div>
+                    <a href="#science-lab" onclick="toggleMenu()"><i class="fas fa-flask"></i> School Library</a>
+                    <a href="#sports" onclick="toggleMenu()"><i class="fas fa-futbol"></i> Sports Activities</a>
                     <a href="#swimming" onclick="toggleMenu()"><i class="fas fa-swimming-pool"></i> Swimming Pool</a>
-                    <a href="#fitness" onclick="toggleMenu()"><i class="fas fa-dumbbell"></i> Fitness Center</a>
                     <a href="#transport" onclick="toggleMenu()"><i class="fas fa-bus"></i> Transport</a>
+                    <a href="#cafeteria" onclick="toggleMenu()"><i class="fas fa-utensils"></i> School Feeding</a>
                 </div>
             </li>
 
-            <!-- Academic Programs -->
+            <!-- Admission -->
             <li>
                 <div class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-                    <span><i class="fas fa-info-circle"></i> Programs</span>
+                    <span><i class="fas fa-user-graduate"></i> Admission</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="mobile-dropdown-content">
-                    <a href="#who-we-are" onclick="toggleMenu()"><i class="fas fa-baby"></i> Nursery Program</a>
-                    <a href="#mission" onclick="toggleMenu()"><i class="fas fa-graduation-cap"></i> Primary School</a>
-                    <a href="#team" onclick="toggleMenu()"><i class="fas fa-book-open"></i> Curriculum</a>
+                    <a href="<?= url('admission#requirement') ?>" onclick="toggleMenu()"><i class="fas fa-baby"></i> Admission Requirements</a>
+                    <a href="<?= url('admission#fee-structure') ?>" onclick="toggleMenu()"><i class="fas fa-child"></i> Fee Structure</a>
+                    <a href="https://docs.google.com/forms/d/1wogDmRr4HUKh4uqx9QpbI96s0o_EEOBoAkr2zM2k7Qw/edit" target="_blank" onclick="toggleMenu()"><i class="fas fa-graduation-cap"></i> Online Registration</a>
                 </div>
             </li>
 
-            <li><a href="#admissions" onclick="toggleMenu()"><i class="fas fa-user-graduate"></i> Admissions</a></li>
             <li><a href="<?= url('contact') ?>" onclick="toggleMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
         </ul>
 
         <div class="mobile-apply-btn">
-            <a href="#apply" class="apply-btn" onclick="toggleMenu()">
+            <a href="https://docs.google.com/forms/d/1wogDmRr4HUKh4uqx9QpbI96s0o_EEOBoAkr2zM2k7Qw/edit" target="_blank" class="apply-btn" onclick="toggleMenu()">
                 <i class="fas fa-edit"></i> APPLY NOW
             </a>
         </div>
