@@ -4806,7 +4806,7 @@ footer {
     position: relative;
     padding: 25px 30px;
     background: linear-gradient(135deg, rgba(0, 121, 107, 0.05), rgba(255, 107, 53, 0.05));
-    border-left: 4px solid #ff6b35;
+    border-left: 4px solid rgb(190, 195, 197);
     border-radius: 8px;
     margin-top: 30px;
 }
