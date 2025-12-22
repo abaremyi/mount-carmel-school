@@ -401,7 +401,7 @@ const PAGE_TYPE = 'services';
     }
 
     .services-header {
-        background: linear-gradient(135deg, rgba(0, 87, 121, 0.9), rgba(32, 66, 128, 0.9)),
+        background: linear-gradient(135deg, rgba(0, 87, 121, 0.9), rgba(32, 98, 128, 0.9)),
                     url('<?= img_url("services-hero.jpg") ?>');
         background-size: cover;
     }

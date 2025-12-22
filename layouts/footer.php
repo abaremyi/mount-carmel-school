@@ -65,7 +65,7 @@
                     <div class="footer-grid-info">
                         <p>Mount Carmel School is dedicated to providing quality education and nurturing future leaders through excellence in academics and character development.</p>
                         <div class="developer-credit">
-                            Website developed by <a href="mailto:mushyagroup@gmail.com">MUSHYA GROUP Ltd</a>
+                            Website developed by <a href="https://mushyagroup.com" target="_blank">MUSHYA GROUP Ltd</a>
                         </div>
                     </div>
                 </div>
