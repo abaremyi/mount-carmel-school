@@ -1,13 +1,12 @@
 <?php
+// modules/General/views/administration.php
+
 // Include paths configuration
 $root_path = dirname(dirname(dirname(dirname(__FILE__))));
 require_once $root_path . "/config/paths.php";
 
 // Include header
 include_once get_layout('header');
-
-// Include database connection
-require_once $root_path . "/config/database.php";
 
 // Fetch administration data from API
 function fetchAdministrationData() {
@@ -50,15 +49,11 @@ function fetchAdministrationData() {
 function getDefaultData() {
     return [
         'leadership' => [],
-        'staff' => [],
-        'departments' => [],
         'orgChart' => null,
         'statistics' => [
-            'total_staff' => 0,
-            'total_teachers' => 0,
             'total_leadership' => 0,
-            'total_departments' => 0,
-            'years_experience' => date('Y') - 2013
+            'years_experience' => date('Y') - 2013,
+            'quick_stats_years' => date('Y') - 2013
         ]
     ];
 }
@@ -66,17 +61,22 @@ function getDefaultData() {
 // Fetch data
 $adminData = fetchAdministrationData();
 
-// Extract data for easier use in template
+// Extract data
 $leadershipTeam = $adminData['leadership'] ?? [];
-$allStaff = $adminData['staff'] ?? [];
-$departments = $adminData['departments'] ?? [];
 $orgChart = $adminData['orgChart'] ?? null;
 $stats = $adminData['statistics'] ?? [];
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Mount Carmel School</title>
+    
+    <!-- Include header scripts -->
+    <?php include_once get_layout('header'); ?>
+</head>
 
 <body>
 
@@ -89,6 +89,7 @@ $stats = $adminData['statistics'] ?? [];
     $news = 'off';
     $contacts = 'off';
     ?>
+    
     <!-- Navbar -->
     <?php include_once get_layout('navbar'); ?>
 
@@ -97,6 +98,11 @@ $stats = $adminData['statistics'] ?? [];
         <div class="container">
             <h1>Our Administration</h1>
             <p>Meet the dedicated leaders shaping our educational excellence</p>
+            <div class="admin-breadcrumb">
+                <a href="/">Home</a>
+                <span><i class="fas fa-chevron-right"></i></span>
+                <span>Administration</span>
+            </div>
         </div>
     </header>
 
@@ -118,31 +124,24 @@ $stats = $adminData['statistics'] ?? [];
                 <h3 class="widget-title">Quick Stats</h3>
                 <div class="admin-stats">
                     <div class="stat-item">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-user-tie"></i>
                         <div>
-                            <span class="stat-number" id="totalStaff"><?= $stats['total_staff'] ?? 0 ?></span>
-                            <span class="stat-label">Total Staff</span>
-                        </div>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <div>
-                            <span class="stat-number" id="totalTeachers"><?= $stats['total_teachers'] ?? 0 ?></span>
-                            <span class="stat-label">Teachers</span>
-                        </div>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-building"></i>
-                        <div>
-                            <span class="stat-number"><?= $stats['total_departments'] ?? 0 ?></span>
-                            <span class="stat-label">Departments</span>
+                            <span class="stat-number" id="totalLeadership"><?= $stats['total_leadership'] ?? 0 ?></span>
+                            <span class="stat-label">Leadership Team</span>
                         </div>
                     </div>
                     <div class="stat-item">
                         <i class="fas fa-award"></i>
                         <div>
-                            <span class="stat-number"><?= $stats['years_experience'] ?? 0 ?>+</span>
+                            <span class="stat-number"><?= $stats['quick_stats_years'] ?? 0 ?>+</span>
                             <span class="stat-label">Years Experience</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <span class="stat-number"><?= date('Y') - 2013 ?>+</span>
+                            <span class="stat-label">Years Established</span>
                         </div>
                     </div>
                 </div>
@@ -179,74 +178,70 @@ $stats = $adminData['statistics'] ?? [];
                         <i class="fas fa-user-tie"></i>
                         <span>Leadership Team</span>
                     </a>
-                    <a href="#staff" class="quick-link">
-                        <i class="fas fa-users"></i>
-                        <span>All Staff</span>
-                    </a>
-                    <a href="#departments" class="quick-link">
-                        <i class="fas fa-sitemap"></i>
-                        <span>Departments</span>
-                    </a>
                     <a href="#structure" class="quick-link">
                         <i class="fas fa-project-diagram"></i>
                         <span>Organization Structure</span>
                     </a>
-                    <a href="/contact" class="quick-link">
+                    <a href="#contact" class="quick-link">
                         <i class="fas fa-headset"></i>
                         <span>Contact Administration</span>
                     </a>
                 </div>
             </div>
 
+            <!-- About Widget -->
+            <div class="sidebar-widget sidebar-about">
+                <h3 class="widget-title">About</h3>
+                <p>Our administration team is committed to providing excellent leadership and ensuring the smooth operation of Mount Carmel School.</p>
+                <a href="#contact" class="subscribe-link">Contact Us <i class="fas fa-arrow-right"></i></a>
+            </div>
+
             <!-- Social Links -->
             <div class="sidebar-social">
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Twitter">
+                    <svg width="16" height="16" viewBox="0 0 1200 1227" fill="currentColor">
+                        <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+                    </svg>
+                </a>
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="RSS"><i class="fas fa-rss"></i></a>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="admin-main">
             
-            <!-- Leadership Team Section -->
-            <section class="admin-section" id="leadership">
+            <!-- Featured Leadership -->
+            <section class="featured-leadership" id="leadership">
                 <div class="section-header">
-                    <h2 class="section-title">Leadership Team</h2>
-                    <p class="section-subtitle">Our experienced administrators committed to student success and academic excellence</p>
+                    <h2>Leadership Team</h2>
+                    <p>Our experienced administrators committed to student success and academic excellence</p>
                 </div>
                 
-                <div class="admin-leadership-grid" id="leadershipGrid">
+                <div class="leadership-grid" id="leadershipGrid">
                     <?php if (!empty($leadershipTeam)): ?>
                         <?php foreach ($leadershipTeam as $leader): ?>
-                            <article class="leader-card">
-                                <div class="leader-image">
-                                    <img src="<?= !empty($leader['image_url']) ? img_url($leader['image_url']) : 'https://ui-avatars.com/api/?name=' . urlencode($leader['full_name']) . '&background=0d47a1&color=fff&size=400&font-size=0.5' ?>" 
+                            <article class="leader-card" data-category="leadership">
+                                <div class="leader-thumbnail">
+                                    <img src="<?= !empty($leader['image_url']) ? img_url($leader['image_url']) : 'https://ui-avatars.com/api/?name=' . urlencode($leader['full_name']) . '&background=0d47a1&color=fff&size=400' ?>" 
                                          alt="<?= htmlspecialchars($leader['full_name']) ?>"
-                                         onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($leader['full_name']) ?>&background=0d47a1&color=fff&size=400&font-size=0.5'">
+                                         onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($leader['full_name']) ?>&background=0d47a1&color=fff&size=400'">
                                     <?php if ($leader['role_badge']): ?>
                                         <span class="leader-badge"><?= htmlspecialchars($leader['role_badge']) ?></span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="leader-body">
-                                    <h3 class="leader-name"><?= htmlspecialchars($leader['full_name']) ?></h3>
-                                    <span class="leader-position"><?= htmlspecialchars($leader['position']) ?></span>
-                                    <p class="leader-bio"><?= htmlspecialchars(substr($leader['short_bio'], 0, 100)) . (strlen($leader['short_bio']) > 100 ? '...' : '') ?></p>
-                                    <div class="leader-contact">
-                                        <?php if ($leader['email']): ?>
-                                            <a href="mailto:<?= htmlspecialchars($leader['email']) ?>" class="contact-link">
-                                                <i class="fas fa-envelope"></i>
-                                                <span><?= htmlspecialchars($leader['email']) ?></span>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if ($leader['phone']): ?>
-                                            <a href="tel:<?= htmlspecialchars(str_replace([' ', '-'], '', $leader['phone'])) ?>" class="contact-link">
-                                                <i class="fas fa-phone"></i>
-                                                <span><?= htmlspecialchars($leader['phone']) ?></span>
-                                            </a>
-                                        <?php endif; ?>
+                                    <div class="leader-meta">
+                                        <span class="leader-position"><?= htmlspecialchars($leader['position']) ?></span>
+                                        
                                     </div>
+                                    <h3 class="leader-title"><?= htmlspecialchars($leader['full_name']) ?></h3>
+                                    
+                                    <button class="btn-view-profile" onclick="openLeaderModal(<?= $leader['id'] ?>)">
+                                        View Full Profile
+                                    </button>
                                 </div>
                             </article>
                         <?php endforeach; ?>
@@ -259,109 +254,11 @@ $stats = $adminData['statistics'] ?? [];
                 </div>
             </section>
 
-            <!-- All Staff Section -->
-            <section class="admin-section" id="staff" style="background: #f8f9fa;">
-                <div class="section-header">
-                    <h2 class="section-title">Our Staff Team</h2>
-                    <p class="section-subtitle">Dedicated professionals committed to student success</p>
-                </div>
-                
-                <div class="admin-staff-grid" id="staffGrid">
-                    <?php if (!empty($allStaff)): ?>
-                        <?php foreach ($allStaff as $staff): ?>
-                            <article class="staff-card">
-                                <div class="staff-image">
-                                    <img src="<?= !empty($staff['image_url']) ? img_url($staff['image_url']) : 'https://ui-avatars.com/api/?name=' . urlencode($staff['full_name']) . '&background=0d47a1&color=fff&size=400&font-size=0.5' ?>" 
-                                         alt="<?= htmlspecialchars($staff['full_name']) ?>"
-                                         onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($staff['full_name']) ?>&background=0d47a1&color=fff&size=400&font-size=0.5'">
-                                    <span class="staff-type-badge <?= $staff['staff_type'] ?>">
-                                        <?= ucfirst($staff['staff_type']) ?>
-                                    </span>
-                                </div>
-                                <div class="staff-body">
-                                    <h3 class="staff-name"><?= htmlspecialchars($staff['full_name']) ?></h3>
-                                    <span class="staff-position"><?= htmlspecialchars($staff['position']) ?></span>
-                                    <p class="staff-bio"><?= htmlspecialchars(substr($staff['short_bio'], 0, 100)) . (strlen($staff['short_bio']) > 100 ? '...' : '') ?></p>
-                                    <div class="staff-details">
-                                        <?php if ($staff['years_experience'] > 0): ?>
-                                            <span class="staff-experience">
-                                                <i class="fas fa-award"></i>
-                                                <?= $staff['years_experience'] ?> yrs
-                                            </span>
-                                        <?php endif; ?>
-                                        <?php if ($staff['join_date']): ?>
-                                            <span class="staff-join-date">
-                                                <i class="fas fa-calendar-alt"></i>
-                                                Since <?= date('Y', strtotime($staff['join_date'])) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </article>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="no-content">
-                            <i class="fas fa-users"></i>
-                            <p>Staff information coming soon.</p>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </section>
-
-            <!-- Departments Section -->
-            <section class="admin-section" id="departments">
-                <div class="section-header">
-                    <h2 class="section-title">Our Departments</h2>
-                    <p class="section-subtitle">Specialized teams working together for holistic student development</p>
-                </div>
-                
-                <div class="admin-departments-grid" id="departmentsGrid">
-                    <?php if (!empty($departments)): ?>
-                        <?php foreach ($departments as $dept): ?>
-                            <article class="department-card">
-                                <div class="department-icon">
-                                    <i class="<?= htmlspecialchars($dept['department_icon'] ?: 'fas fa-building') ?>"></i>
-                                </div>
-                                <div class="department-body">
-                                    <h3 class="department-name"><?= htmlspecialchars($dept['department_name']) ?></h3>
-                                    <p class="department-desc"><?= htmlspecialchars($dept['description']) ?></p>
-                                    <div class="department-footer">
-                                        <span class="staff-count">
-                                            <i class="fas fa-users"></i>
-                                            <?= $dept['current_staff'] ?> Staff
-                                        </span>
-                                        <?php if ($dept['head_of_department']): ?>
-                                            <span class="hod-info">
-                                                <i class="fas fa-user-tie"></i>
-                                                <?= htmlspecialchars($dept['head_of_department']) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <?php if ($dept['email']): ?>
-                                        <div class="department-contact">
-                                            <a href="mailto:<?= htmlspecialchars($dept['email']) ?>" class="contact-link">
-                                                <i class="fas fa-envelope"></i>
-                                                <?= htmlspecialchars($dept['email']) ?>
-                                            </a>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </article>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="no-content">
-                            <i class="fas fa-sitemap"></i>
-                            <p>Department information coming soon.</p>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </section>
-
             <!-- Organizational Structure -->
-            <section class="admin-section" id="structure" style="background: #f8f9fa;">
+            <section id="structure" class="org-structure-section">
                 <div class="section-header">
-                    <h2 class="section-title">Organizational Structure</h2>
-                    <p class="section-subtitle">Our hierarchical framework ensuring effective communication and management</p>
+                    <h2>Organizational Structure</h2>
+                    <p>Our hierarchical framework ensuring effective communication and management</p>
                 </div>
                 
                 <div class="org-chart-container">
@@ -370,46 +267,61 @@ $stats = $adminData['statistics'] ?? [];
                             <img src="<?= img_url($orgChart['image_url']) ?>" 
                                  alt="Mount Carmel School Organizational Structure"
                                  onerror="this.src='<?= img_url('org-chart.png') ?>'">
-                            <?php if (isset($orgChart['description'])): ?>
-                                <p class="org-chart-description"><?= htmlspecialchars($orgChart['description']) ?></p>
-                            <?php endif; ?>
-                            <?php if (isset($orgChart['updated_at'])): ?>
-                                <p class="org-chart-updated small text-muted">
-                                    <i class="fas fa-clock me-1"></i>
-                                    Last updated: <?= date('F j, Y', strtotime($orgChart['updated_at'])) ?>
-                                </p>
-                            <?php endif; ?>
                         </div>
+                        <?php if (isset($orgChart['description'])): ?>
+                            <p class="org-chart-description"><?= htmlspecialchars($orgChart['description']) ?></p>
+                        <?php endif; ?>
+                        <?php if (isset($orgChart['updated_at'])): ?>
+                            <p class="org-chart-updated">
+                                <i class="fas fa-clock"></i>
+                                Last updated: <?= date('F j, Y', strtotime($orgChart['updated_at'])) ?>
+                            </p>
+                        <?php endif; ?>
                     <?php else: ?>
                         <div class="org-chart-image">
                             <img src="<?= img_url('org-chart.png') ?>" 
                                  alt="Mount Carmel School Organizational Structure"
                                  onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80'">
-                            <p class="org-chart-description">Organizational chart showing the hierarchical structure of Mount Carmel School administration.</p>
                         </div>
+                        <p class="org-chart-description">Organizational chart showing the hierarchical structure of Mount Carmel School administration.</p>
                     <?php endif; ?>
                 </div>
             </section>
 
             <!-- Contact CTA -->
-            <section class="contact-cta lower-part-link">
+            <section id="contact" class="contact-cta">
                 <div class="cta-content">
                     <h2>Need to Contact Administration?</h2>
                     <p>Get in touch with our administrative team for inquiries, appointments, or more information.</p>
                     <div class="cta-buttons">
                         <a href="<?= url('contact') ?>" class="btn-primary">
-                            <i class="fas fa-envelope"></i>
-                            Send Message
+                            <i class="fas fa-envelope"></i> Send Message
                         </a>
                         <a href="tel:+250789121680" class="btn-secondary">
-                            <i class="fas fa-phone"></i>
-                            Call Now
+                            <i class="fas fa-phone"></i> Call Now
                         </a>
                     </div>
                 </div>
             </section>
 
         </main>
+
+    </div>
+
+    <!-- Leader Modal -->
+    <div class="leader-modal" id="leaderModal">
+        <div class="modal-backdrop" onclick="closeLeaderModal()"></div>
+        <article class="modal-content">
+            <button class="modal-close" aria-label="Close" onclick="closeLeaderModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-loading" id="modalLoading">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded dynamically -->
+            </div>
+        </article>
     </div>
 
     <!-- Footer -->
@@ -420,32 +332,44 @@ $stats = $adminData['statistics'] ?? [];
 
     <style>
     /* ============================================
-       MODERN ADMINISTRATION PAGE STYLES
-       Professional, Clean Layout - FULLY RESPONSIVE
+       GLOBAL STYLES
        ============================================ */
+    :root {
+        --primary-color: #0d9488;
+        --secondary-color: #0c4a6e;
+        --accent-color: #d97706;
+        --light-bg: #f8fafc;
+        --dark-text: #1f2937;
+        --light-text: #6b7280;
+        --border-color: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
 
-    /* Base Layout */
-    .admin-container {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 40px;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 60px 30px 80px;
-        background: #fafafa;
-        min-height: 100vh;
+    * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
     }
 
-    /* Page Header */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--dark-text);
+        background-color: #fff;
+    }
+
+    /* ============================================
+       PAGE HEADER
+       ============================================ */
     .admin-page-header {
         background: linear-gradient(135deg, rgba(0, 73, 121, 0.9), rgba(26, 58, 82, 0.9)),
-        url('<?= img_url("administration.jpg") ?>');
-        color: white;
-        padding: 80px 20px;
-        text-align: center;
+                    url('<?= img_url("administration.jpg") ?>');
         background-size: cover;
         background-position: center;
+        color: white;
+        padding: 80px 0 60px;
+        text-align: center;
         margin-bottom: 0;
     }
 
@@ -453,115 +377,171 @@ $stats = $adminData['statistics'] ?? [];
         font-size: 2.8rem;
         font-weight: 700;
         margin-bottom: 15px;
-        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     .admin-page-header p {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         opacity: 0.9;
         max-width: 600px;
+        margin: 0 auto 30px;
+    }
+
+    .admin-breadcrumb {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 0.9rem;
+    }
+
+    .admin-breadcrumb a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .admin-breadcrumb a:hover {
+        color: white;
+    }
+
+    .admin-breadcrumb span:last-child {
+        color: white;
+        font-weight: 500;
+    }
+
+    .admin-breadcrumb i {
+        font-size: 0.8rem;
+        opacity: 0.7;
+    }
+
+    /* ============================================
+       MAIN CONTAINER LAYOUT
+       ============================================ */
+    .admin-container {
+        display: flex;
+        max-width: 1400px;
         margin: 0 auto;
-        line-height: 1.5;
+        padding: 40px 20px;
+        gap: 40px;
+    }
+
+    @media (max-width: 1024px) {
+        .admin-container {
+            flex-direction: column;
+            padding: 30px 15px;
+        }
     }
 
     /* ============================================
        SIDEBAR STYLES
        ============================================ */
-
     .admin-sidebar {
-        position: sticky;
-        top: 100px;
-        height: fit-content;
-        background: #ffffff;
-        padding: 30px;
+        flex: 0 0 320px;
+        background: white;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        align-self: start;
+        padding: 30px;
+        box-shadow: var(--shadow);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+    }
+
+    @media (max-width: 1024px) {
+        .admin-sidebar {
+            flex: none;
+            width: 100%;
+            position: static;
+            margin-bottom: 30px;
+        }
     }
 
     .sidebar-header {
         text-align: center;
-        padding-bottom: 25px;
-        margin-bottom: 25px;
-        border-bottom: 2px solid #f0f0f0;
+        margin-bottom: 30px;
     }
 
     .sidebar-logo {
-        width: 70px;
-        height: 70px;
-        margin: 0 auto 15px;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
         background: var(--light-bg);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 3px solid var(--primary-teal);
+        border: 3px solid var(--primary-color);
     }
 
     .sidebar-logo img {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         object-fit: contain;
     }
 
     .sidebar-title {
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--primary-teal);
+        color: var(--primary-color);
         margin: 0 0 5px 0;
     }
 
     .sidebar-subtitle {
         font-size: 0.85rem;
-        color: #888;
+        color: var(--light-text);
         text-transform: uppercase;
         letter-spacing: 1px;
         margin: 0;
     }
 
-    /* Sidebar Widgets */
     .sidebar-widget {
         margin-bottom: 30px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-widget:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
 
     .widget-title {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 700;
-        color: #333;
+        color: var(--dark-text);
         text-transform: uppercase;
         letter-spacing: 1px;
-        margin: 0 0 15px 0;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 20px;
     }
 
     /* Quick Stats */
     .admin-stats {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 15px;
     }
 
     .stat-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px 15px;
-        background: #f8f9fa;
+        gap: 15px;
+        padding: 15px;
+        background: var(--light-bg);
         border-radius: 8px;
         transition: all 0.3s ease;
     }
 
     .stat-item:hover {
-        background: #e9ecef;
+        background: #e8f4ff;
         transform: translateX(3px);
     }
 
     .stat-item i {
-        font-size: 1.1rem;
-        color: var(--primary-teal);
-        width: 36px;
-        height: 36px;
+        font-size: 1.3rem;
+        color: var(--primary-color);
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -572,48 +552,43 @@ $stats = $adminData['statistics'] ?? [];
 
     .stat-number {
         display: block;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        color: #333;
+        color: var(--dark-text);
         line-height: 1;
     }
 
     .stat-label {
-        font-size: 0.8rem;
-        color: #666;
+        font-size: 0.85rem;
+        color: var(--light-text);
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        margin-top: 3px;
     }
 
     /* Contact Info */
     .contact-info {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
     }
 
     .contact-item {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    .contact-item:last-child {
-        border-bottom: none;
+        gap: 12px;
     }
 
     .contact-item i {
-        color: var(--primary-teal);
-        font-size: 0.95rem;
+        color: var(--primary-color);
+        font-size: 1rem;
         width: 20px;
         flex-shrink: 0;
     }
 
     .contact-item span {
-        font-size: 0.85rem;
-        color: #555;
+        font-size: 0.9rem;
+        color: var(--light-text);
         flex: 1;
     }
 
@@ -621,31 +596,33 @@ $stats = $adminData['statistics'] ?? [];
     .quick-links {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
     }
 
     .quick-link {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         padding: 12px 15px;
         text-decoration: none;
-        color: #555;
+        color: var(--dark-text);
         border-radius: 8px;
         transition: all 0.3s ease;
-        background: #f8f9fa;
+        background: var(--light-bg);
+        border: 1px solid transparent;
     }
 
     .quick-link:hover,
     .quick-link.active {
-        background: var(--primary-teal);
+        background: var(--primary-color);
         color: white;
         transform: translateX(3px);
+        border-color: var(--primary-color);
     }
 
     .quick-link i {
-        color: var(--primary-teal);
-        font-size: 0.95rem;
+        color: var(--primary-color);
+        font-size: 1rem;
         width: 20px;
         transition: color 0.3s ease;
         flex-shrink: 0;
@@ -657,180 +634,158 @@ $stats = $adminData['statistics'] ?? [];
     }
 
     .quick-link span {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-weight: 500;
         flex: 1;
+    }
+
+    /* About Widget */
+    .sidebar-about p {
+        font-size: 0.9rem;
+        color: var(--light-text);
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .subscribe-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: gap 0.3s ease;
+    }
+
+    .subscribe-link:hover {
+        gap: 12px;
+    }
+
+    .subscribe-link i {
+        font-size: 0.8rem;
     }
 
     /* Social Links */
     .sidebar-social {
         display: flex;
         justify-content: center;
-        gap: 12px;
-        padding-top: 25px;
-        border-top: 1px solid #eee;
+        gap: 15px;
+        margin-top: 20px;
     }
 
     .sidebar-social a {
-        width: 36px;
-        height: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #f8f9fa;
-        color: #666;
+        width: 36px;
+        height: 36px;
+        background: var(--light-bg);
+        color: var(--light-text);
         border-radius: 50%;
         transition: all 0.3s ease;
-        font-size: 0.95rem;
+        text-decoration: none;
     }
 
     .sidebar-social a:hover {
-        background: var(--primary-teal);
+        background: var(--primary-color);
         color: white;
         transform: translateY(-2px);
     }
 
     /* ============================================
-       MAIN CONTENT STYLES
+       MAIN CONTENT AREA
        ============================================ */
-
     .admin-main {
-        background: transparent;
-        overflow-x: hidden;
+        flex: 1;
+        min-width: 0;
     }
 
-    /* Section Header */
     .section-header {
         text-align: center;
         margin-bottom: 40px;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
     }
 
-    .section-title {
+    .section-header h2 {
         font-size: 2.2rem;
         font-weight: 700;
-        color: var(--primary-teal);
-        margin: 0 0 15px 0;
-        line-height: 1.2;
+        color: var(--primary-color);
+        margin-bottom: 15px;
     }
 
-    .section-subtitle {
-        font-size: 1rem;
-        color: #666;
-        line-height: 1.5;
+    .section-header p {
+        font-size: 1.1rem;
+        color: var(--light-text);
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
     }
 
     /* ============================================
-       RESPONSIVE GRID SYSTEM
+       LEADERSHIP GRID - FIXED TO SHOW 3 PER ROW
        ============================================ */
-
-    /* Base grid styles for all grid containers */
-    .admin-leadership-grid,
-    .admin-staff-grid,
-    .admin-departments-grid {
+    .leadership-grid {
         display: grid;
-        gap: 25px;
-        margin-bottom: 60px;
-        width: 100%;
-        box-sizing: border-box;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 50px;
     }
 
-    /* DESKTOP: 3 columns for large screens */
-    @media (min-width: 1200px) {
-        .admin-leadership-grid,
-        .admin-staff-grid,
-        .admin-departments-grid {
-            grid-template-columns: repeat(3, 1fr);
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    }
-
-    /* TABLET: 2 columns */
-    @media (min-width: 768px) and (max-width: 1199px) {
-        .admin-leadership-grid,
-        .admin-staff-grid,
-        .admin-departments-grid {
+    @media (max-width: 1200px) {
+        .leadership-grid {
             grid-template-columns: repeat(2, 1fr);
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
         }
     }
 
-    /* MOBILE: 1 column */
-    @media (max-width: 767px) {
-        .admin-leadership-grid,
-        .admin-staff-grid,
-        .admin-departments-grid {
+    @media (max-width: 768px) {
+        .leadership-grid {
             grid-template-columns: 1fr;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
         }
     }
 
-    /* ============================================
-       CARD STYLES (Shared by all card types)
-       ============================================ */
-
-    .leader-card,
-    .staff-card,
-    .department-card {
+    .leader-card {
         background: white;
-        border-radius: 10px;
+        /* border-radius: 12px; */
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        box-shadow: var(--shadow);
         transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
         display: flex;
         flex-direction: column;
-        height: 100%;
-        min-width: 0; /* Prevents flexbox overflow */
     }
 
-    .leader-card:hover,
-    .staff-card:hover,
-    .department-card:hover {
+    .leader-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-lg);
     }
 
-    /* Image container styles */
-    .leader-image,
-    .staff-image {
+    .leader-thumbnail {
         position: relative;
         width: 100%;
-        height: 220px;
+        height: 350px;
         overflow: hidden;
-        flex-shrink: 0;
+        border: solid 15px white;
     }
 
-    .leader-image img,
-    .staff-image img {
+    .leader-thumbnail img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.5s ease;
     }
 
-    .leader-card:hover .leader-image img,
-    .staff-card:hover .staff-image img {
+    .leader-card:hover .leader-thumbnail img {
         transform: scale(1.05);
     }
 
-    /* Badge styles */
-    .leader-badge,
-    .staff-type-badge {
+    .leader-badge {
         position: absolute;
-        top: 12px;
-        left: 12px;
-        background: var(--accent-gold);
+        top: 15px;
+        left: 15px;
+        background: var(--accent-color);
         color: white;
         padding: 5px 12px;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -838,244 +793,191 @@ $stats = $adminData['statistics'] ?? [];
         z-index: 1;
     }
 
-    .staff-type-badge {
-        left: auto;
-        right: 12px;
-    }
-
-    .staff-type-badge.teaching {
-        background: var(--primary-teal);
-    }
-
-    .staff-type-badge.non_teaching {
-        background: #6c757d;
-    }
-
-    .staff-type-badge.leadership {
-        background: var(--accent-gold);
-    }
-
-    /* Card body styles */
-    .leader-body,
-    .staff-body {
-        padding: 25px;
-        flex: 1;
+    .leader-body {
+        padding: 20px;
         display: flex;
         flex-direction: column;
+        flex: 1;
+        text-align: center;
     }
 
-    .leader-name,
-    .staff-name,
-    .department-name {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #333;
-        margin: 0 0 5px 0;
-        line-height: 1.3;
+    .leader-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+        font-size: 0.85rem;
     }
 
-    .leader-position,
-    .staff-position {
-        display: block;
-        font-size: 0.8rem;
-        color: var(--primary-teal);
+    .leader-position {
+        color: var(--primary-color);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 15px;
+        font-size: 0.8rem;
     }
 
-    .leader-bio,
-    .staff-bio,
-    .department-desc {
+    .leader-date {
+        color: var(--light-text);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.75rem;
+    }
+
+    .leader-date i {
+        font-size: 0.7rem;
+    }
+
+    .leader-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark-text);
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+
+    .leader-qualifications {
+        font-size: 0.8rem;
+        color: var(--light-text);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        line-height: 1.4;
+    }
+
+    .leader-qualifications i {
+        color: var(--primary-color);
+        font-size: 0.85rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .leader-excerpt {
         font-size: 0.85rem;
         line-height: 1.5;
-        color: #666;
-        margin: 0 0 20px 0;
+        color: var(--light-text);
+        margin-bottom: 15px;
         flex: 1;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
 
-    /* Contact links */
-    .leader-contact,
-    .staff-details {
+    .leader-contact {
         display: flex;
         flex-direction: column;
         gap: 8px;
+        margin-bottom: 15px;
         padding-top: 15px;
-        border-top: 1px solid #eee;
+        border-top: 1px solid var(--border-color);
     }
 
     .contact-link {
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #555;
+        color: var(--light-text);
         text-decoration: none;
         font-size: 0.8rem;
         transition: color 0.3s ease;
-        word-break: break-word;
+        overflow: hidden;
     }
 
     .contact-link:hover {
-        color: var(--primary-teal);
+        color: var(--primary-color);
     }
 
     .contact-link i {
-        color: var(--primary-teal);
-        font-size: 0.9rem;
+        color: var(--primary-color);
+        font-size: 0.85rem;
         width: 16px;
         flex-shrink: 0;
     }
 
-    .contact-link span {
+    .contact-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         flex: 1;
+        min-width: 0;
     }
 
-    /* Staff details */
-    .staff-experience,
-    .staff-join-date {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.8rem;
-        color: #666;
-    }
-
-    .staff-experience i {
-        color: var(--accent-gold);
-    }
-
-    .staff-join-date i {
-        color: var(--primary-teal);
-    }
-
-    /* ============================================
-       DEPARTMENT CARD SPECIFIC STYLES
-       ============================================ */
-
-    .department-card {
-        padding: 25px;
-        text-align: center;
-    }
-
-    .department-icon {
-        width: 50px;
-        height: 50px;
-        margin: 0 auto 20px;
-        background: linear-gradient(135deg, var(--primary-teal) 0%, var(--secondary-blue) 100%);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .department-icon i {
-        font-size: 1.2rem;
+    .btn-view-profile {
+        width: 100%;
+        padding: 10px 20px;
+        background: var(--primary-color);
         color: white;
-    }
-
-    .department-desc {
-        -webkit-line-clamp: 3;
-        min-height: 60px;
-    }
-
-    .department-footer {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding-top: 15px;
-        border-top: 1px solid #eee;
-        margin-bottom: 15px;
-    }
-
-    .staff-count,
-    .hod-info {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.8rem;
-        color: var(--primary-teal);
-        font-weight: 600;
-        justify-content: center;
-    }
-
-    .hod-info {
-        color: #666;
-        font-weight: 500;
-    }
-
-    .staff-count i,
-    .hod-info i {
+        border: none;
+        border-radius: 6px;
         font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
 
-    .department-contact {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px dashed #eee;
+    .btn-view-profile:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
     }
 
     /* ============================================
-       ORGANIZATION CHART
+       ORGANIZATION STRUCTURE SECTION
        ============================================ */
+    .org-structure-section {
+        background: var(--light-bg);
+        border-radius: 12px;
+        padding: 50px 30px;
+        margin-bottom: 50px;
+    }
 
     .org-chart-container {
-        background: white;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        margin-bottom: 60px;
+        max-width: 900px;
+        margin: 0 auto;
     }
 
     .org-chart-image {
-        width: 100%;
-        padding: 30px;
-        text-align: center;
+        margin-bottom: 25px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
     }
 
     .org-chart-image img {
-        max-width: 100%;
+        width: 100%;
         height: auto;
-        border-radius: 6px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        display: block;
     }
 
     .org-chart-description {
-        margin-top: 20px;
-        font-size: 0.9rem;
-        color: #666;
-        line-height: 1.5;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
+        font-size: 1rem;
+        color: var(--light-text);
+        line-height: 1.6;
+        margin-bottom: 15px;
+        text-align: center;
     }
 
     .org-chart-updated {
-        margin-top: 10px;
         font-size: 0.85rem;
-        color: #888;
-        font-style: italic;
+        color: var(--light-text);
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
     }
 
     /* ============================================
        CONTACT CTA
        ============================================ */
-
     .contact-cta {
-        background: linear-gradient(135deg, var(--primary-teal) 0%, var(--secondary-blue) 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         color: white;
+        border-radius: 12px;
         padding: 50px 30px;
         text-align: center;
-        border-radius: 10px;
-        margin-top: 40px;
         position: relative;
         overflow: hidden;
     }
-    
+
     .contact-cta::before {
         content: '';
         position: absolute;
@@ -1087,30 +989,31 @@ $stats = $adminData['statistics'] ?? [];
         opacity: 0.5;
     }
 
-    .contact-cta h2 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin: 0 0 15px 0;
+    .cta-content {
         position: relative;
         z-index: 1;
     }
 
+    .contact-cta h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
     .contact-cta p {
-        font-size: 1rem;
+        font-size: 1.05rem;
         opacity: 0.9;
-        max-width: 700px;
-        margin: 0 auto 30px;
-        line-height: 1.5;
-        position: relative;
-        z-index: 1;
+        margin-bottom: 25px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .cta-buttons {
         display: flex;
         gap: 15px;
         justify-content: center;
-        position: relative;
-        z-index: 1;
+        flex-wrap: wrap;
     }
 
     .btn-primary,
@@ -1126,11 +1029,13 @@ $stats = $adminData['statistics'] ?? [];
         align-items: center;
         gap: 8px;
         transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
     }
 
     .btn-primary {
         background: white;
-        color: var(--primary-teal);
+        color: var(--primary-color);
         border: 2px solid white;
     }
 
@@ -1155,143 +1060,313 @@ $stats = $adminData['statistics'] ?? [];
     /* ============================================
        NO CONTENT STATES
        ============================================ */
-
     .no-content {
-        text-align: center;
-        padding: 50px 40px;
-        color: #999;
         grid-column: 1 / -1;
+        text-align: center;
+        padding: 50px 20px;
+        color: var(--light-text);
     }
 
     .no-content i {
-        font-size: 2.5rem;
+        font-size: 3rem;
         margin-bottom: 15px;
         display: block;
         opacity: 0.3;
     }
 
     .no-content p {
-        font-size: 1rem;
-        margin: 0;
+        font-size: 1.1rem;
     }
 
     /* ============================================
-       RESPONSIVE BREAKPOINTS
+       LEADER MODAL
        ============================================ */
+    .leader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
 
-    /* Large Desktop */
-    @media (min-width: 1400px) {
+    .leader-modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        width: 40%;
+        min-height: 87vh;
+        max-width: 500px;
+        max-height: 90vh;
+        background: white;
+        border-radius: 2px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transition: transform 0.3s ease;
+    }
+
+    .leader-modal.active .modal-content {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        color: var(--dark-text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: rotate(90deg);
+    }
+
+    .modal-loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    .modal-loading i {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .modal-body {
+        padding: 40px;
+        overflow-y: auto;
+        max-height: calc(90vh - 80px);
+    }
+
+    .modal-header-image {
+        width: 100%;
+        height: 450px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .modal-header-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .modal-meta {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .modal-category {
+        background: var(--primary-color);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .modal-date {
+        color: var(--light-text);
+        font-size: 0.9rem;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark-text);
+        margin-bottom: 20px;
+        line-height: 1.3;
+    }
+
+    .modal-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-author img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .modal-author div {
+        flex: 1;
+    }
+
+    .modal-author strong {
+        display: block;
+        font-size: 1.1rem;
+        color: var(--dark-text);
+        margin-bottom: 5px;
+    }
+
+    .modal-author span {
+        font-size: 0.9rem;
+        color: var(--light-text);
+        text-align: justify;
+    }
+
+    .modal-content-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--dark-text);
+        margin-bottom: 30px;
+    }
+    .modal-article {
+        padding: 20px 40px;
+    }
+
+    .modal-content-text p {
+        margin-bottom: 15px!important;
+        text-align: justify!important;
+        word-spacing: 2px;
+    }
+
+    .modal-content-text h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark-text);
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+
+    .contact-details p {
+        margin-bottom: 10px;
+    }
+
+    .contact-details strong {
+        color: var(--dark-text);
+        margin-right: 8px;
+    }
+
+    .contact-details a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .contact-details a:hover {
+        text-decoration: underline;
+    }
+
+    /* ============================================
+       RESPONSIVE DESIGN
+       ============================================ */
+    @media (max-width: 1200px) {
         .admin-container {
-            max-width: 1400px;
-            padding: 70px 50px 90px;
-            gap: 50px;
+            padding: 30px 15px;
         }
         
         .admin-sidebar {
-            padding: 35px;
-        }
-        
-        .section-title {
-            font-size: 2.4rem;
+            flex: 0 0 280px;
         }
     }
 
-    /* Desktop */
-    @media (min-width: 992px) and (max-width: 1399px) {
-        .admin-container {
-            grid-template-columns: 280px 1fr;
-            gap: 40px;
-            padding: 60px 40px 80px;
-        }
-    }
-
-    /* Tablet */
-    @media (max-width: 991px) {
-        .admin-container {
-            grid-template-columns: 1fr;
-            gap: 50px;
-            padding: 50px 25px 70px;
-        }
-        
-        .admin-sidebar {
-            position: static;
-            order: 2;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .admin-main {
-            order: 1;
-        }
-        
-        .admin-page-header h1 {
-            font-size: 2.4rem;
-        }
-        
-        .section-title {
-            font-size: 2rem;
-        }
-    }
-
-    /* Mobile */
-    @media (max-width: 767px) {
-        .admin-container {
-            padding: 40px 20px 60px;
-            gap: 40px;
-        }
-        
+    @media (max-width: 992px) {
         .admin-page-header {
-            padding: 60px 20px;
+            padding: 60px 0 40px;
         }
         
         .admin-page-header h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
+        }
+        
+        .admin-page-header p {
+            font-size: 1.1rem;
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+        }
+        
+        .contact-cta {
+            padding: 40px 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .admin-page-header h1 {
+            font-size: 1.8rem;
         }
         
         .admin-page-header p {
             font-size: 1rem;
         }
         
+        .admin-breadcrumb {
+            font-size: 0.8rem;
+        }
+        
         .admin-sidebar {
-            padding: 25px;
+            padding: 25px 20px;
         }
         
-        .section-title {
-            font-size: 1.8rem;
+        .section-header h2 {
+            font-size: 1.6rem;
         }
         
-        .section-subtitle {
-            font-size: 0.95rem;
+        .section-header p {
+            font-size: 1rem;
         }
         
-        /* Card adjustments for mobile */
-        .leader-image,
-        .staff-image {
-            height: 200px;
-        }
-        
-        .leader-body,
-        .staff-body {
+        .leader-body {
             padding: 20px;
         }
         
-        .leader-bio,
-        .staff-bio,
-        .department-desc {
-            font-size: 0.82rem;
-            -webkit-line-clamp: 3;
+        .leader-title {
+            font-size: 1.1rem;
         }
         
-        .department-card {
-            padding: 20px;
-        }
-        
-        .org-chart-image {
-            padding: 20px;
-        }
-        
-        .contact-cta {
-            padding: 40px 25px;
+        .org-structure-section {
+            padding: 40px 20px;
         }
         
         .contact-cta h2 {
@@ -1299,68 +1374,70 @@ $stats = $adminData['statistics'] ?? [];
         }
         
         .contact-cta p {
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
         
         .cta-buttons {
             flex-direction: column;
             align-items: center;
-            gap: 12px;
         }
         
         .btn-primary,
         .btn-secondary {
             width: 100%;
-            justify-content: center;
             max-width: 280px;
+            justify-content: center;
+        }
+        
+        .modal-body {
+            padding: 30px 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.6rem;
         }
     }
 
-    /* Small Mobile */
     @media (max-width: 576px) {
-        .admin-container {
-            padding: 30px 15px 50px;
-        }
-        
         .admin-page-header {
-            padding: 50px 15px;
+            padding: 50px 0 30px;
         }
         
         .admin-page-header h1 {
-            font-size: 1.8rem;
-        }
-        
-        .sidebar-logo {
-            width: 60px;
-            height: 60px;
-        }
-        
-        .sidebar-logo img {
-            width: 35px;
-            height: 35px;
-        }
-        
-        .section-title {
             font-size: 1.6rem;
         }
         
-        .leader-image,
-        .staff-image {
-            height: 180px;
+        .sidebar-logo {
+            width: 70px;
+            height: 70px;
         }
         
-        .leader-badge,
-        .staff-type-badge {
-            padding: 4px 10px;
-            font-size: 0.65rem;
+        .sidebar-logo img {
+            width: 40px;
+            height: 40px;
         }
         
-        .contact-link span {
-            font-size: 0.78rem;
+        .stat-item {
+            padding: 12px;
+            gap: 12px;
+        }
+        
+        .stat-item i {
+            width: 35px;
+            height: 35px;
+            font-size: 1.1rem;
+        }
+        
+        .stat-number {
+            font-size: 1.2rem;
+        }
+        
+        .leader-thumbnail {
+            height: 390px;
         }
         
         .contact-cta {
-            padding: 35px 20px;
+            padding: 30px 20px;
         }
         
         .contact-cta h2 {
@@ -1371,7 +1448,6 @@ $stats = $adminData['statistics'] ?? [];
     /* ============================================
        ANIMATIONS
        ============================================ */
-
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -1383,136 +1459,35 @@ $stats = $adminData['statistics'] ?? [];
         }
     }
 
-    /* Stagger animations for better visual flow */
-    .leader-card,
-    .staff-card,
-    .department-card {
+    .leader-card {
         animation: fadeInUp 0.5s ease-out;
         animation-fill-mode: both;
     }
 
+    /* Stagger animations */
     .leader-card:nth-child(1) { animation-delay: 0.1s; }
     .leader-card:nth-child(2) { animation-delay: 0.2s; }
     .leader-card:nth-child(3) { animation-delay: 0.3s; }
     .leader-card:nth-child(4) { animation-delay: 0.4s; }
     .leader-card:nth-child(5) { animation-delay: 0.5s; }
     .leader-card:nth-child(6) { animation-delay: 0.6s; }
-
-    .staff-card:nth-child(1) { animation-delay: 0.1s; }
-    .staff-card:nth-child(2) { animation-delay: 0.2s; }
-    .staff-card:nth-child(3) { animation-delay: 0.3s; }
-    .staff-card:nth-child(4) { animation-delay: 0.4s; }
-    .staff-card:nth-child(5) { animation-delay: 0.5s; }
-    .staff-card:nth-child(6) { animation-delay: 0.6s; }
-
-    .department-card:nth-child(1) { animation-delay: 0.1s; }
-    .department-card:nth-child(2) { animation-delay: 0.2s; }
-    .department-card:nth-child(3) { animation-delay: 0.3s; }
-    .department-card:nth-child(4) { animation-delay: 0.4s; }
-    .department-card:nth-child(5) { animation-delay: 0.5s; }
-    .department-card:nth-child(6) { animation-delay: 0.6s; }
-
-    /* ============================================
-       ACCESSIBILITY & PRINT STYLES
-       ============================================ */
-
-    /* Focus styles for accessibility */
-    .quick-link:focus,
-    .contact-link:focus,
-    .btn-primary:focus,
-    .btn-secondary:focus {
-        outline: 2px solid var(--primary-teal);
-        outline-offset: 2px;
-    }
-
-    /* Print styles */
-    @media print {
-        .admin-sidebar,
-        .contact-cta,
-        .quick-links,
-        .sidebar-social,
-        .leader-badge,
-        .staff-type-badge,
-        .btn-primary,
-        .btn-secondary {
-            display: none !important;
-        }
-        
-        .admin-container {
-            grid-template-columns: 1fr !important;
-            padding: 20px !important;
-            background: white !important;
-        }
-        
-        .admin-page-header {
-            background: white !important;
-            color: black !important;
-            padding: 40px 0 !important;
-        }
-        
-        .leader-card,
-        .staff-card,
-        .department-card {
-            break-inside: avoid;
-            box-shadow: none !important;
-            border: 1px solid #ddd !important;
-            animation: none !important;
-            margin-bottom: 20px !important;
-        }
-        
-        .org-chart-container {
-            page-break-before: always;
-        }
-        
-        .contact-link {
-            color: #000 !important;
-            text-decoration: none;
-        }
-        
-        a[href]:after {
-            content: " (" attr(href) ")";
-            font-size: 0.8em;
-            color: #666;
-        }
-    }
-
-    /* Reduce motion preference */
-    @media (prefers-reduced-motion: reduce) {
-        .leader-card,
-        .staff-card,
-        .department-card,
-        .stat-item,
-        .quick-link,
-        .btn-primary,
-        .btn-secondary,
-        .sidebar-social a {
-            animation: none !important;
-            transition: none !important;
-        }
-    }
     </style>
 
     <script>
     // Configuration
     const BASE_URL = '<?= url() ?>';
+    const API_URL = BASE_URL + '/api/administration';
     
-    // Initialize page
+    // Initialize
     $(document).ready(function() {
-        initializeAdminPage();
+        initializePage();
         setupEventListeners();
         animateCounters();
-        setupLazyLoading();
     });
 
-    function initializeAdminPage() {
-        // Update quick links based on scroll position
+    function initializePage() {
         updateActiveQuickLinks();
-        
-        // Smooth scroll for quick links
         setupSmoothScroll();
-        
-        // Initialize tooltips
-        initializeTooltips();
     }
 
     function setupEventListeners() {
@@ -1523,7 +1498,6 @@ $stats = $adminData['statistics'] ?? [];
             $('.quick-link').removeClass('active');
             $(this).addClass('active');
             
-            // Smooth scroll to section
             $('html, body').animate({
                 scrollTop: $(target).offset().top - 80
             }, 600);
@@ -1531,31 +1505,13 @@ $stats = $adminData['statistics'] ?? [];
         
         // Update active link on scroll
         $(window).scroll(throttle(updateActiveQuickLinks, 100));
-        
-        // Handle window resize
-        $(window).resize(throttle(handleResize, 250));
     }
 
     function animateCounters() {
-        // Animate the years experience counter
-        const yearsElement = document.querySelector('.stat-number:last-child');
-        if (yearsElement) {
-            const years = parseInt(yearsElement.textContent);
-            animateNumber(yearsElement, years, 1500);
-        }
-        
-        // Animate staff counters
-        const totalStaffElement = document.getElementById('totalStaff');
-        const totalTeachersElement = document.getElementById('totalTeachers');
-        
-        if (totalStaffElement) {
-            const totalStaff = parseInt(totalStaffElement.textContent);
-            animateNumber(totalStaffElement, totalStaff, 1200);
-        }
-        
-        if (totalTeachersElement) {
-            const totalTeachers = parseInt(totalTeachersElement.textContent);
-            animateNumber(totalTeachersElement, totalTeachers, 1200);
+        const leadershipElement = document.getElementById('totalLeadership');
+        if (leadershipElement) {
+            const total = parseInt(leadershipElement.textContent);
+            animateNumber(leadershipElement, total, 1200);
         }
     }
 
@@ -1591,7 +1547,7 @@ $stats = $adminData['statistics'] ?? [];
     }
 
     function updateActiveQuickLinks() {
-        const sections = ['#leadership', '#staff', '#departments', '#structure'];
+        const sections = ['#leadership', '#structure', '#contact'];
         const scrollPosition = window.scrollY + 100;
         
         let currentSection = '';
@@ -1629,47 +1585,90 @@ $stats = $adminData['statistics'] ?? [];
         });
     }
 
-    function initializeTooltips() {
-        // Initialize Bootstrap tooltips if available
-        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        }
-    }
-
-    function setupLazyLoading() {
-        // Add lazy loading to all images
-        const images = document.querySelectorAll('.leader-image img, .staff-image img, .org-chart-image img');
+    function openLeaderModal(leaderId) {
+        const modal = $('#leaderModal');
+        const modalBody = $('#modalBody');
+        const modalLoading = $('#modalLoading');
         
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        const src = img.getAttribute('data-src');
-                        if (src) {
-                            img.src = src;
-                            img.removeAttribute('data-src');
-                        }
-                        observer.unobserve(img);
-                    }
-                });
-            });
-
-            images.forEach(img => {
-                const currentSrc = img.src;
-                img.setAttribute('data-src', currentSrc);
-                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
-                imageObserver.observe(img);
-            });
-        }
+        modal.addClass('active');
+        $('body').css('overflow', 'hidden');
+        modalLoading.show();
+        modalBody.html('');
+        
+        $.ajax({
+            url: API_URL,
+            method: 'GET',
+            data: { action: 'get_leadership_by_id', id: leaderId },
+            dataType: 'json',
+            success: function(response) {
+                console.log('API Response:', response);
+                if (response.success && response.data) {
+                    displayLeaderModal(response.data);
+                } else {
+                    modalBody.html('<div style="padding: 40px; text-align: center;"><p class="error-message">Failed to load leader profile.</p></div>');
+                }
+                modalLoading.hide();
+            },
+            error: function(xhr, status, error) {
+                console.error('API Error:', status, error);
+                modalBody.html('<div style="padding: 40px; text-align: center;"><p class="error-message">Failed to load leader profile. Please try again.</p></div>');
+                modalLoading.hide();
+            }
+        });
     }
 
-    function handleResize() {
-        // Update any responsive behaviors on resize
-        updateActiveQuickLinks();
+    function displayLeaderModal(leader) {
+        const joinDate = leader.join_date ? new Date(leader.join_date).toLocaleDateString('en-US', { 
+            month: 'long', 
+            day: 'numeric', 
+            year: 'numeric' 
+        }) : 'Not specified';
+        
+        const imageUrl = leader.image_url 
+            ? '<?= img_url("") ?>' + leader.image_url 
+            : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(leader.full_name) + '&background=0d47a1&color=fff&size=800';
+        
+        const html = `
+            <div class="modal-header-image">
+                <img src="${imageUrl}" alt="${leader.full_name}"
+                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(leader.full_name)}&background=0d47a1&color=fff&size=800'">
+            </div>
+            <div class="modal-article">
+                <div class="modal-meta">
+                    <span class="modal-category">${leader.role_badge || 'Leadership'}</span>
+                    <span class="modal-date">Member since ${joinDate}</span>
+                </div>
+                <h1 class="modal-title">${leader.full_name}</h1>
+                <div class="modal-author">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(leader.full_name)}&background=0d47a1&color=fff" 
+                         alt="${leader.full_name}">
+                    <div>
+                        <strong>${leader.position}</strong>
+                        <span>${leader.qualifications || 'Qualified Professional'}</span>
+                    </div>
+                </div>
+                <div class="modal-content-text">
+                    <p>${leader.short_bio || 'No biography available.'}</p>
+                    
+                    ${leader.qualifications ? `<h3>Qualifications</h3><p>${leader.qualifications}</p>` : ''}
+                    
+                    ${leader.email || leader.phone ? `
+                    <h3>Contact Information</h3>
+                    <div class="contact-details">
+                        ${leader.email ? `<p><strong>Email:</strong> <a href="mailto:${leader.email}">${leader.email}</a></p>` : ''}
+                        ${leader.phone ? `<p><strong>Phone:</strong> <a href="tel:${leader.phone.replace(/[^\d+]/g, '')}">${leader.phone}</a></p>` : ''}
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        
+        $('#modalBody').html(html);
+    }
+
+    function closeLeaderModal() {
+        $('#leaderModal').removeClass('active');
+        $('body').css('overflow', '');
     }
 
     // Utility function for throttling
@@ -1686,31 +1685,17 @@ $stats = $adminData['statistics'] ?? [];
         }
     }
 
-    // Image error handling
-    document.addEventListener('DOMContentLoaded', function() {
-        const images = document.querySelectorAll('img');
-        images.forEach(img => {
-            img.addEventListener('error', function() {
-                const name = this.alt || 'User';
-                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0d47a1&color=fff&size=400`;
-                this.onerror = null; // Prevent infinite loop
-            });
-        });
-    });
+    // Handle window resize
+    $(window).resize(throttle(handleResize, 250));
 
-    // Keyboard navigation for quick links
+    function handleResize() {
+        updateActiveQuickLinks();
+    }
+
+    // Keyboard navigation
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Tab') {
-            // Add focus styles to quick links
-            const quickLinks = document.querySelectorAll('.quick-link');
-            quickLinks.forEach(link => {
-                link.addEventListener('focus', function() {
-                    this.classList.add('focused');
-                });
-                link.addEventListener('blur', function() {
-                    this.classList.remove('focused');
-                });
-            });
+        if (e.key === 'Escape' && $('#leaderModal').hasClass('active')) {
+            closeLeaderModal();
         }
     });
     </script>

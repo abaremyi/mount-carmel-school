@@ -40,19 +40,11 @@ try {
             echo json_encode($result);
             break;
 
-        case 'get_staff_by_id':
-        case 'getStaffById':
-            // Get single staff member by ID
+        case 'get_leadership_by_id':
+        case 'getLeadershipById':
+            // Get single leadership member by ID
             $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-            $result = $administrationController->getStaffById($id);
-            echo json_encode($result);
-            break;
-
-        case 'get_department_by_id':
-        case 'getDepartmentById':
-            // Get department by ID
-            $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-            $result = $administrationController->getDepartmentById($id);
+            $result = $administrationController->getLeadershipById($id);
             echo json_encode($result);
             break;
 
@@ -67,32 +59,10 @@ try {
             ]);
             break;
 
-        case 'get_staff':
-        case 'getStaff':
-            // Get all staff only
-            $result = $administrationController->getAllData();
-            echo json_encode([
-                'success' => $result['success'],
-                'data' => $result['data']['staff'] ?? [],
-                'total' => count($result['data']['staff'] ?? [])
-            ]);
-            break;
-
-        case 'get_departments':
-        case 'getDepartments':
-            // Get departments only
-            $result = $administrationController->getAllData();
-            echo json_encode([
-                'success' => $result['success'],
-                'data' => $result['data']['departments'] ?? [],
-                'total' => count($result['data']['departments'] ?? [])
-            ]);
-            break;
-
         default:
             echo json_encode([
                 'success' => false,
-                'message' => 'Invalid action. Available actions: get_all_data, get_statistics, get_staff_by_id, get_department_by_id, get_leadership, get_staff, get_departments'
+                'message' => 'Invalid action. Available actions: get_all_data, get_statistics, get_leadership_by_id, get_leadership'
             ]);
             break;
     }

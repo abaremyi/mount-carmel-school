@@ -5404,7 +5404,7 @@ footer::before {
 
 .director-card {
     position: relative;
-    border-radius: 16px;
+    border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 121, 107, 0.2);
 }

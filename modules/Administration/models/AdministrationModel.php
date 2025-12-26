@@ -24,12 +24,19 @@ class AdministrationModel {
                         position,
                         role_badge,
                         short_bio,
+                        qualifications,
                         email,
                         phone,
                         image_url,
+                        facebook_url,
+                        twitter_url,
+                        linkedin_url,
+                        whatsapp_number,
                         display_order,
-                        staff_type,
-                        created_at
+                        join_date,
+                        status,
+                        created_at,
+                        updated_at
                       FROM leadership_team 
                       WHERE status = 'active'
                       ORDER BY display_order ASC, full_name ASC";
@@ -41,80 +48,6 @@ class AdministrationModel {
             
         } catch (PDOException $e) {
             error_log("Administration Model Error: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    /**
-     * Get all staff members
-     * @return array Array of staff members
-     */
-    public function getAllStaff() {
-        try {
-            $query = "SELECT 
-                        s.id,
-                        s.staff_code,
-                        s.full_name,
-                        s.position,
-                        s.staff_type,
-                        s.department_id,
-                        s.qualifications,
-                        s.short_bio,
-                        s.email,
-                        s.phone,
-                        s.image_url,
-                        s.join_date,
-                        s.years_experience,
-                        s.display_order,
-                        s.status,
-                        d.department_name
-                      FROM school_staff s
-                      LEFT JOIN departments d ON s.department_id = d.id
-                      WHERE s.status = 'active'
-                      ORDER BY s.display_order ASC, s.full_name ASC";
-            
-            $stmt = $this->db->prepare($query);
-            $stmt->execute();
-            
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-        } catch (PDOException $e) {
-            error_log("Administration Model Staff Error: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    /**
-     * Get all departments
-     * @return array Array of departments
-     */
-    public function getAllDepartments() {
-        try {
-            $query = "SELECT 
-                        d.id,
-                        d.department_name,
-                        d.department_icon,
-                        d.description,
-                        d.staff_count as target_staff,
-                        d.email,
-                        d.phone,
-                        d.head_of_department,
-                        d.display_order,
-                        d.status,
-                        COUNT(s.id) as current_staff
-                      FROM departments d
-                      LEFT JOIN school_staff s ON d.id = s.department_id AND s.status = 'active'
-                      WHERE d.status = 'active'
-                      GROUP BY d.id
-                      ORDER BY d.display_order ASC, d.department_name ASC";
-            
-            $stmt = $this->db->prepare($query);
-            $stmt->execute();
-            
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-        } catch (PDOException $e) {
-            error_log("Administration Model Departments Error: " . $e->getMessage());
             return [];
         }
     }
@@ -151,57 +84,46 @@ class AdministrationModel {
      */
     public function getStatistics() {
         try {
-            $query = "SELECT 
-                        (SELECT COUNT(*) FROM school_staff WHERE status = 'active') as total_staff,
-                        (SELECT COUNT(*) FROM school_staff WHERE status = 'active' AND staff_type = 'teaching') as total_teachers,
-                        (SELECT COUNT(*) FROM school_staff WHERE status = 'active' AND staff_type = 'leadership') as total_leadership,
-                        (SELECT COUNT(*) FROM departments WHERE status = 'active') as total_departments,
-                        (SELECT AVG(years_experience) FROM school_staff WHERE status = 'active' AND staff_type = 'teaching') as avg_experience";
-            
-            $stmt = $this->db->prepare($query);
-            $stmt->execute();
-            
-            $stats = $stmt->fetch(PDO::FETCH_ASSOC);
-            
             // Calculate years since establishment (2013)
             $currentYear = date('Y');
-            $stats['years_experience'] = $currentYear - 2013;
+            $yearsExperience = $currentYear - 2013;
             
-            // Ensure numeric values
-            $stats['total_staff'] = intval($stats['total_staff']);
-            $stats['total_teachers'] = intval($stats['total_teachers']);
-            $stats['total_leadership'] = intval($stats['total_leadership']);
-            $stats['total_departments'] = intval($stats['total_departments']);
-            $stats['avg_experience'] = round(floatval($stats['avg_experience']), 1);
+            // Get leadership count
+            $query = "SELECT COUNT(*) as total_leadership FROM leadership_team WHERE status = 'active'";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            return $stats;
+            // Get quick stats
+            $statsQuery = "SELECT stat_value FROM quick_stats WHERE stat_name = 'stats_years' AND status = 'active'";
+            $statsStmt = $this->db->prepare($statsQuery);
+            $statsStmt->execute();
+            $quickStats = $statsStmt->fetch(PDO::FETCH_ASSOC);
+            
+            return [
+                'total_leadership' => intval($result['total_leadership']),
+                'years_experience' => $yearsExperience,
+                'quick_stats_years' => $quickStats['stat_value'] ?? $yearsExperience
+            ];
             
         } catch (PDOException $e) {
             error_log("Administration Model Statistics Error: " . $e->getMessage());
             return [
-                'total_staff' => 0,
-                'total_teachers' => 0,
                 'total_leadership' => 0,
-                'total_departments' => 0,
-                'avg_experience' => 0,
-                'years_experience' => date('Y') - 2013
+                'years_experience' => date('Y') - 2013,
+                'quick_stats_years' => date('Y') - 2013
             ];
         }
     }
 
     /**
-     * Get single staff member by ID
-     * @param int $id Staff ID
-     * @return array|null Staff data
+     * Get single leadership member by ID
+     * @param int $id Leadership ID
+     * @return array|null Leadership data
      */
-    public function getStaffById($id) {
+    public function getLeadershipById($id) {
         try {
-            $query = "SELECT 
-                        s.*,
-                        d.department_name
-                      FROM school_staff s
-                      LEFT JOIN departments d ON s.department_id = d.id
-                      WHERE s.id = :id";
+            $query = "SELECT * FROM leadership_team WHERE id = :id";
             
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -210,35 +132,90 @@ class AdministrationModel {
             return $stmt->fetch(PDO::FETCH_ASSOC);
             
         } catch (PDOException $e) {
-            error_log("Administration Model Get Staff Error: " . $e->getMessage());
+            error_log("Administration Model Get Leadership Error: " . $e->getMessage());
             return null;
         }
     }
 
     /**
-     * Get single department by ID
-     * @param int $id Department ID
-     * @return array|null Department data
+     * Add new leadership member
+     * @param array $data Leadership data
+     * @return bool Success status
      */
-    public function getDepartmentById($id) {
+    public function addLeadership($data) {
         try {
-            $query = "SELECT 
-                        d.*,
-                        COUNT(s.id) as current_staff
-                      FROM departments d
-                      LEFT JOIN school_staff s ON d.id = s.department_id AND s.status = 'active'
-                      WHERE d.id = :id
-                      GROUP BY d.id";
+            $query = "INSERT INTO leadership_team (
+                        full_name, position, role_badge, short_bio, qualifications,
+                        email, phone, image_url, facebook_url, twitter_url,
+                        linkedin_url, whatsapp_number, display_order, join_date, status
+                      ) VALUES (
+                        :full_name, :position, :role_badge, :short_bio, :qualifications,
+                        :email, :phone, :image_url, :facebook_url, :twitter_url,
+                        :linkedin_url, :whatsapp_number, :display_order, :join_date, :status
+                      )";
+            
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute($data);
+            
+        } catch (PDOException $e) {
+            error_log("Administration Model Add Leadership Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update leadership member
+     * @param int $id Leadership ID
+     * @param array $data Updated data
+     * @return bool Success status
+     */
+    public function updateLeadership($id, $data) {
+        try {
+            $query = "UPDATE leadership_team SET
+                        full_name = :full_name,
+                        position = :position,
+                        role_badge = :role_badge,
+                        short_bio = :short_bio,
+                        qualifications = :qualifications,
+                        email = :email,
+                        phone = :phone,
+                        image_url = :image_url,
+                        facebook_url = :facebook_url,
+                        twitter_url = :twitter_url,
+                        linkedin_url = :linkedin_url,
+                        whatsapp_number = :whatsapp_number,
+                        display_order = :display_order,
+                        join_date = :join_date,
+                        status = :status,
+                        updated_at = NOW()
+                      WHERE id = :id";
+            
+            $data['id'] = $id;
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute($data);
+            
+        } catch (PDOException $e) {
+            error_log("Administration Model Update Leadership Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete leadership member
+     * @param int $id Leadership ID
+     * @return bool Success status
+     */
+    public function deleteLeadership($id) {
+        try {
+            $query = "DELETE FROM leadership_team WHERE id = :id";
             
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-            
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->execute();
             
         } catch (PDOException $e) {
-            error_log("Administration Model Get Department Error: " . $e->getMessage());
-            return null;
+            error_log("Administration Model Delete Leadership Error: " . $e->getMessage());
+            return false;
         }
     }
 }

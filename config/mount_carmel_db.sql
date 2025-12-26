@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2025 at 10:00 PM
+-- Generation Time: Dec 26, 2025 at 10:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -108,43 +108,6 @@ CREATE TABLE `contact_messages` (
 
 INSERT INTO `contact_messages` (`id`, `name`, `email`, `phone`, `subject`, `message`, `person_type`, `inquiry_type`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'TEST Too', 'remy.abayo@auca.ac.rw', '+250788678211', 'Admissions Inquiry', 'weww', 'parent', 'admissions', 'new', '2025-12-21 19:54:30', '2025-12-21 19:54:30');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `departments`
---
-
-CREATE TABLE `departments` (
-  `id` int(11) NOT NULL,
-  `department_name` varchar(100) NOT NULL,
-  `department_icon` varchar(50) DEFAULT 'fas fa-building',
-  `description` text DEFAULT NULL,
-  `staff_count` int(11) DEFAULT 0,
-  `email` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `head_of_department` varchar(100) DEFAULT NULL,
-  `display_order` int(11) DEFAULT 0,
-  `status` enum('active','inactive') DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `departments`
---
-
-INSERT INTO `departments` (`id`, `department_name`, `department_icon`, `description`, `staff_count`, `email`, `phone`, `head_of_department`, `display_order`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Teaching Faculty', 'fas fa-chalkboard-teacher', 'Professional educators qualified at EAC standards, delivering excellence in bilingual education. Our teachers are trained in modern pedagogical approaches and subject matter expertise.', 24, 'teaching.faculty@mountcarmel.ac.rw', '+250 788 123 456', 'Mrs. Marie Claire Uwase', 1, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(2, 'Student Affairs', 'fas fa-user-graduate', 'Supporting student well-being, guidance, counseling, and pastoral care throughout their educational journey. We ensure a supportive environment for all students.', 5, 'student.affairs@mountcarmel.ac.rw', '+250 788 123 456', 'Mr. David Habimana', 2, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(3, 'Curriculum Development', 'fas fa-book-open', 'Designing and implementing innovative programs aligned with national and international standards. We continuously update our curriculum to meet evolving educational needs.', 6, 'curriculum.development@mountcarmel.ac.rw', '+250 788 123 456', 'Dr. Jean Baptiste Munyankindi', 3, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(4, 'Administration', 'fas fa-clipboard-check', 'Ensuring smooth operations, admissions, records management, and efficient school management systems. We handle day-to-day administrative functions.', 8, 'administration@mountcarmel.ac.rw', '+250 788 123 456', 'Mr. Patrick Niyonzima', 4, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(5, 'Health & Wellness', 'fas fa-heartbeat', 'Maintaining student health, nutrition programs, medical services, and promoting physical well-being. We have a fully equipped clinic and counseling services.', 3, 'health.&.wellness@mountcarmel.ac.rw', '+250 788 123 456', 'Dr. Grace Mukamana', 5, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(6, 'Support Services', 'fas fa-hands-helping', 'Providing technical support, maintenance, transport, security, and cafeteria services. We ensure the school infrastructure runs smoothly.', 12, 'support.services@mountcarmel.ac.rw', '+250 788 123 456', 'Mr. John Doe', 6, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(7, 'Finance & Accounts', 'fas fa-calculator', 'Managing school finances, fees processing, payroll, budgeting, and financial planning. We ensure transparent and efficient financial management.', 4, 'finance.&.accounts@mountcarmel.ac.rw', '+250 788 123 456', 'Mrs. Sarah Williams', 7, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(8, 'Sports & Activities', 'fas fa-futbol', 'Organizing sports programs, extracurricular activities, clubs, and competitions. We promote physical fitness and talent development.', 3, 'sports.&.activities@mountcarmel.ac.rw', '+250 788 123 456', 'Mr. Robert Brown', 8, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(9, 'ICT Department', 'fas fa-laptop-code', 'Managing technology infrastructure, computer labs, digital learning resources, and technical support for students and staff.', 5, 'ict.department@mountcarmel.ac.rw', '+250 788 123 456', 'Mr. Peter Smith', 9, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46'),
-(10, 'Library Services', 'fas fa-book-reader', 'Maintaining school library, digital resources, reading programs, and research support for students and teachers.', 3, 'library.services@mountcarmel.ac.rw', '+250 788 123 456', 'Mrs. Alice Johnson', 10, 'active', '2025-12-18 22:03:05', '2025-12-22 09:53:46');
 
 -- --------------------------------------------------------
 
@@ -379,13 +342,11 @@ CREATE TABLE `leadership_team` (
   `id` int(11) NOT NULL,
   `full_name` varchar(100) NOT NULL,
   `position` varchar(100) NOT NULL,
-  `role_badge` varchar(50) DEFAULT 'Leader',
-  `staff_type` enum('leadership','teaching','non_teaching') DEFAULT 'leadership',
+  `role_badge` varchar(50) DEFAULT 'Leadership',
   `short_bio` text DEFAULT NULL,
   `qualifications` text DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
-  `department_id` int(11) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `facebook_url` varchar(255) DEFAULT NULL,
   `twitter_url` varchar(255) DEFAULT NULL,
@@ -402,13 +363,13 @@ CREATE TABLE `leadership_team` (
 -- Dumping data for table `leadership_team`
 --
 
-INSERT INTO `leadership_team` (`id`, `full_name`, `position`, `role_badge`, `staff_type`, `short_bio`, `qualifications`, `email`, `phone`, `department_id`, `image_url`, `facebook_url`, `twitter_url`, `linkedin_url`, `whatsapp_number`, `display_order`, `join_date`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Rev. Pastor Jeanne D\'Arc Uwanyiligira', 'Founder & School Director', 'Founder', 'leadership', 'With a vision to combine quality education with spiritual growth, Rev. Pastor Jeanne founded Mount Carmel School in 2013 to nurture God-fearing and highly skilled generation transformers. With over 20 years of experience in education and ministry, she leads with compassion and wisdom.', NULL, 'director@mountcarmel.ac.rw', '+250 789 121 680', NULL, 'admin/leadership/jeanne-darc.jpg', NULL, NULL, NULL, NULL, 1, NULL, 'active', '2025-12-18 22:03:05', '2025-12-18 22:03:05'),
-(2, 'Dr. Jean Baptiste Munyankindi', 'Academic Director', 'Academic', 'leadership', 'Leading our academic programs with 15+ years of experience in bilingual education. PhD in Educational Leadership from University of Rwanda. Committed to maintaining high standards and innovative teaching methodologies that prepare students for global challenges.', NULL, 'academic@mountcarmel.ac.rw', '+250 788 234 567', NULL, 'admin/leadership/munyankindi.jpg', NULL, NULL, NULL, NULL, 2, NULL, 'active', '2025-12-18 22:03:05', '2025-12-18 22:03:05'),
-(3, 'Mrs. Marie Claire Uwase', 'Head of Primary School', 'Primary', 'leadership', 'Overseeing primary education with expertise in child development and curriculum implementation. 12+ years experience in early childhood education. Dedicated to creating a nurturing learning environment that fosters curiosity and foundational skills.', NULL, 'primary@mountcarmel.ac.rw', '+250 788 345 678', NULL, 'admin/leadership/uwase.jpg', NULL, NULL, NULL, NULL, 3, NULL, 'active', '2025-12-18 22:03:05', '2025-12-18 22:03:05'),
-(4, 'Mr. Patrick Niyonzima', 'Head of Secondary School', 'Secondary', 'leadership', 'Specializing in secondary education with focus on STEM programs and university preparation. Masters in Education Management. 12+ years in educational leadership, passionate about mentoring students for academic excellence and character development.', NULL, 'secondary@mountcarmel.ac.rw', '+250 788 456 789', NULL, 'admin/leadership/niyonzima.jpg', NULL, NULL, NULL, NULL, 4, NULL, 'active', '2025-12-18 22:03:05', '2025-12-18 22:03:05'),
-(5, 'Mrs. Grace Mukamana', 'Finance Director', 'Finance', 'leadership', 'Managing school finances and budgets with 10+ years experience in financial management. CPA certified with expertise in educational institution financial planning, ensuring sustainable growth and proper resource allocation.', NULL, 'finance@mountcarmel.ac.rw', '+250 788 567 890', NULL, 'admin/leadership/mukamana.jpg', NULL, NULL, NULL, NULL, 5, NULL, 'active', '2025-12-18 22:03:05', '2025-12-18 22:03:05'),
-(6, 'Mr. David Habimana', 'Head of Student Affairs', 'Student Life', 'leadership', 'Overseeing student welfare, discipline, and extracurricular activities. 8+ years in student counseling and pastoral care. Committed to holistic student development and creating a supportive school community.', NULL, 'studentaffairs@mountcarmel.ac.rw', '+250 788 678 901', NULL, 'admin/leadership/habimana.jpg', NULL, NULL, NULL, NULL, 6, NULL, 'active', '2025-12-18 22:03:05', '2025-12-18 22:03:05');
+INSERT INTO `leadership_team` (`id`, `full_name`, `position`, `role_badge`, `short_bio`, `qualifications`, `email`, `phone`, `image_url`, `facebook_url`, `twitter_url`, `linkedin_url`, `whatsapp_number`, `display_order`, `join_date`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'SIBOMANA GERARD', 'Acting Legal Representative', 'Legal', 'Overseeing legal matters and ensuring compliance with educational regulations. With extensive experience in educational law and administration.', 'LL.B in Law, MBA in Educational Management', 'sibomana.gerard@mountcarmel.ac.rw', '+250 788 111 222', 'leadership/1766697008_Mount Carmel Admin Staff Photos-1.png', NULL, NULL, NULL, NULL, 1, '2022-01-15', 'active', '2025-12-23 07:25:12', '2025-12-25 21:10:08'),
+(2, 'TUMUSIIME JOSEPH', 'School Director', 'Director', 'Leading the school with vision and dedication. Committed to academic excellence and holistic development of students.', 'M.Ed in Educational Leadership, PhD in Education', 'tumusiime.joseph@mountcarmel.ac.rw', '+250 788 222 333', 'leadership/leader_2_1766738839.png', NULL, NULL, NULL, NULL, 2, '2020-03-10', 'active', '2025-12-23 07:25:12', '2025-12-26 08:47:19'),
+(3, 'BAHATI Guerschom', 'Deputy Director', 'Deputy', 'Supporting the director in school administration and daily operations. Special focus on academic programs and teacher development.', 'M.Sc in Educational Management, B.Ed', 'bahati.guerschom@mountcarmel.ac.rw', '+250 788 333 444', '/leadership/bahati.jpg', NULL, NULL, NULL, NULL, 3, '2021-06-01', 'active', '2025-12-23 07:25:12', '2025-12-23 07:25:12'),
+(4, 'RUREMESHA Habib', 'Accountant', 'Finance', 'Managing school finances, budgeting, and financial planning. Ensuring transparent financial operations.', 'CPA, B.Com in Accounting', 'ruremesha.habib@mountcarmel.ac.rw', '+250 788 444 555', '/leadership/ruremesha.jpg', NULL, NULL, NULL, NULL, 4, '2019-08-20', 'active', '2025-12-23 07:25:12', '2025-12-23 07:25:12'),
+(5, 'MUKABALISA Agnes', 'Assistant Administration', 'Admin', 'Handling administrative tasks, records management, and office coordination. Ensuring smooth daily operations.', 'Diploma in Office Management, Secretarial Studies', 'mukabalisa.agnes@mountcarmel.ac.rw', '+250 788 555 666', '/leadership/mukabalisa.jpg', NULL, NULL, NULL, NULL, 5, '2022-02-28', 'active', '2025-12-23 07:25:12', '2025-12-23 07:25:12'),
+(6, 'HABIMANA Abel', 'Receptionist', 'Reception', 'First point of contact for visitors, parents, and students. Managing front desk operations and communications.', 'Certificate in Customer Service, Diploma in Communication', 'habimana.abel@mountcarmel.ac.rw', '+250 788 666 777', '/leadership/habimana.jpg', NULL, NULL, NULL, NULL, 6, '2023-01-10', 'active', '2025-12-23 07:25:12', '2025-12-23 07:25:12');
 
 -- --------------------------------------------------------
 
@@ -442,9 +403,9 @@ CREATE TABLE `news_events` (
 --
 
 INSERT INTO `news_events` (`id`, `title`, `excerpt`, `description`, `image_url`, `thumbnail_url`, `category`, `author`, `published_date`, `end_date`, `status`, `views`, `created_at`, `updated_at`, `featured`, `event_location`, `event_time`, `end_time`) VALUES
-(1, 'Annual Sports Day 2024', 'Join us for our exciting Annual Sports Day featuring various competitions and activities for all students.', '<p>Our Annual Sports Day is a celebration of athleticism, teamwork, and school spirit. Students from all grades participate in various sporting events including track and field, basketball, football, and many more. This year promises to be even more exciting with new activities and competitions. Parents and guardians are warmly invited to attend and cheer for their children.</p>\r\n', '/news/news-1.jpg', NULL, 'event', 'Admin', '2026-01-02', '0000-00-00', 'published', 11, '2025-11-25 21:57:33', '2025-12-22 00:45:21', 0, 'School Playground', '09:00:00', '00:00:00'),
-(2, 'Science Fair Winners', 'Congratulations to our students who won top prizes at the Regional Science Fair competition.', 'We are proud to announce that our students have excelled at the Regional Science Fair, bringing home multiple awards including first place in the Biology category and second place in Physics. Their innovative projects and dedication to scientific inquiry have made Mount Carmel School proud. Special congratulations to Sarah Mugisha, John Kamanzi, and their team members for their outstanding achievements.', '/news/news-2.jpg', NULL, 'achievement', 'Admin', '2025-12-14', NULL, 'published', 8, '2025-11-25 21:57:33', '2025-12-21 16:36:38', 0, 'Science Lab', '10:00:00', NULL),
-(3, 'Parent-Teacher Meeting', 'Quarterly parent-teacher meeting scheduled to discuss student progress and development.', '<p>We invite all parents to attend our quarterly parent-teacher meeting where we will discuss student progress, upcoming events, and ways parents can support their children&#39;s learning at home. This is an excellent opportunity to meet with teachers, understand your child&#39;s academic journey, and participate in planning for the next term. Refreshments will be served.</p>\r\n', '/news/news-3.jpg', NULL, 'announcement', 'Admin', '2025-12-26', '0000-00-00', 'published', 14, '2025-11-25 21:57:33', '2025-12-21 16:36:19', 1, 'Main Hall', '14:00:00', '00:00:00'),
+(1, 'Annual Sports Day 2024', 'Join us for our exciting Annual Sports Day featuring various competitions and activities for all students.', '<p>Our Annual Sports Day is a celebration of athleticism, teamwork, and school spirit. Students from all grades participate in various sporting events including track and field, basketball, football, and many more. This year promises to be even more exciting with new activities and competitions. Parents and guardians are warmly invited to attend and cheer for their children.</p>\r\n', '/news/news-1.jpg', NULL, 'event', 'Admin', '2026-01-02', '0000-00-00', 'published', 12, '2025-11-25 21:57:33', '2025-12-22 21:05:42', 0, 'School Playground', '09:00:00', '00:00:00'),
+(2, 'Science Fair Winners', 'Congratulations to our students who won top prizes at the Regional Science Fair competition.', 'We are proud to announce that our students have excelled at the Regional Science Fair, bringing home multiple awards including first place in the Biology category and second place in Physics. Their innovative projects and dedication to scientific inquiry have made Mount Carmel School proud. Special congratulations to Sarah Mugisha, John Kamanzi, and their team members for their outstanding achievements.', '/news/news-2.jpg', NULL, 'achievement', 'Admin', '2025-12-14', NULL, 'published', 9, '2025-11-25 21:57:33', '2025-12-25 21:40:35', 0, 'Science Lab', '10:00:00', NULL),
+(3, 'Parent-Teacher Meeting', 'Quarterly parent-teacher meeting scheduled to discuss student progress and development.', '<p>We invite all parents to attend our quarterly parent-teacher meeting where we will discuss student progress, upcoming events, and ways parents can support their children&#39;s learning at home. This is an excellent opportunity to meet with teachers, understand your child&#39;s academic journey, and participate in planning for the next term. Refreshments will be served.</p>\r\n', '/news/news-3.jpg', NULL, 'announcement', 'Admin', '2025-12-26', '0000-00-00', 'published', 15, '2025-11-25 21:57:33', '2025-12-25 21:40:22', 1, 'Main Hall', '14:00:00', '00:00:00'),
 (4, 'New Library Inauguration', 'Our new state-of-the-art library has been officially inaugurated with over 5000 books.', 'Mount Carmel School is proud to announce the inauguration of our new library facility, equipped with modern amenities, comfortable reading spaces, and over 5,000 books covering various subjects and interests. The library features dedicated sections for different age groups, computer stations for research, and quiet study areas. We thank all our donors and supporters who made this project possible.', '/news/news-4.jpg', NULL, 'news', 'Admin', '2025-12-19', NULL, 'published', 7, '2025-11-25 21:57:33', '2025-12-19 00:19:28', 0, 'Library', '15:00:00', NULL),
 (5, 'New Computer Lab Opens', 'Our new computer lab with 30 modern computers is now open for students.', 'Mount Carmel School is excited to announce the opening of our new state-of-the-art computer laboratory. Equipped with 30 modern computers, high-speed internet, and educational software, this facility will enhance digital literacy among our students.', '/news/computer-lab.jpg', NULL, 'news', 'Admin', '2024-11-15', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
 (6, 'Math Olympiad Winners', 'Our students win gold medals in the National Math Olympiad competition.', 'Congratulations to our mathematics team for winning three gold medals in the National Math Olympiad. Their dedication and problem-solving skills have brought great honor to our school.', '/news/math-olympiad.jpg', NULL, 'achievement', 'Admin', '2024-11-10', NULL, 'published', 0, '2025-12-06 22:03:27', '2025-12-06 22:03:27', 0, NULL, NULL, NULL),
@@ -526,7 +487,8 @@ INSERT INTO `page_content` (`id`, `page_name`, `section_name`, `title`, `content
 (20, 'home', 'letter_paragraph_2', NULL, 'Since our establishment in 2013, we have remained dedicated to offering quality education that shapes the mind, heart, and character of every learner. Our mission is to raise God-fearing, skilled, and responsible young people who will positively impact their communities and the nation.', NULL, 13, 'active', '2025-12-18 07:27:41', '2025-12-18 07:27:41'),
 (21, 'home', 'letter_paragraph_3', NULL, 'At Mount Carmel School, we believe in helping students grow beyond their limits. Through a supportive learning environment, experienced teachers, small class sizes, and a balanced approach to academics, leadership, creativity, and service, we focus on developing well-rounded individuals prepared for future opportunities.', NULL, 14, 'active', '2025-12-18 07:27:41', '2025-12-18 07:27:41'),
 (22, 'home', 'letter_signature_name', NULL, 'SIBOMANA Gérard', NULL, 15, 'active', '2025-12-18 07:27:41', '2025-12-18 07:27:41'),
-(23, 'home', 'letter_signature_role', NULL, 'Acting Legal Representative', NULL, 16, 'active', '2025-12-18 07:27:41', '2025-12-18 07:27:41');
+(23, 'home', 'letter_signature_role', NULL, 'Acting Legal Representative', NULL, 16, 'active', '2025-12-18 07:27:41', '2025-12-18 07:27:41'),
+(24, 'home', 'director_photo', 'Director Photo', '<h3 class=\"ql-align-center\"><strong>SIBOMANA Gérard</strong></h3><p class=\"ql-align-center\">Acting Legal Representative</p><p><br></p>', '/home-director_photo-5700.png', 0, 'active', '2025-12-22 21:23:19', '2025-12-22 21:23:19');
 
 -- --------------------------------------------------------
 
@@ -684,48 +646,6 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `permission_id`, `created_at`) 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `school_staff`
---
-
-CREATE TABLE `school_staff` (
-  `id` int(11) NOT NULL,
-  `staff_code` varchar(20) NOT NULL,
-  `full_name` varchar(100) NOT NULL,
-  `position` varchar(100) NOT NULL,
-  `staff_type` enum('teaching','non_teaching','leadership') DEFAULT 'teaching',
-  `department_id` int(11) DEFAULT NULL,
-  `qualifications` text DEFAULT NULL,
-  `short_bio` text DEFAULT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
-  `join_date` date DEFAULT NULL,
-  `years_experience` int(11) DEFAULT 0,
-  `display_order` int(11) DEFAULT 0,
-  `status` enum('active','inactive','on_leave') DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `school_staff`
---
-
-INSERT INTO `school_staff` (`id`, `staff_code`, `full_name`, `position`, `staff_type`, `department_id`, `qualifications`, `short_bio`, `email`, `phone`, `image_url`, `join_date`, `years_experience`, `display_order`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'ST0001', 'John Smith', 'Mathematics Teacher', 'teaching', 1, 'M.Sc. in Mathematics, B.Ed.', 'Dedicated mathematics teacher with 8 years of experience. Passionate about making math fun and accessible for all students.', 'john.smith@mountcarmel.ac.rw', '+250 788 111 111', '/staff/staff1.jpg', '2018-03-15', 8, 1, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:35'),
-(2, 'ST0002', 'Sarah Johnson', 'Science Teacher', 'teaching', 1, 'Ph.D. in Biology, M.Ed.', 'Experienced science educator with expertise in biology and chemistry. Leads the school science club.', 'sarah.j@mountcarmel.ac.rw', '+250 788 222 222', '/staff/staff2.jpg', '2019-06-01', 6, 2, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:35'),
-(3, 'ST0003', 'Michael Brown', 'English Teacher', 'teaching', 1, 'M.A. in English Literature, B.Ed.', 'Specializes in English literature and creative writing. Coordinates the school\'s annual poetry competition.', 'michael.b@mountcarmel.ac.rw', '+250 788 333 333', NULL, '2020-01-10', 5, 3, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(4, 'ST0004', 'Lisa Williams', 'French Teacher', 'teaching', 1, 'M.A. in French, DELF Certified', 'Native French speaker with 7 years of teaching experience. Focuses on conversational French skills.', 'lisa.w@mountcarmel.ac.rw', '+250 788 444 444', NULL, '2019-09-01', 7, 4, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(5, 'ST0005', 'Robert Davis', 'IT Support Specialist', 'non_teaching', 9, 'B.Sc. in Computer Science', 'Manages school\'s IT infrastructure and provides technical support to staff and students.', 'robert.d@mountcarmel.ac.rw', '+250 788 555 555', NULL, '2021-02-15', 4, 5, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(6, 'ST0006', 'Maria Garcia', 'Librarian', 'non_teaching', 10, 'M.L.I.S., B.A. in Literature', 'Manages school library resources and conducts reading programs for students.', 'maria.g@mountcarmel.ac.rw', '+250 788 666 666', NULL, '2018-08-20', 7, 6, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(7, 'ST0007', 'David Wilson', 'Sports Coordinator', 'non_teaching', 8, 'B.Sc. in Physical Education', 'Organizes sports activities and coordinates inter-school competitions.', 'david.w@mountcarmel.ac.rw', '+250 788 777 777', NULL, '2019-11-05', 6, 7, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(8, 'ST0008', 'Jennifer Lee', 'Counselor', 'non_teaching', 2, 'M.A. in Counseling Psychology', 'Provides counseling services to students and supports their emotional well-being.', 'jennifer.l@mountcarmel.ac.rw', '+250 788 888 888', NULL, '2020-03-20', 5, 8, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(9, 'ST0009', 'Thomas Martin', 'Accountant', 'non_teaching', 7, 'CPA, B.Com in Accounting', 'Manages school finances, budgeting, and financial reporting.', 'thomas.m@mountcarmel.ac.rw', '+250 788 999 999', NULL, '2017-05-10', 8, 9, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04'),
-(10, 'ST0010', 'Susan Clark', 'Nurse', 'non_teaching', 5, 'B.Sc. in Nursing, RN', 'Provides healthcare services to students and maintains medical records.', 'susan.c@mountcarmel.ac.rw', '+250 788 000 000', NULL, '2018-07-01', 7, 10, 'active', '2025-12-22 10:19:04', '2025-12-22 10:19:04');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `testimonials`
 --
 
@@ -784,7 +704,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `username`, `password`, `photo`, `role_id`, `status`, `last_login`, `created_by`, `created_at`, `updated_at`, `reset_token`, `reset_expiry`) VALUES
 (1, 'BAHATI', 'Gerchom', 'info@mountcarmel.ac.rw', '250787254817', 'superadmin', '$2y$10$U8MPqa6EFv0sKwCuUKY/sOJoBLgkbsiBlSZ4q1p4aeS84IdoDdKyq', 'default-profile.jpg', 1, 'active', '2025-12-22 01:41:21', NULL, '2025-12-09 16:32:49', '2025-12-21 23:41:21', NULL, NULL),
-(3, 'Admin', 'User', 'aba1remy@gmail.com', '1234567890', 'admin', '$2y$10$cTKQFPz493I5.QQkU1MwzOW.YLOdQKqnHbWzpsnO13eI54jLUnCt6', 'default-profile.jpg', 1, 'active', '2025-12-22 22:13:03', 1, '2025-12-10 08:07:50', '2025-12-22 20:13:03', '949474', '2025-12-13 09:47:31'),
+(3, 'Admin', 'User', 'aba1remy@gmail.com', '1234567890', 'admin', '$2y$10$cTKQFPz493I5.QQkU1MwzOW.YLOdQKqnHbWzpsnO13eI54jLUnCt6', 'default-profile.jpg', 1, 'active', '2025-12-26 10:15:39', 1, '2025-12-10 08:07:50', '2025-12-26 08:15:39', '949474', '2025-12-13 09:47:31'),
 (4, 'Cathy', 'Den', 'info.abaremy@gmail.com', '250721053807', 'info.abaremy@gmail.com', '$2y$10$j/XsKcqWfDEUkfKlZfxipe76Ab5XmkV4.P30CJAB5Me.xzpmGsO0.', 'default-profile.jpg', 2, 'active', '2025-12-20 16:36:48', 1, '2025-12-11 12:13:07', '2025-12-20 14:36:48', NULL, NULL),
 (5, 'KEVIN', 'PRO', 'kevinuzamurera@gmail.com', '2507877445522', 'kevinuzamurera@gmail.com', '$2y$10$ACGn5raqlzqH3U3KZOnjJuN1SZXCMuNM/MBe6KXu1Bnv89pTJbWEO', 'default-profile.jpg', 3, 'active', NULL, 1, '2025-12-20 14:44:33', '2025-12-20 14:50:36', NULL, NULL);
 
@@ -884,12 +804,6 @@ ALTER TABLE `contact_messages`
   ADD KEY `inquiry_type` (`inquiry_type`),
   ADD KEY `person_type` (`person_type`),
   ADD KEY `created_at` (`created_at`);
-
---
--- Indexes for table `departments`
---
-ALTER TABLE `departments`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `educational_programs`
@@ -994,16 +908,6 @@ ALTER TABLE `role_permissions`
   ADD KEY `permission_id` (`permission_id`);
 
 --
--- Indexes for table `school_staff`
---
-ALTER TABLE `school_staff`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `staff_code` (`staff_code`),
-  ADD KEY `department_id` (`department_id`),
-  ADD KEY `staff_type` (`staff_type`),
-  ADD KEY `status` (`status`);
-
---
 -- Indexes for table `testimonials`
 --
 ALTER TABLE `testimonials`
@@ -1057,12 +961,6 @@ ALTER TABLE `admission_sections`
 --
 ALTER TABLE `contact_messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `departments`
---
-ALTER TABLE `departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `educational_programs`
@@ -1122,7 +1020,7 @@ ALTER TABLE `organization_chart`
 -- AUTO_INCREMENT for table `page_content`
 --
 ALTER TABLE `page_content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1147,12 +1045,6 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `role_permissions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
-
---
--- AUTO_INCREMENT for table `school_staff`
---
-ALTER TABLE `school_staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `testimonials`
@@ -1194,12 +1086,6 @@ ALTER TABLE `admission_content`
 ALTER TABLE `role_permissions`
   ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `role_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `school_staff`
---
-ALTER TABLE `school_staff`
-  ADD CONSTRAINT `fk_staff_department` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `users`

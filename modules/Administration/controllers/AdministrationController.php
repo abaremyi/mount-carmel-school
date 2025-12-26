@@ -25,24 +25,12 @@ class AdministrationController {
         try {
             // Get all data
             $leadership = $this->administrationModel->getAllLeadership();
-            $staff = $this->administrationModel->getAllStaff();
-            $departments = $this->administrationModel->getAllDepartments();
             $orgChart = $this->administrationModel->getOrganizationChart();
             $stats = $this->administrationModel->getStatistics();
 
             // Format leadership data
             foreach ($leadership as &$leader) {
                 $leader = $this->formatLeaderData($leader);
-            }
-
-            // Format staff data
-            foreach ($staff as &$staffMember) {
-                $staffMember = $this->formatStaffData($staffMember);
-            }
-
-            // Format departments data
-            foreach ($departments as &$department) {
-                $department = $this->formatDepartmentData($department);
             }
 
             // Format organization chart
@@ -54,15 +42,11 @@ class AdministrationController {
                 'success' => true,
                 'data' => [
                     'leadership' => $leadership,
-                    'staff' => $staff,
-                    'departments' => $departments,
                     'orgChart' => $orgChart,
                     'statistics' => $stats
                 ],
                 'counts' => [
-                    'leadership' => count($leadership),
-                    'staff' => count($staff),
-                    'departments' => count($departments)
+                    'leadership' => count($leadership)
                 ]
             ];
 
@@ -74,13 +58,9 @@ class AdministrationController {
                 'error' => $e->getMessage(),
                 'data' => [
                     'leadership' => [],
-                    'staff' => [],
-                    'departments' => [],
                     'orgChart' => null,
                     'statistics' => [
-                        'total_staff' => 0,
-                        'total_teachers' => 0,
-                        'total_departments' => 0,
+                        'total_leadership' => 0,
                         'years_experience' => date('Y') - 2013
                     ]
                 ]
@@ -108,13 +88,49 @@ class AdministrationController {
                 'message' => 'Failed to retrieve statistics.',
                 'error' => $e->getMessage(),
                 'data' => [
-                    'total_staff' => 0,
-                    'total_teachers' => 0,
                     'total_leadership' => 0,
-                    'total_departments' => 0,
-                    'avg_experience' => 0,
                     'years_experience' => date('Y') - 2013
                 ]
+            ];
+        }
+    }
+
+    /**
+     * Get leadership by ID
+     * @param int $id Leadership ID
+     * @return array Response array
+     */
+    public function getLeadershipById($id) {
+        try {
+            if (empty($id)) {
+                return [
+                    'success' => false,
+                    'message' => 'Leadership ID is required.'
+                ];
+            }
+
+            $leader = $this->administrationModel->getLeadershipById($id);
+
+            if ($leader) {
+                $leader = $this->formatLeaderData($leader);
+                
+                return [
+                    'success' => true,
+                    'data' => $leader
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Leadership member not found.'
+                ];
+            }
+
+        } catch (Exception $e) {
+            error_log("Administration Controller Leadership Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to retrieve leadership information.',
+                'error' => $e->getMessage()
             ];
         }
     }
@@ -132,65 +148,16 @@ class AdministrationController {
                                    '&background=0d47a1&color=fff&size=400';
         }
 
-        // Truncate bio if too long
-        if (!empty($leader['short_bio']) && strlen($leader['short_bio']) > 100) {
-            $leader['short_bio'] = substr($leader['short_bio'], 0, 100) . '...';
+        // Format date if exists
+        if (isset($leader['join_date']) && $leader['join_date']) {
+            $leader['formatted_join_date'] = date('F Y', strtotime($leader['join_date']));
         }
 
-        // Format date if exists
-        if (isset($leader['created_at'])) {
-            $leader['formatted_date'] = date('F j, Y', strtotime($leader['created_at']));
+        if (isset($leader['created_at']) && $leader['created_at']) {
+            $leader['formatted_created_date'] = date('F j, Y', strtotime($leader['created_at']));
         }
 
         return $leader;
-    }
-
-    /**
-     * Format staff data
-     * @param array $staff Staff data
-     * @return array Formatted staff data
-     */
-    private function formatStaffData($staff) {
-        // Ensure image URL
-        if (empty($staff['image_url'])) {
-            $staff['image_url'] = 'https://ui-avatars.com/api/?name=' . 
-                                  urlencode($staff['full_name']) . 
-                                  '&background=0d47a1&color=fff&size=400';
-        }
-
-        // Truncate bio if too long
-        if (!empty($staff['short_bio']) && strlen($staff['short_bio']) > 100) {
-            $staff['short_bio'] = substr($staff['short_bio'], 0, 100) . '...';
-        }
-
-        // Format join date
-        if (!empty($staff['join_date'])) {
-            $staff['formatted_join_date'] = date('M Y', strtotime($staff['join_date']));
-        }
-
-        // Get staff type badge class
-        $staff['badge_class'] = $this->getStaffBadgeClass($staff['staff_type']);
-
-        return $staff;
-    }
-
-    /**
-     * Format department data
-     * @param array $department Department data
-     * @return array Formatted department data
-     */
-    private function formatDepartmentData($department) {
-        // Ensure icon class
-        if (empty($department['department_icon'])) {
-            $department['department_icon'] = 'fas fa-building';
-        }
-
-        // Truncate description if too long
-        if (!empty($department['description']) && strlen($department['description']) > 150) {
-            $department['description'] = substr($department['description'], 0, 150) . '...';
-        }
-
-        return $department;
     }
 
     /**
@@ -201,11 +168,11 @@ class AdministrationController {
     private function formatOrgChartData($orgChart) {
         // Ensure image URL
         if (empty($orgChart['image_url'])) {
-            $orgChart['image_url'] = '/org-chart.png';
+            $orgChart['image_url'] = 'org-chart.png';
         }
 
         // Format updated date
-        if (isset($orgChart['updated_at'])) {
+        if (isset($orgChart['updated_at']) && $orgChart['updated_at']) {
             $orgChart['formatted_updated_at'] = date('F j, Y', strtotime($orgChart['updated_at']));
         }
 
@@ -213,95 +180,135 @@ class AdministrationController {
     }
 
     /**
-     * Get staff badge CSS class based on staff type
-     * @param string $staffType Staff type
-     * @return string CSS class
-     */
-    private function getStaffBadgeClass($staffType) {
-        $classes = [
-            'teaching' => 'teaching',
-            'non_teaching' => 'non_teaching',
-            'leadership' => 'leadership'
-        ];
-
-        return $classes[$staffType] ?? 'teaching';
-    }
-
-    /**
-     * Get staff by ID
-     * @param int $id Staff ID
+     * Add new leadership member
+     * @param array $data Leadership data
      * @return array Response array
      */
-    public function getStaffById($id) {
+    public function addLeadership($data) {
         try {
-            if (empty($id)) {
-                return [
-                    'success' => false,
-                    'message' => 'Staff ID is required.'
-                ];
+            // Validate required fields
+            $required = ['full_name', 'position', 'email'];
+            foreach ($required as $field) {
+                if (empty($data[$field])) {
+                    return [
+                        'success' => false,
+                        'message' => ucfirst(str_replace('_', ' ', $field)) . ' is required.'
+                    ];
+                }
             }
 
-            $staff = $this->administrationModel->getStaffById($id);
+            // Set defaults
+            $data['status'] = $data['status'] ?? 'active';
+            $data['display_order'] = $data['display_order'] ?? 0;
+            $data['role_badge'] = $data['role_badge'] ?? 'Leadership';
 
-            if ($staff) {
-                $staff = $this->formatStaffData($staff);
-                
+            $success = $this->administrationModel->addLeadership($data);
+
+            if ($success) {
                 return [
                     'success' => true,
-                    'data' => $staff
+                    'message' => 'Leadership member added successfully.'
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Staff member not found.'
+                    'message' => 'Failed to add leadership member.'
                 ];
             }
 
         } catch (Exception $e) {
-            error_log("Administration Controller Staff Error: " . $e->getMessage());
+            error_log("Administration Controller Add Leadership Error: " . $e->getMessage());
             return [
                 'success' => false,
-                'message' => 'Failed to retrieve staff information.',
+                'message' => 'Failed to add leadership member.',
                 'error' => $e->getMessage()
             ];
         }
     }
 
     /**
-     * Get department by ID
-     * @param int $id Department ID
+     * Update leadership member
+     * @param int $id Leadership ID
+     * @param array $data Updated data
      * @return array Response array
      */
-    public function getDepartmentById($id) {
+    public function updateLeadership($id, $data) {
         try {
             if (empty($id)) {
                 return [
                     'success' => false,
-                    'message' => 'Department ID is required.'
+                    'message' => 'Leadership ID is required.'
                 ];
             }
 
-            $department = $this->administrationModel->getDepartmentById($id);
+            // Validate required fields
+            $required = ['full_name', 'position', 'email'];
+            foreach ($required as $field) {
+                if (empty($data[$field])) {
+                    return [
+                        'success' => false,
+                        'message' => ucfirst(str_replace('_', ' ', $field)) . ' is required.'
+                    ];
+                }
+            }
 
-            if ($department) {
-                $department = $this->formatDepartmentData($department);
-                
+            $success = $this->administrationModel->updateLeadership($id, $data);
+
+            if ($success) {
                 return [
                     'success' => true,
-                    'data' => $department
+                    'message' => 'Leadership member updated successfully.'
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Department not found.'
+                    'message' => 'Failed to update leadership member.'
                 ];
             }
 
         } catch (Exception $e) {
-            error_log("Administration Controller Department Error: " . $e->getMessage());
+            error_log("Administration Controller Update Leadership Error: " . $e->getMessage());
             return [
                 'success' => false,
-                'message' => 'Failed to retrieve department information.',
+                'message' => 'Failed to update leadership member.',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Delete leadership member
+     * @param int $id Leadership ID
+     * @return array Response array
+     */
+    public function deleteLeadership($id) {
+        try {
+            if (empty($id)) {
+                return [
+                    'success' => false,
+                    'message' => 'Leadership ID is required.'
+                ];
+            }
+
+            $success = $this->administrationModel->deleteLeadership($id);
+
+            if ($success) {
+                return [
+                    'success' => true,
+                    'message' => 'Leadership member deleted successfully.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Failed to delete leadership member.'
+                ];
+            }
+
+        } catch (Exception $e) {
+            error_log("Administration Controller Delete Leadership Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to delete leadership member.',
                 'error' => $e->getMessage()
             ];
         }

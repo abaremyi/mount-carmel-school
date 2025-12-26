@@ -42,21 +42,16 @@ $decoded = $token ? $jwtHandler->validateToken($token) : null;
         </li>
         <?php endif; ?>
         
-        <!-- In admin-sidebar.php, update the Staff section -->
-        <?php if ($decoded->is_super_admin || in_array('staff.view', $decoded->permissions)): ?>
+        <!-- Leadership section (replacing Staff) -->
+        <?php if ($decoded->is_super_admin || in_array('leadership.view', $decoded->permissions)): ?>
         <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-users me-2"></i> Staff
+                <i class="fas fa-user-tie me-2"></i> Leadership
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a href="<?= url('admin/staff') ?>" class="dropdown-item">
-                        <i class="fas fa-user-tie me-2"></i> Staff Management
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= url('admin/departments') ?>" class="dropdown-item">
-                        <i class="fas fa-sitemap me-2"></i> Departments
+                    <a href="<?= url('admin/leadership') ?>" class="dropdown-item">
+                        <i class="fas fa-users-cog me-2"></i> Leadership Management
                     </a>
                 </li>
             </ul>
@@ -137,7 +132,6 @@ $decoded = $token ? $jwtHandler->validateToken($token) : null;
         </li>
         <?php endif; ?>
 
-        <!-- In your admin sidebar file -->
         <li class="nav-item">
             <a class="nav-link <?= (basename($_SERVER['REQUEST_URI']) == 'facilities-management.php' || basename($_SERVER['REQUEST_URI']) == 'facilities') ? 'active' : '' ?>" 
                href="<?= url('admin/facilities') ?>">

@@ -9,21 +9,6 @@ mount-carmel/
 │   │   ├── animate.min.css
 │   │   ├── bootstrap.css
 │   │   ├── bootstrap.min.css
-│   │   ├── close.png
-│   │   ├── datepicker.css
-│   │   ├── flaticon.css
-│   │   ├── flexslider.css
-│   │   ├── font-awesome-6.5.1-all.min.css
-│   │   ├── font-awesome-pro.css
-│   │   ├── magnific-popup.css
-│   │   ├── omFont.css
-│   │   ├── owl.carousel.min.css
-│   │   ├── owl.theme.default.min.css
-│   │   ├── owl.video.play.html
-│   │   ├── select2.css
-│   │   ├── themify-icons.css
-│   │   ├── vegas.slider.min.css
-│   │   └── YouTubePopUp.css
 │   ├── plugins.css
 │   ├── style-temp.css
 │   └── style.css
@@ -51,21 +36,6 @@ mount-carmel/
 │   ├── easing.js
 │   ├── imagesloaded.pkgd.min.js
 │   ├── jquery-2.1.4.min.js
-│   ├── jquery-migrate-3.4.1.min.js
-│   ├── jquery.isotope.v3.0.2.js
-│   ├── jquery.magnific-popup.js
-│   ├── jquery.stellar.min.js
-│   ├── jquery.waypoints.min.js
-│   ├── main.js
-│   ├── modernizr-2.6.2.min.js
-│   ├── move-top.js
-│   ├── owl.carousel.min.js
-│   ├── popper.min.js
-│   ├── scrollIt.min.js
-│   ├── select2.js
-│   ├── temp.js
-│   ├── vegas.slider.min.js
-│   └── YouTubePopUp.js
 ├── layouts
 │   ├── footer.php
 │   ├── header.php
@@ -143,6 +113,7 @@ mount-carmel/
 │   │       	├── admin-dashboard.php
 │   │       	├── gallery-management.php
 │   │       	├── hero-sliders.php
+│   │       	├── leadership-management
 │   │       	├── news-events-management
 │   │       	├── page-content-management.php
 │   │       	├── team-management.php

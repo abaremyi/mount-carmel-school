@@ -110,6 +110,18 @@ include_once get_layout('header');
                             environment rooted in faith.</p>
                     </div>
                 </div>
+
+                <!-- Motto Card -->
+                
+                <div class="cause-about-card">
+                    <div class="bg-about-thumbnail" style="background-image: url('<?= img_url('about/about-4.jpg') ?>')"></div>
+                    <div class="card-about-content">
+                        <img src="<?= img_url('about/motto.png') ?>" alt="Motto Icon"
+                            class="card-about-icon">
+                        <h3>Our Motto</h3>
+                        <p>"In God We Hope Wisdom and Knowledge" <br><em>Job 12:13</em></p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
